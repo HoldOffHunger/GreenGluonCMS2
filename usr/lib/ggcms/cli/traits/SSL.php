@@ -233,6 +233,12 @@
 			return $this->validate_certkeys($args);
 		}
 		
+		public function validateLetsEncryptRenewal($args) {
+			$errors = [];
+			
+			return $errors;
+		}
+		
 		public function getLetsEncryptRenewal($args) {
 			$file_location = $args['file_location'];
 			
@@ -245,25 +251,25 @@
 			foreach($lets_encrypt_renewal_file as $lets_encrypt_line) {
 				$lets_encrypt_line = rtrim($lets_encrypt_line);
 				
-				if(strlen($lets_encrypt_line) !== 0) {
+				if(strlen($lets_encrypt_line) > 2) {
 					if($lets_encrypt_line[0] !== '#') {
-						if($lets_encrypt_line === '[renewalparams]') {
-							$param_section = 'renewalparams';
+						if($lets_encrypt_line[0] === '[' && $lets_encrypt_line[1]) {
+							$param_section = substr($lets_encrypt_line, 1, -1);
 							$lets_encrypt_renewal[$param_section] = [];
-						}
-						
-						$line_pieces = $this->getLetsEncryptRenewal_splitLine(['line'=>$lets_encrypt_line]);
-						
-						if(strlen($param_section) === 0) {
-							$lets_encrypt_renewal[$line_pieces['key']] = $line_pieces['value'];
 						} else {
-							$lets_encrypt_renewal[$param_section][$line_pieces['key']] = $line_pieces['value'];
+							$line_pieces = $this->getLetsEncryptRenewal_splitLine(['line'=>$lets_encrypt_line]);
+							
+							if(strlen($param_section) === 0) {
+								$lets_encrypt_renewal[$line_pieces['key']] = $line_pieces['value'];
+							} else {
+								$lets_encrypt_renewal[$param_section][$line_pieces['key']] = $line_pieces['value'];
+							}
 						}
 					}
 				}
 			}
 			
-			#print_r($lets_encrypt_renewal);
+			print_r($lets_encrypt_renewal);
 			
 			return $lets_encrypt_renewal;
 		}
@@ -271,6 +277,7 @@
 		public function getLetsEncryptRenewal_splitLine($args) {
 			$line = $args['line'];
 			
+			#print("\n\nLINE!" . $line . "\n\n");
 			$line_pieces = explode(' = ', $line);
 			
 			return [

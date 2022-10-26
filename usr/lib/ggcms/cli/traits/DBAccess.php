@@ -2,39 +2,13 @@
 
 	trait DBAccess {
 		public function setMySQLArgs() {
-			$port = $this->globals->OverrideMySQLPort();
-			$db_credentials = $this->globals->DBInfo();
-			
-			$username = $db_credentials['username'];
-			$password = $db_credentials['password'];
-			$hostname = $db_credentials['hostname'];
-			
-			$base_sql_args = '';
-			
-		#	$base_sql_args .= '--login-path=local ';		# we iz not local =\
-		#	$base_sql_args .= '-u ' . $username . ' ';
-		#	$base_sql_args .= '-p' . $password . ' ';	# diff from others, no space between "-p" and password
-		#	$base_sql_args .= '-h ' . $hostname . ' ';
-		#	$base_sql_args .= '-P ' . $port . ' ';
-			
-		#	print("BT:!"  . ini_get("mysqli.default_host") . "||||");
-			
-			$this->db_link = new mysqli(
+			return $this->db_link = new mysqli(
 				ini_get("mysqli.default_host"),
 				ini_get("mysqli.default_user"),
 				ini_get("mysqli.default_pw"),
-				'',
-				ini_get("mysqli.default_port")
-/*				$hostname,
-				$username,
-				$password,
 				$this->host,
-				$port*/
+				ini_get("mysqli.default_port")
 			);
-			
-			$this->base_sql_args = $base_sql_args;
-			
-			return $this->base_sql_args;
 		}
 		
 		public function runQuery($args) {
@@ -55,7 +29,7 @@
 					$objects[] = $this->FillArraysFromDB_FormatRow($format_row_args);
 				}
 			} else {
-				print("ERROR ON QUERY!");
+				print('ERROR ON QUERY!');
 			}
 			
 			return $objects;

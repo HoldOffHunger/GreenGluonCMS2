@@ -702,7 +702,7 @@
 			
 			if(is_file($live_file_location)) {
 				$errors = $this->validateLetsEncryptRenewal([
-					'file_location'=>$local_file_location,
+					'file_location'=>$live_file_location,
 				]);
 				
 				$error_count = count($errors);
@@ -713,8 +713,6 @@
 					$this->failResults();
 					print(' (errors: ' . implode(', ', $errors) . ')');
 				}
-				
-				#$lets_encrypt_renewal = $this->getLetsEncryptRenewal(['file_location'=>$live_file_location]);
 			} else {
 				$this->failResults();
 				print(' (file does not exist: ' . $live_file_location . ')');
