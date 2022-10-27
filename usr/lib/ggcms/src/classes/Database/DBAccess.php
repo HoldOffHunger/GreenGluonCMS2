@@ -71,7 +71,12 @@
 			
 			if($this->db_link->connect_errno) {
 				$this->hostname = 'mysql.' . $this->hostlabel . '.com';
-				$this->db_link = new mysqli($this->hostname,$this->username,$this->password,$this->database);
+				$this->db_link = new mysqli(
+					ini_get("mysqli.default_host"),
+					ini_get("mysqli.default_user"),
+					ini_get("mysqli.default_pw"),
+					$this->database
+				);
 			}
 			
 		//	error_reporting(E_ERROR | E_WARNING | E_PARSE);
