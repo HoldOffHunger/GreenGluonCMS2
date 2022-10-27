@@ -236,6 +236,45 @@
 		public function validateLetsEncryptRenewal($args) {
 			$errors = [];
 			
+			$lets_encrypt_renewal_contents = $this->getLetsEncryptRenewal($args);
+			
+			print("\nBT validate LETS ENC!!!!\n\n");
+			
+			print_r($lets_encrypt_renewal_contents);
+			
+			/*
+			
+				BT validate LETS ENC!!!!
+				
+				Array
+				(
+				    [version] => 0.40.0
+				    [archive_dir] => /etc/letsencrypt/archive/holdoffhunger.com
+				    [cert] => /etc/letsencrypt/live/holdoffhunger.com/cert.pem
+				    [privkey] => /etc/letsencrypt/live/holdoffhunger.com/privkey.pem
+				    [chain] => /etc/letsencrypt/live/holdoffhunger.com/chain.pem
+				    [fullchain] => /etc/letsencrypt/live/holdoffhunger.com/fullchain.pem
+				    [renewalparams] => Array
+				        (
+				            [account] => 8d884d1b7b15bda4cff1b83b9d17651b
+				            [authenticator] => standalone
+				            [server] => https://acme-v02.api.letsencrypt.org/directory
+				        )
+				
+				)
+				
+			*/
+			
+			$standard_keys = [
+				'version',
+				'archive_dir',
+				'cert',
+				'privkey',
+				'chain',
+				'fullchain',
+				'renewalparams',
+			];
+			
 			return $errors;
 		}
 		
@@ -269,7 +308,7 @@
 				}
 			}
 			
-			print_r($lets_encrypt_renewal);
+		#	print_r($lets_encrypt_renewal);
 			
 			return $lets_encrypt_renewal;
 		}

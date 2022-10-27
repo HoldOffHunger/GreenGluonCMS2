@@ -75,7 +75,7 @@ git remote add origin git@github.com:YOURPROJECTFOUNDER/PROJECTNAME.git
 For instance, for GGCMS2, you would do:
 
 ```ssh
-git remote add origin git@github.com:HoldOffHunger/GreenGluonCMS2.git
+git remote add origin git@github.com:YOURNAME/GreenGluonCMS2.git
 ```
 
 ### **_Redo the Previous Step_**
