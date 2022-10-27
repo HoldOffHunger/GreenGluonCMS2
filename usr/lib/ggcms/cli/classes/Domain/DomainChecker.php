@@ -10,6 +10,7 @@
 	clireq('traits/CLIAccess.php');
 	clireq('traits/GlobalsTrait.php');
 	clireq('traits/SSL.php');
+	clireq('traits/VersionNumber.php');
 	
 	class DomainChecker {
 		use Base64;
@@ -20,6 +21,7 @@
 		use CLIAccess;
 		use GlobalsTrait;
 		use SSL;
+		use VersionNumber;
 		
 		public function checkDomain() {
 			$this->setHandle();

@@ -238,9 +238,9 @@
 			
 			$lets_encrypt_renewal_contents = $this->getLetsEncryptRenewal($args);
 			
-			print("\nBT validate LETS ENC!!!!\n\n");
+			#print("\nBT validate LETS ENC!!!!\n\n");
 			
-			print_r($lets_encrypt_renewal_contents);
+		#	print_r($lets_encrypt_renewal_contents);
 			
 			/*
 			
@@ -274,6 +274,71 @@
 				'fullchain',
 				'renewalparams',
 			];
+			
+			$renewal_keys = [
+				'account',
+				'authenticator',
+				'server',
+			];
+			
+			$standard_isversion_keys = [
+				'version',
+			];
+			
+			$standard_isfile_keys = [
+					# this is not created until after first renewal?
+			#	'archive_dir',
+				'cert',
+				'privkey',
+				'chain',
+				'fullchain',
+			];
+			
+			$standard_isarray_keys = [
+				'renewalparams',
+			];
+			
+			foreach($standard_keys as $standard_key) {
+				if(!array_key_exists($standard_key, $lets_encrypt_renewal_contents)) {
+					$errors[] = 'missing standard key, ' . $standard_key;
+				}
+			}
+			
+			foreach($renewal_keys as $renewal_key) {
+				if(!array_key_exists($renewal_key, $lets_encrypt_renewal_contents['renewalparams'])) {
+					$errors[] = 'missing renewal key, ' . $renewal_key;
+				}
+			}
+			
+			foreach($standard_isversion_keys as $standard_isversion_key) {
+				if(!$this->validateVersionNumber(['string'=>$lets_encrypt_renewal_contents[$standard_isversion_key]])) {
+					$errors[] = 'standard isversion key, ' . $standard_isversion_key . '[' . $lets_encrypt_renewal_contents[$standard_isversion_key] . ']';
+				}
+			}
+			
+			foreach($standard_isfile_keys as $standard_isfile_key) {
+				if(!is_file($lets_encrypt_renewal_contents[$standard_isfile_key])) {
+					$errors[] = 'standard isfile key, ' . $standard_isfile_key;
+				}
+			}
+			
+			foreach($standard_isarray_keys as $standard_isarray_key) {
+				if(!is_array($lets_encrypt_renewal_contents[$standard_isarray_key])) {
+					$errors[] = 'standard isarray key, ' . $standard_isarray_key;
+				}
+			}
+			
+			if(!ctype_xdigit($lets_encrypt_renewal_contents['renewalparams']['account'])) {
+				$errors[] = 'non-Hex value in renewal hash key `account`';
+			}
+			
+			if(strlen($lets_encrypt_renewal_contents['renewalparams']['authenticator']) === 0) {
+				$errors[] = 'empty string for renewal hash key `authenticator`';
+			}
+			
+			if(!filter_var($lets_encrypt_renewal_contents['renewalparams']['server'], FILTER_VALIDATE_URL)) {
+				$errors[] = 'invalid url for renewal hash key `server`';
+			}
 			
 			return $errors;
 		}
