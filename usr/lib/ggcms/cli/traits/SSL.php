@@ -308,7 +308,7 @@
 				}
 			}
 			
-		#	print_r($lets_encrypt_renewal);
+			print_r($lets_encrypt_renewal);
 			
 			return $lets_encrypt_renewal;
 		}
