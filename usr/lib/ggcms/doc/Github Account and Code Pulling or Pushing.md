@@ -105,3 +105,19 @@ git add -A
 git commit
 git push
 ```
+
+### **_See Un-Committed Changes_**
+
+See all uncommitted changes with:
+
+```ssh
+git diff --cached
+```
+
+### **_See Committed, Unpushed Changes_**
+
+See all unpushed changes with:
+
+```ssh
+git log origin/main..HEAD
+```
