@@ -34,11 +34,11 @@ ssh-add
 The output will look something like:
 
 ```sh
-YOURNAME@YOURNAME MINGW64 /e/Code (master)
+YOURNAME@YOURNAME MINGW64 /e/Code (main)
 $ eval `ssh-agent`
 Agent pid 2065
 
-YOURNAME@YOURNAME MINGW64 /e/Code (master)
+YOURNAME@YOURNAME MINGW64 /e/Code (main)
 $ ssh-add
 Enter passphrase for /c/Users/YOURNAME/.ssh/id_rsa: YOURPASSWORD
 Identity added: /c/Users/YOURNAME/.ssh/id_rsa (YOUREMAIL)
