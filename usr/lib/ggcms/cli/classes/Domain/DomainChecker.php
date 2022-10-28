@@ -735,7 +735,7 @@
 		
 		public function SSLCertifications_apache_fileChecks() {
 			$this->SSLCertifications_apache_fileChecks_enabledFileCheck();
-			$this->SSLCertifications_apache_fileChecks_availableFileCheck();
+			$this->SSLCertifications_apache_fileChecks_availableFileChecks();
 			
 			return TRUE;
 		}
@@ -756,10 +756,33 @@
 			return TRUE;
 		}
 		
-		public function SSLCertifications_apache_fileChecks_availableFileCheck() {
-			print("SSL Cert Checks, Apache Available File: ");
+		public function SSLCertifications_apache_fileChecks_availableFileChecks() {
+			$this->SSLCertifications_apache_fileChecks_availableFileChecks_80();
+			$this->SSLCertifications_apache_fileChecks_availableFileChecks_443();
 			
-			$enabled_file_location = '/etc/apache2/sites-available/' . $this->host . '.com-le-ssl.conf';
+			return TRUE;
+		}
+		
+		public function SSLCertifications_apache_fileChecks_availableFileChecks_80() {
+			print("SSL Cert Checks, Apache Available File, 80: ");
+			
+			$enabled_file_location = '/etc/apache2/sites-available/' . $this->domain . '.conf';
+			
+			if(is_file($enabled_file_location)) {
+				$this->successResults();
+			} else {
+				$this->failResults();
+			}
+			
+			print("\n");
+			
+			return TRUE;
+		}
+		
+		public function SSLCertifications_apache_fileChecks_availableFileChecks_443() {
+			print("SSL Cert Checks, Apache Available File, 443: ");
+			
+			$enabled_file_location = '/etc/apache2/sites-available/' . $this->domain . '-le-ssl.conf';
 			
 			if(is_file($enabled_file_location)) {
 				$this->successResults();
