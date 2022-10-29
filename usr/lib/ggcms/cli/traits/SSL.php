@@ -256,9 +256,9 @@
 				    [fullchain] => /etc/letsencrypt/live/holdoffhunger.com/fullchain.pem
 				    [renewalparams] => Array
 				        (
-				            [account] => 8d884d1b7b15bda4cff1b83b9d17651b
+				            [account] => hex
 				            [authenticator] => standalone
-				            [server] => https://acme-v02.api.letsencrypt.org/directory
+				            [server] => urlvalue
 				        )
 				
 				)
@@ -388,6 +388,97 @@
 				'key'=>$line_pieces[0],
 				'value'=>$line_pieces[1],
 			];
+		}
+		
+		/*
+		
+		
+				Array
+				(
+				    [ServerAdmin] => holdoffhunger@gmail.com		// I'm on parole!  You can't stop me!
+				    [ServerName] => holdoffhunger.com
+				    [ServerAlias] => www.holdoffhunger.com
+				    [DocumentRoot] => /var/www/html
+				    [ErrorLog] => ${APACHE_LOG_DIR}/error.log
+				    [CustomLog] => ${APACHE_LOG_DIR}/access.log
+				)
+
+		
+		*/
+		
+		public function validateLetsEncryptRenewal80_formatCheck($args) {
+			$file_location = $args['file_location'];
+			
+			$errors = [];
+			
+			#print("\n\nBT: validateLetsEncryptRenewal80_formatCheck!!!!\n\n");
+			
+			$lets_encrypt_renewal_80_config = $this->getLetsEncryptRenewal80($args);
+			
+			if($lets_encrypt_renewal_80_config['ServerName'] !== $this->domain) {
+				$errors[] = 'invalid 80 servername'; 
+			}
+			
+			$is_dir_folder_keys = [
+				'DocumentRoot',
+						## hrmmmm, wat????? ${APACHE_LOG_DIR}
+		#		'ErrorLog',
+		#		'CustomLog',
+			];
+			
+			foreach($is_dir_folder_keys as $is_dir_folder_key) {
+				if(!is_dir($lets_encrypt_renewal_80_config[$is_dir_folder_key])) {
+					$errors[] = 'bad 80 directory, ' . $is_dir_folder_key; 
+				}
+			}
+			/*
+			if(!is_dir($lets_encrypt_renewal_80_config['DocumentRoot'])) {
+				$errors[] = 'is_dir failed on DocumentRoot'; 
+			}*/
+			
+			return $errors;
+		}
+		
+		public function getLetsEncryptRenewal80($args) {
+			$file_location = $args['file_location'];
+			
+			$lets_encrypt_renewal_80_hash = [];
+			$lets_encrypt_renewal_80_contents = file($file_location);
+			
+		#	print_r($lets_encrypt_renewal_80_contents);
+			
+			$lets_encrypt_renewal_80_contents[0] = str_replace(' *:80', '', $lets_encrypt_renewal_80_contents[0]);
+			
+			$xml = implode('', $lets_encrypt_renewal_80_contents);
+			
+			$dom = new DOMDocument;
+			$dom->loadXML($xml);
+			
+			$node = $dom->getElementsByTagName('VirtualHost')[0];
+			
+			$node_lines = explode("\n", $node->nodeValue);
+			
+			foreach($node_lines as &$node_line) {
+				$node_line = trim($node_line);
+				
+				$node_length = strlen($node_line);
+				if($node_length !== 0) {
+					$node_line_pieces = explode(' ', $node_line);
+				#	print_r($node_line_pieces);
+				#	print("\n\n");
+					$node_line_key = $node_line_pieces[0];
+					$node_line_value = $node_line_pieces[1];
+					
+					$lets_encrypt_renewal_80_hash[$node_line_key] = $node_line_value;
+				}
+			}
+			
+		#	print_r($lets_encrypt_renewal_80_hash);
+			
+		#	print_r($node->nodeValue);
+		//	print($xml);
+			
+			return $lets_encrypt_renewal_80_hash;
 		}
 	}
 

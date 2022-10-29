@@ -760,6 +760,9 @@
 			$this->SSLCertifications_apache_fileChecks_availableFileChecks_80();
 			$this->SSLCertifications_apache_fileChecks_availableFileChecks_443();
 			
+			$this->SSLCertifications_apache_fileChecks_availableFileChecks_80_format();
+		#	$this->SSLCertifications_apache_fileChecks_availableFileChecks_443_format();
+			
 			return TRUE;
 		}
 		
@@ -794,6 +797,36 @@
 			
 			return TRUE;
 		}
+		
+		public function SSLCertifications_apache_fileChecks_availableFileChecks_80_format() {
+			print("SSL Cert Checks, Apache Available File, 80, Format Check: ");
+			
+			$available_file_location = '/etc/apache2/sites-available/' . $this->domain . '.conf';
+			
+			if(is_file($available_file_location)) {
+				$errors = $this->validateLetsEncryptRenewal80_formatCheck([
+					'file_location'=>$available_file_location,
+				]);
+				
+				$error_count = count($errors);
+				
+				if($error_count === 0) {
+					$this->successResults();
+				} else {
+					$this->failResults();
+					print(' (errors: ' . implode(', ', $errors) . ')');
+				}
+			} else {
+				$this->failResults();
+				print(' (file does not exist: ' . $live_file_location . ')');
+			}
+			
+			print("\n");
+			
+			return TRUE;
+		}
+		
+					// Script-Level Functions
 		
 		public function userConfirm() {
 			return $this->basicConfirmDialogue([
