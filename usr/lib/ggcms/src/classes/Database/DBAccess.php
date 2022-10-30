@@ -59,7 +59,7 @@
 			// -------------------------------------------------
 		
 		public function DBStart() {
-			error_reporting(E_ERROR);
+		#	error_reporting(E_ERROR);
 			
 			$this->db_link = new mysqli(
 				ini_get("mysqli.default_host"),

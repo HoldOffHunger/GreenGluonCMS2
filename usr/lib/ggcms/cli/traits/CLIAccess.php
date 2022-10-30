@@ -11,6 +11,14 @@
 			die('Abstract method.  Please override to proceed.');
 		}
 		
+			// Constructor
+			
+		public function __construct($args) {
+			$this->argv = $args['argv'];
+			
+			return $this;
+		}
+		
 			// Standard Functions
 			
 		public function formatTable($args) {
@@ -70,7 +78,12 @@
 				}
 			}
 			
-			$proceed = strtolower(trim(fgets($this->handle)));
+			if(array_key_exists(2, $this->argv) && $this->argv[2]) {
+				$proceed = $this->argv[2];
+				print($proceed . "\n");
+			} else {
+				$proceed = strtolower(trim(fgets($this->handle)));
+			}
 			
 			print("\n");
 			
@@ -86,32 +99,15 @@
 			return exit(1);
 		}
 		
-		public function setDB() {
-			print("Enter Fully-Qualified Domain Name (without subnet): ");
-			
-			$this->domain = strtolower(trim(fgets($this->handle)));
-			
-			$domain_parts = explode('.', $this->domain);
-			
-			if(!$this->validateDomain(['domain_parts'=>$domain_parts])) {
-				return FALSE;
-			}
-			
-			$this->host = $domain_parts[0];
-			
-			print("\n");
-			
-			print('List 404s For Domain: ' . $this->domain);
-			
-			print("\n\n");
-			
-			return TRUE;
-		}
-		
 		public function setDomain() {
 			print("Enter Fully-Qualified Domain Name (without subnet): ");
 			
-			$this->domain = strtolower(trim(fgets($this->handle)));
+			if(array_key_exists(1, $this->argv) && $this->argv[1]) {
+				$this->domain = $this->argv[1];
+				print($this->domain . "\n");
+			} else {
+				$this->domain = strtolower(trim(fgets($this->handle)));
+			}
 			
 			$domain_parts = explode('.', $this->domain);
 			

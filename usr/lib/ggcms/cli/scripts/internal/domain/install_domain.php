@@ -9,7 +9,9 @@
 	
 	require(GGCMS_CLI_DIR . 'classes/Domain/DomainInstaller.php');
 	
-	$installer = new DomainInstaller();
+	$installer = new DomainInstaller([
+		'argv'=>$argv,
+	]);
 	
 	$installer->installDomain();
 	

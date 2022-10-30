@@ -4,6 +4,7 @@
 	
 	clireq('traits/DBAccess.php');
 	clireq('traits/DBTest.php');
+	clireq('traits/Directories.php');
 	clireq('traits/DNSRecords.php');
 	clireq('traits/CLIAccess.php');
 	clireq('traits/GlobalsTrait.php');
@@ -11,6 +12,7 @@
 	class DomainInstaller {
 		use DBAccess;
 		use DBTest;
+		use Directories;
 		use DNSRecords;
 		use CLIAccess;
 		use GlobalsTrait;
@@ -237,34 +239,6 @@
 			print("Successfully built " . $this->host . " directories.\n\n");
 			
 			return TRUE;
-		}
-		
-		public function domainDirectories() {
-			$domain = $this->domain;
-			
-			return array_merge(
-				$this->webServingDirectories(),
-				$this->statDirectories()
-			);
-		}
-		
-		public function webServingDirectories() {
-			$domain = $this->domain;
-			
-			return [
-				'/srv/ggcms/' . $domain . '/',
-				'/srv/ggcms/' . $domain . '/www/',
-				'/srv/ggcms/' . $domain . '/www/image/',
-			];
-		}
-		
-		public function statDirectories() {
-			$domain = $this->domain;
-			
-			return [
-				'/var/log/ggcms/' . $domain . '/',
-				'/var/log/ggcms/' . $domain . '/stats/',
-			];
 		}
 		
 		public function buildDatabase() {

@@ -6,6 +6,7 @@
 	clireq('traits/DataArrays.php');
 	clireq('traits/DBAccess.php');
 	clireq('traits/DBTest.php');
+	clireq('traits/Directories.php');
 	clireq('traits/DNSRecords.php');
 	clireq('traits/CLIAccess.php');
 	clireq('traits/GlobalsTrait.php');
@@ -17,6 +18,7 @@
 		use DataArrays;
 		use DBAccess;
 		use DBTest;
+		use Directories;
 		use DNSRecords;
 		use CLIAccess;
 		use GlobalsTrait;
@@ -43,6 +45,8 @@
 				$this->userAdminDatabaseCheck();
 				$this->primaryEntryCheck();
 				$this->primaryEntryCheckPublic();
+				$this->DirectoryChecks();
+				$this->GGCMSConfigCheck();
 				$this->SSLCertifications();
 				
 				/*
@@ -413,6 +417,26 @@
 				$this->failResults();
 				print(' (could not perform if primary entries count is not 1)');
 			}
+			
+			print("\n");
+			
+			return TRUE;
+		}
+		
+		public function DirectoryChecks() {
+			print("Check Directories: ");
+			
+			$directories = $this->domainDirectories();
+			
+			print_r($directories);
+			
+			print("\n");
+			
+			return TRUE;
+		}
+		
+		public function GGCMSConfigCheck() {
+			print("Check GGCMS Config Check: ");
 			
 			print("\n");
 			

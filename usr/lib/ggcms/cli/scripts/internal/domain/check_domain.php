@@ -9,7 +9,9 @@
 	
 	require(GGCMS_CLI_DIR . 'classes/Domain/DomainChecker.php');
 	
-	$checker = new DomainChecker();
+	$checker = new DomainChecker([
+		'argv'=>$argv,
+	]);
 	
 	$checker->checkDomain();
 	

@@ -9,7 +9,9 @@
 	
 	require(GGCMS_CLI_DIR . 'classes/Errors/List404.php');
 	
-	$list404 = new List404();
+	$list404 = new List404([
+		'argv'=>$argv,
+	]);
 	
 	$list404->list404Errors();
 	

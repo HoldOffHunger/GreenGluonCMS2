@@ -9,7 +9,9 @@
 	
 	require(GGCMS_CLI_DIR . 'classes/Domain/DomainLister.php');
 	
-	$lister = new DomainLister();
+	$lister = new DomainLister([
+		'argv'=>$argv,
+	]);
 	
 	$lister->listDomains();
 	

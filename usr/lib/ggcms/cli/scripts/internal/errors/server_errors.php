@@ -9,7 +9,9 @@
 	
 	require(GGCMS_CLI_DIR . 'classes/Errors/List500.php');
 	
-	$list500 = new List500();
+	$list500 = new List500([
+		'argv'=>$argv,
+	]);
 	
 	$list500->list500Errors();
 	
