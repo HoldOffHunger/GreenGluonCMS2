@@ -499,6 +499,20 @@
 				}
 			}
 			
+			$is_file_folder_keys = [
+				'ErrorLog',
+				'CustomLog',
+				'SSLCertificateFile',
+				'SSLCertificateKeyFile',
+				'Include',
+			];
+			
+			foreach($is_file_folder_keys as $is_file_folder_key) {
+				if(!is_file($lets_encrypt_renewal_443_config[$is_file_folder_key])) {
+					$errors[] = 'bad 443 file, ' . $is_file_folder_key . ':' . $lets_encrypt_renewal_443_config[$is_file_folder_key]; 
+				}
+			}
+			
 		#	print("BT: 443 config!!!");
 		#	print_r($lets_encrypt_renewal_443_config);
 			
@@ -510,15 +524,12 @@
 			
 			$lets_encrypt_renewal_443_contents = file($file_location);
 			
-			unset($lets_encrypt_renewal_443_contents[0]);
-			unset($lets_encrypt_renewal_443_contents[count($lets_encrypt_renewal_443_contents)]);
+			$lets_encrypt_renewal_443_contents[0] = str_replace(' mod_ssl.c', '', $lets_encrypt_renewal_443_contents[0]);
 			$lets_encrypt_renewal_443_contents[1] = str_replace(' *:443', '', $lets_encrypt_renewal_443_contents[1]);
 			
 			$xml = implode('', $lets_encrypt_renewal_443_contents);
-			$xml = str_replace('${APACHE_LOG_DIR}', '/var/log/apache2', $xml);
 			
-		#	print("BT: 443 XML!!!!");
-		#	print($xml);
+			$xml = str_replace('${APACHE_LOG_DIR}', '/var/log/apache2', $xml);
 			
 			return $this->getLetsEncryptRenewalFormatting(['xml'=>$xml]);
 		}
@@ -539,8 +550,6 @@
 		public function getLetsEncryptRenewalFormatting($args) {
 			$xml = $args['xml'];
 			
-		#	print($xml);
-			
 			$lets_encrypt_hash = [];
 			
 			$dom = new DOMDocument;
@@ -548,8 +557,6 @@
 			
 			$nodes = $dom->getElementsByTagName('VirtualHost');
 			$node = $nodes[0];
-			
-		#	print_r($node);
 			
 			$node_lines = explode("\n", $node->nodeValue);
 			
@@ -559,8 +566,7 @@
 				$node_length = strlen($node_line);
 				if($node_length !== 0) {
 					$node_line_pieces = explode(' ', $node_line);
-				#	print_r($node_line_pieces);
-				#	print("\n\n");
+					
 					$node_line_key = $node_line_pieces[0];
 					$node_line_value = $node_line_pieces[1];
 					
