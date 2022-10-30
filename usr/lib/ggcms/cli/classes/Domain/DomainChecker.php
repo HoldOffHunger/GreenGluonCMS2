@@ -423,12 +423,27 @@
 			return TRUE;
 		}
 		
-		public function DirectoryChecks() {
+		public function DirectoryChecks() { 
 			print("Check Directories: ");
 			
 			$directories = $this->domainDirectories();
 			
-			print_r($directories);
+			$errors = [];
+			
+			foreach($directories as $directory) {
+				if(!is_dir($directory)) {
+					$errors[] = 'missing dir `' . $directory . '`';
+				}
+			}
+			
+			$error_count = count($errors);
+			
+			if($error_count === 0) {
+				$this->successResults();
+			} else {
+				$this->failResults();
+				print(' (' . implode(', ', $errors) . ')');
+			}
 			
 			print("\n");
 			
