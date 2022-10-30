@@ -83,11 +83,11 @@
 		}
 		
 		public function AdminEmailAddress() {
-			return 'uprisingengineer@gmail.com';
+			return 'holdoffhunger@gmail.com';
 		}
 		
 		public function AdminName() {
-			return 'UprisingEngineer';
+			return 'HoldOffHunger';
 		}
 		
 		public function minNewsItemsAllowed() {

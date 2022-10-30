@@ -415,46 +415,141 @@
 			
 			$lets_encrypt_renewal_80_config = $this->getLetsEncryptRenewal80($args);
 			
+			if($lets_encrypt_renewal_80_config['ServerAdmin'] !== $this->globals->AdminEmailAddress()) {
+				$errors[] = 'invalid 80 server admin email is invalid';
+			}
+			
 			if($lets_encrypt_renewal_80_config['ServerName'] !== $this->domain) {
 				$errors[] = 'invalid 80 servername'; 
 			}
 			
+			if($lets_encrypt_renewal_80_config['ServerAlias'] !== 'www.' . $this->domain) {
+				$errors[] = 'invalid 80 missing www server alias'; 
+			}
+			
 			$is_dir_folder_keys = [
 				'DocumentRoot',
-						## hrmmmm, wat????? ${APACHE_LOG_DIR}
-		#		'ErrorLog',
-		#		'CustomLog',
 			];
 			
 			foreach($is_dir_folder_keys as $is_dir_folder_key) {
 				if(!is_dir($lets_encrypt_renewal_80_config[$is_dir_folder_key])) {
-					$errors[] = 'bad 80 directory, ' . $is_dir_folder_key; 
+					$errors[] = 'bad 80 directory, ' . $is_dir_folder_key . ':' . $lets_encrypt_renewal_80_config[$is_dir_folder_key]; 
 				}
 			}
-			/*
-			if(!is_dir($lets_encrypt_renewal_80_config['DocumentRoot'])) {
-				$errors[] = 'is_dir failed on DocumentRoot'; 
-			}*/
+			
+			$is_file_folder_keys = [
+				'ErrorLog',
+				'CustomLog',
+			];
+			
+			foreach($is_file_folder_keys as $is_file_folder_key) {
+				if(!is_file($lets_encrypt_renewal_80_config[$is_file_folder_key])) {
+					$errors[] = 'bad 80 file, ' . $is_file_folder_key . ':' . $lets_encrypt_renewal_80_config[$is_file_folder_key]; 
+				}
+			}
 			
 			return $errors;
+		}
+		
+		/*
+		
+		
+				SSL Cert Checks, Apache Available File, 443, Format Check: BT: 443 config!!!Array
+				(
+				    [ServerAdmin] => holdoffhunger@gmail.com
+				    [ServerName] => holdoffhunger.com
+				    [ServerAlias] => www.holdoffhunger.com
+				    [DocumentRoot] => /var/www/html
+				    [ErrorLog] => /var/log/apache2/error.log
+				    [CustomLog] => /var/log/apache2/access.log
+				    [SSLCertificateFile] => /etc/letsencrypt/live/holdoffhunger.com/fullchain.pem
+				    [SSLCertificateKeyFile] => /etc/letsencrypt/live/holdoffhunger.com/privkey.pem
+				    [Include] => /etc/letsencrypt/options-ssl-apache.conf
+				)
+
+		
+		*/
+		
+		public function validateLetsEncryptRenewal443_formatCheck($args) {
+			$file_location = $args['file_location'];
+			
+			$errors = [];
+			
+			$lets_encrypt_renewal_443_config = $this->getLetsEncryptRenewal443($args);
+			
+			if($lets_encrypt_renewal_443_config['ServerAdmin'] !== $this->globals->AdminEmailAddress()) {
+				$errors[] = 'invalid 443 server admin email is invalid';
+			}
+			
+			if($lets_encrypt_renewal_443_config['ServerName'] !== $this->domain) {
+				$errors[] = 'invalid 443 servername'; 
+			}
+			
+			if($lets_encrypt_renewal_443_config['ServerAlias'] !== 'www.' . $this->domain) {
+				$errors[] = 'invalid 443 missing www server alias'; 
+			}
+			
+			$is_dir_folder_keys = [
+				'DocumentRoot',
+			];
+			
+			foreach($is_dir_folder_keys as $is_dir_folder_key) {
+				if(!is_dir($lets_encrypt_renewal_443_config[$is_dir_folder_key])) {
+					$errors[] = 'bad 443 directory, ' . $is_dir_folder_key . ':' . $lets_encrypt_renewal_443_config[$is_dir_folder_key]; 
+				}
+			}
+			
+		#	print("BT: 443 config!!!");
+		#	print_r($lets_encrypt_renewal_443_config);
+			
+			return $errors;
+		}
+		
+		public function getLetsEncryptRenewal443($args) {
+			$file_location = $args['file_location'];
+			
+			$lets_encrypt_renewal_443_contents = file($file_location);
+			
+			unset($lets_encrypt_renewal_443_contents[0]);
+			unset($lets_encrypt_renewal_443_contents[count($lets_encrypt_renewal_443_contents)]);
+			$lets_encrypt_renewal_443_contents[1] = str_replace(' *:443', '', $lets_encrypt_renewal_443_contents[1]);
+			
+			$xml = implode('', $lets_encrypt_renewal_443_contents);
+			$xml = str_replace('${APACHE_LOG_DIR}', '/var/log/apache2', $xml);
+			
+		#	print("BT: 443 XML!!!!");
+		#	print($xml);
+			
+			return $this->getLetsEncryptRenewalFormatting(['xml'=>$xml]);
 		}
 		
 		public function getLetsEncryptRenewal80($args) {
 			$file_location = $args['file_location'];
 			
-			$lets_encrypt_renewal_80_hash = [];
 			$lets_encrypt_renewal_80_contents = file($file_location);
-			
-		#	print_r($lets_encrypt_renewal_80_contents);
 			
 			$lets_encrypt_renewal_80_contents[0] = str_replace(' *:80', '', $lets_encrypt_renewal_80_contents[0]);
 			
 			$xml = implode('', $lets_encrypt_renewal_80_contents);
+			$xml = str_replace('${APACHE_LOG_DIR}', '/var/log/apache2', $xml);
+			
+			return $this->getLetsEncryptRenewalFormatting(['xml'=>$xml]);
+		}
+		
+		public function getLetsEncryptRenewalFormatting($args) {
+			$xml = $args['xml'];
+			
+		#	print($xml);
+			
+			$lets_encrypt_hash = [];
 			
 			$dom = new DOMDocument;
 			$dom->loadXML($xml);
 			
-			$node = $dom->getElementsByTagName('VirtualHost')[0];
+			$nodes = $dom->getElementsByTagName('VirtualHost');
+			$node = $nodes[0];
+			
+		#	print_r($node);
 			
 			$node_lines = explode("\n", $node->nodeValue);
 			
@@ -469,16 +564,11 @@
 					$node_line_key = $node_line_pieces[0];
 					$node_line_value = $node_line_pieces[1];
 					
-					$lets_encrypt_renewal_80_hash[$node_line_key] = $node_line_value;
+					$lets_encrypt_hash[$node_line_key] = $node_line_value;
 				}
 			}
 			
-		#	print_r($lets_encrypt_renewal_80_hash);
-			
-		#	print_r($node->nodeValue);
-		//	print($xml);
-			
-			return $lets_encrypt_renewal_80_hash;
+			return $lets_encrypt_hash;
 		}
 	}
 
