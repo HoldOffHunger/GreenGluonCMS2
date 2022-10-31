@@ -166,7 +166,7 @@
 			
 			shell_exec($enable_apache_line);
 			
-			$change_ownership_line = 'chown -R www-data ' . $apache_conf_location;
+			$change_ownership_line = 'chown -R ' . $this->defaultWebServerUser() . ' ' . $apache_conf_location;
 			
 			shell_exec($change_ownership_line);
 			
@@ -224,7 +224,7 @@
 		public function buildDirectories() {
 			print("Building " . $this->host . " directories.\n\n");
 			$mkdir_command_base = 'mkdir --mode=744 ';
-			$chown_command_base = 'chown -R www-data ';
+			$chown_command_base = 'chown -R ' . $this->defaultWebServerUser() . ' ';
 			
 			$directories = $this->domainDirectories();
 			
@@ -235,7 +235,7 @@
 				shell_exec($directory_make_command);
 				shell_exec($directory_chown_command);
 				
-				print('Created directory owned by www-data: ' . $directory . "\n");
+				print('Created directory owned by ' . $this->defaultWebServerUser() . ': ' . $directory . "\n");
 			}
 			
 			print("Successfully built " . $this->host . " directories.\n\n");
