@@ -2,6 +2,7 @@
 
 	depreq('arr2textTable/arr2textTable.php');
 	
+	clireq('traits/Apache.php');
 	clireq('traits/Base64.php');
 	clireq('traits/DataArrays.php');
 	clireq('traits/DBAccess.php');
@@ -14,6 +15,7 @@
 	clireq('traits/VersionNumber.php');
 	
 	class DomainChecker {
+		use Apache;
 		use Base64;
 		use DataArrays;
 		use DBAccess;
@@ -433,6 +435,17 @@
 			foreach($directories as $directory) {
 				if(!is_dir($directory)) {
 					$errors[] = 'missing dir `' . $directory . '`';
+				}
+			}
+			
+			$default_user = $this->defaultWebServerUser();
+			
+			foreach($directories as $directory) {
+				$owner = fileowner($directory);
+				$owner_username = posix_getpwuid($owner)['name'];
+				
+				if($owner_username !== $default_user) {
+					$errors[] = 'incorrect owner of `' . $directory . '`, ' . $default_user . ' vs. ' . $owner_username ;
 				}
 			}
 			
