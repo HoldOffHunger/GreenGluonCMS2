@@ -2,6 +2,7 @@
 
 	depreq('arr2textTable/arr2textTable.php');
 	
+	clireq('traits/Apache.php');
 	clireq('traits/DBAccess.php');
 	clireq('traits/DBTest.php');
 	clireq('traits/Directories.php');
@@ -10,6 +11,7 @@
 	clireq('traits/GlobalsTrait.php');
 	
 	class DomainInstaller {
+		use Apache;
 		use DBAccess;
 		use DBTest;
 		use Directories;
