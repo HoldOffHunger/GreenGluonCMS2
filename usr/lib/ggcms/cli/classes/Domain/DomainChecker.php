@@ -459,9 +459,6 @@
 				if($folder_perms !== $default_server_mode) {
 					$errors[] = 'incorrect perms ' . $folder_perms . ' for `' . $directory . '`';
 				}
-			#	print($directory);
-			#	print_r("|" . $folder_perms . "|" . $default_server_mode . "\n");
-			#	print_r(lstat($directory));
 			}
 			
 			$error_count = count($errors);
@@ -480,6 +477,23 @@
 		
 		public function GGCMSConfigCheck() {
 			print("Check GGCMS Config Check: ");
+			
+			$errors = [];
+			
+			$config_filename = $this->host . '.php';
+			
+			if(!conf_isfile($config_filename)) {
+				$errors[] = 'missing config file, ' . $config_filename . ', from ' . GGCMS_CONFIG_DIR;
+			}
+			
+			$error_count = count($errors);
+			
+			if($error_count === 0) {
+				$this->successResults();
+			} else {
+				$this->failResults();
+				print(' (' . implode(', ', $errors) . ')');
+			}
 			
 			print("\n");
 			
