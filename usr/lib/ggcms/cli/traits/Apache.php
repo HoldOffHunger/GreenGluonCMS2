@@ -6,7 +6,7 @@
 		}
 		
 		public function defaultWebServerUserMode() {
-			return 744;
+			return '0744';
 		}
 	}
  

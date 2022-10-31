@@ -4,12 +4,13 @@
 	
 	clireq('traits/Apache.php');
 	clireq('traits/Base64.php');
+	clireq('traits/CLIAccess.php');
 	clireq('traits/DataArrays.php');
 	clireq('traits/DBAccess.php');
 	clireq('traits/DBTest.php');
 	clireq('traits/Directories.php');
 	clireq('traits/DNSRecords.php');
-	clireq('traits/CLIAccess.php');
+	clireq('traits/FileSystem.php');
 	clireq('traits/GlobalsTrait.php');
 	clireq('traits/SSL.php');
 	clireq('traits/VersionNumber.php');
@@ -17,12 +18,13 @@
 	class DomainChecker {
 		use Apache;
 		use Base64;
+		use CLIAccess;
 		use DataArrays;
 		use DBAccess;
 		use DBTest;
 		use Directories;
 		use DNSRecords;
-		use CLIAccess;
+		use FileSystem;
 		use GlobalsTrait;
 		use SSL;
 		use VersionNumber;
@@ -447,6 +449,19 @@
 				if($owner_username !== $default_user) {
 					$errors[] = 'incorrect owner of `' . $directory . '`, ' . $default_user . ' vs. ' . $owner_username ;
 				}
+			}
+			
+			$default_server_mode = $this->defaultWebServerUserMode();
+			
+			foreach($directories as $directory) {
+				$folder_perms = $this->getFilePermissions(['path'=>$directory]);
+				
+				if($folder_perms !== $default_server_mode) {
+					$errors[] = 'incorrect perms ' . $folder_perms . ' for `' . $directory . '`';
+				}
+			#	print($directory);
+			#	print_r("|" . $folder_perms . "|" . $default_server_mode . "\n");
+			#	print_r(lstat($directory));
 			}
 			
 			$error_count = count($errors);
