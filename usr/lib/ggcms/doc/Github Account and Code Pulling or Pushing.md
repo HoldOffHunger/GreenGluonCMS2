@@ -1,4 +1,4 @@
-# GGCMS: Github Account and Code Pulling or Pushing
+# Github Account and Code Pulling or Pushing
 ## _Setting Up Your Machine to Contribute and/or Work With the Project on GitHub_
 
 ### **_Install GitBash_**
@@ -20,6 +20,16 @@ Generate an SSH Key:
 
 ```ssh
 ssh-keygen -t rsa -C "YOUREMAIL"
+```
+
+### **_Configure Advanced Settings_**
+
+#### Paging
+
+Most Linux commands do not use a paging system, so if you would like to disable Git's native paging system permanently, try this:
+
+```ssh
+git config --global pager.diff false
 ```
 
 ### **_Enable SSH Whenever Logging On_**
@@ -44,7 +54,7 @@ Enter passphrase for /c/Users/YOURNAME/.ssh/id_rsa: YOURPASSWORD
 Identity added: /c/Users/YOURNAME/.ssh/id_rsa (YOUREMAIL)
 ```
 
-### **_Test Configururation Basics_**
+### **_Test Configuration Basics_**
 
 Test with this command in GitBash:
 
