@@ -10,6 +10,7 @@
 	clireq('traits/DBTest.php');
 	clireq('traits/Directories.php');
 	clireq('traits/DNSRecords.php');
+	clireq('traits/ErrorCLI.php');
 	clireq('traits/FileSystem.php');
 	clireq('traits/GlobalsTrait.php');
 	clireq('traits/SSL.php');
@@ -24,6 +25,7 @@
 		use DBTest;
 		use Directories;
 		use DNSRecords;
+		use ErrorCLI;
 		use FileSystem;
 		use GlobalsTrait;
 		use SSL;
@@ -486,16 +488,7 @@
 				$errors[] = 'missing config file, ' . $config_filename . ', from ' . GGCMS_CONFIG_DIR;
 			}
 			
-			$error_count = count($errors);
-			
-			if($error_count === 0) {
-				$this->successResults();
-			} else {
-				$this->failResults();
-				print(' (' . implode(', ', $errors) . ')');
-			}
-			
-			print("\n");
+			$this->DisplaySuccessFailResults(['errors'=>$errors]);
 			
 			return TRUE;
 		}
