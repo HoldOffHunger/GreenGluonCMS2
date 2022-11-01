@@ -9,7 +9,9 @@
 	
 	require(GGCMS_CLI_DIR . 'classes/Database/MySQLConnector.php');
 	
-	$mysql_connector = new MySQLConnector();
+	$mysql_connector = new MySQLConnector([
+		'argv'=>$argv,
+	]);
 	
 	$mysql_connector->connect();
 	

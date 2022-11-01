@@ -9,7 +9,9 @@
 	
 	require(GGCMS_CLI_DIR . 'classes/Database/DatabaseLister.php');
 	
-	$lister = new DatabaseLister();
+	$lister = new DatabaseLister([
+		'argv'=>$argv,
+	]);
 	
 	$lister->listDatabases();
 	

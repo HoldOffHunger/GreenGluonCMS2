@@ -9,7 +9,9 @@
 	
 	require(GGCMS_CLI_DIR . 'classes/Database/TableSizes.php');
 	
-	$tablesizes = new TableSizes();
+	$tablesizes = new TableSizes([
+		'argv'=>$argv,
+	]);
 	
 	$tablesizes->listTableSizes();
 	
