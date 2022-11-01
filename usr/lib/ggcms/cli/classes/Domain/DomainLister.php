@@ -17,39 +17,17 @@
 			$this->setGlobals();
 			$this->setMySQLArgs();
 			
-			$create_database_command = 'mysql ' . $this->base_sql_args . '-e "SHOW DATABASES;"';
-				
-			$output = shell_exec($create_database_command);
+			$full_mysql = 'SHOW DATABASES;';
 			
-			print($this->formatTable(['output'=>$output]));
+			$host_count_records = $this->runQuery([
+				'query'=>$full_mysql,
+			]);
+			
+		#	print_r($host_count_records);
+			
+			print(arr2textTable(['output'=>$host_count_records]));
 			
 			return TRUE;
-		}
-		
-		public function formatTable($args) {
-			$output = $args['output'];
-			
-			$output_lines = explode("\n", $output);
-			
-			$table_input = [];
-			
-			$skip_databases = $this->skipDatabasesHash();
-			
-			foreach($output_lines as $output_line) {
-				$output_line = trim($output_line);
-				
-				if(!array_key_exists($output_line, $skip_databases)) {
-					if(strlen($output_line) !== 0) {
-						$output_array = [
-							'Database'=>$output_line,
-						];
-						
-						$table_input[] = $output_array;
-					}
-				}
-			}
-			
-			return arr2textTable($table_input);
 		}
 		
 		public function skipDatabasesHash() {

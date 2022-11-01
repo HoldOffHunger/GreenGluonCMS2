@@ -2,11 +2,16 @@
 
 	trait DBAccess {
 		public function setMySQLArgs() {
+			$host = false;
+			if(property_exists($this, $host)) {
+				$host = $this->host;
+			}
+			
 			return $this->db_link = new mysqli(
 				ini_get("mysqli.default_host"),
 				ini_get("mysqli.default_user"),
 				ini_get("mysqli.default_pw"),
-				$this->host,
+				$host,
 				ini_get("mysqli.default_port")
 			);
 		}
