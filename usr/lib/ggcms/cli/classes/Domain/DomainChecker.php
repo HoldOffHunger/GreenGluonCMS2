@@ -463,6 +463,10 @@
 				}
 			}
 			
+			$this->DisplaySuccessFailResults(['errors'=>$errors]);
+			
+			/*
+			
 			$error_count = count($errors);
 			
 			if($error_count === 0) {
@@ -471,6 +475,7 @@
 				$this->failResults();
 				print(' (' . implode(', ', $errors) . ')');
 			}
+			*/
 			
 			print("\n");
 			
