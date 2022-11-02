@@ -23,9 +23,7 @@
 				'query'=>$full_mysql,
 			]);
 			
-		#	print_r($host_count_records);
-			
-			print(arr2textTable(['output'=>$host_count_records]));
+			print(arr2textTable($host_count_records));
 			
 			return TRUE;
 		}

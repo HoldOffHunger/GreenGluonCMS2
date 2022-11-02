@@ -1,11 +1,6 @@
 <?php
 
 	class DBAccess {
-		private $hostname;
-		private $username;
-		private $password;
-		private $database;
-		
 		public $db_link;
 		private $ip_address;
 		

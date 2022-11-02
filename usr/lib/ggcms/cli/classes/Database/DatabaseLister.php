@@ -17,11 +17,13 @@
 			$this->setGlobals();
 			$this->setMySQLArgs();
 			
-			$create_database_command = 'mysql ' . $this->base_sql_args . '-e "SHOW DATABASES;"';
-				
-			$output = shell_exec($create_database_command);
+			$full_mysql = 'SHOW DATABASES;';
 			
-			print($this->formatTable(['output'=>$output]));
+			$host_count_records = $this->runQuery([
+				'query'=>$full_mysql,
+			]);
+			
+			print(arr2textTable($host_count_records));
 			
 			return TRUE;
 		}
