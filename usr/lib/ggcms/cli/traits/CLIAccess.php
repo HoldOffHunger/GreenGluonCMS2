@@ -137,6 +137,81 @@
 			return TRUE;
 		}
 		
+		/*
+			
+			Example:
+			
+
+			return $this->abstractConfirmDialogue([
+				'message'=>'Archive is for removing data.  Backup is for data you may need to immediately restore.',
+				'prompt'=>'Archive or Backup? (a)/(b)?',
+				'index'=>3,
+				'internal_key'=>'archive_or_backup',
+				'valid_answers'=>[
+					'a',
+					'b',
+				],
+			]);
+		*/
+		
+		public function abstractConfirmDialogue($args) {
+			$message = $args['message'];
+			$prompt = $args['prompt'];
+			$index = $args['index'];
+			
+			print($message);
+			print("\n\n");
+			print($prompt);
+			
+			/*
+			if(property_exists($this, 'answer_type')) {
+				if($this->answer_type === 'y' || $this->answer_type === 'yes') {
+					return TRUE;
+				}
+			}
+			*/
+			
+			if(array_key_exists($index, $this->argv) && $this->argv[$index]) {
+				$answer = $this->argv[$index];
+				print($answer . "\n");
+			} else {
+				$answer = strtolower(trim(fgets($this->handle)));
+			}
+			
+			if(array_key_exists('internal_key', $args)) {
+				$argv_internal_key = $args['internal_key'];
+			} else {
+				$argv_internal_key = 'argv' . $index;
+			}
+			
+			$this->$argv_internal_key = $answer;
+			
+			print("\n");
+			
+			$answer_length = strlen($answer);
+			
+			if($answer_length === 0) {
+				return FALSE;
+			}
+			
+			$valid_answers = $args['valid_answers'];
+			$valid_answer_hash = [];
+			
+			foreach($valid_answers as $valid_answer) {
+				$valid_answer_hash[$valid_answer] = TRUE;
+			}
+			
+			if(!array_key_exists($answer, $valid_answer_hash)) {
+				print('invalid response: ' . $answer);
+				
+				print("\n\n");
+				
+				return FALSE;
+			}
+			
+			return TRUE;
+		}
+		
 		public function successResults() {
 			print("\033[32mPASS\033[0m");
 			
