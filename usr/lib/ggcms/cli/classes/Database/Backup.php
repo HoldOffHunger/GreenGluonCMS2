@@ -31,6 +31,11 @@
 					$this->runMySQLTest(['display'=>'short']);
 					$this->verifyBackupFolderLocation();
 					$this->confirmArchiveOrBackup();
+					
+					if($this->archive_or_backup === 'a') {
+						$this->moveLastBackupToArchive();
+					}
+					
 					$this->verifyBackupFileLocation();
 					$this->mySQLDump();
 				#}
@@ -46,7 +51,10 @@
 			
 			$databases_backed_up = $this->getBackedUpMySQLDatabases();
 			
-			if(!array_key_exists($this->host, $databases_backed_up)) {
+			#print_r($databases_backed_up);
+			#die("BT:");
+			
+			if(array_key_exists($this->host, $databases_backed_up)) {
 				$this->archive_or_backup = 'a';
 				$this->archive_or_backup_nicetype = 'Archive';
 			} else {
@@ -69,22 +77,12 @@
 			print("\n");
 			
 			return TRUE;
-			
-			return $this->archive_or_backup = 'b';
-			return $this->archive_or_backup = 'a';
-			return $this->abstractConfirmDialogue([
-				'message'=>'Archive is for removing data.  Backup is for data you may need to immediately restore.',
-				'prompt'=>'Archive or Backup? (a)/(b)?',
-				'index'=>3,
-				'internal_key'=>'archive_or_backup',
-				'valid_answers'=>[
-					'a',
-					'b',
-				],
-			]);
 		}
 		
 		public function getBackedUpMySQLDatabases() {
+			if(property_exists($this, 'backup_databases')) {
+				return $this->backup_databases;
+			}
 			$backup_directory = scandir($this->backup_dir);
 			
 			#print_r($backup_directory);
@@ -107,10 +105,17 @@
 					if($backup_type === 'mysqldump') {
 						$backup_domain = $content_pieces[1];
 						
-						$backedup_domains[$backup_domain] = TRUE;
+						if(!array_key_exists($backup_domain, $backedup_domains)) {
+							$backedup_domains[$backup_domain] = [];
+						}
+						
+						$backedup_domains[$backup_domain][] = $content;
 					}
 				}
 			}
+			
+			$this->backup_databases = $backedup_domains;
+			
 			#print("BT: huh????????");
 			#print_r($backedup_domains);
 			
@@ -244,12 +249,12 @@
 			$mysqldump_pieces = explode(' ', $mysqldump);
 			print(implode("\n    ", $mysqldump_pieces));
 			
-			#$mysqldump_results = '';	# BT: turn me off
+		#	$mysqldump_results = '';	# BT: turn me on for testing
 			$mysqldump_results = shell_exec($mysqldump);
 			
-			print("\n");
+			print("\n\n");
 			
-			print("Verify Backup File Location(s): ");
+			print("MySQL Dump: ");
 			
 			if(strlen($mysqldump_results) === 0) {
 				$this->successResults();
@@ -257,18 +262,40 @@
 				$this->failResults();
 			}
 			
-		/*	print("\n\nDump finished!!!");
-			print_r($mysqldump_results);
-			print("|||||\n\n");*/
+			print("\n\n");
 			
-		#	print("BT: DUMP!" . $mysqldump . "|";
-			
-		#	print("BT: BACKUP FILENAME!!!!" . $backup_file_name . "|||");
-				// print(microtime());
+			return TRUE;
+		}
 		
-				// nice mysqldump --max_allowed_packet=1M --default-character-set=latin1 --skip-set-charset --no-tablespaces -N --routines --quick --skip-triggers clonefrom > clonefrom-2022-11-03.sql
+		public function moveLastBackupToArchive() {
+			print("Move Last Backups to Archives Directory --");
 			
 			print("\n\n");
+			
+			$backups_to_move = $this->backup_databases[$this->domain];
+			$backup_dir = $this->backup_dir;
+			$archive_dir = $this->archive_dir;
+			
+			foreach($backups_to_move as $backup_to_move) {
+				$source_location = $backup_dir . $backup_to_move;
+				$destination_location = $archive_dir . $backup_to_move;
+				
+				print('    ');
+				print('Source: ' . $source_location . "\n");
+				print('    ');
+				print('Destination: ' . $destination_location . "\n");
+				
+				print('    ');
+				print('Move: ');
+				
+				if(rename($source_location, $destination_location)) {
+					$this->successResults();
+				} else {
+					$this->failResults();
+				}
+				
+				print("\n\n");
+			}
 			
 			return TRUE;
 		}
