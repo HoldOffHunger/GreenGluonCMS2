@@ -125,7 +125,7 @@
 		public function verifyBackupFolderLocation() {
 			print("Verify Backup Folder Location(s) -- \n\n");
 			
-			$log_base_dir = '/var/log/ggcms/' . $this->domain . '/';
+			$log_base_dir = GGCMS_LOG_DIR . $this->domain . '/';
 			
 			$sql_dir = $log_base_dir . 'sql/';
 			

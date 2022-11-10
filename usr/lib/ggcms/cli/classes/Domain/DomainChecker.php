@@ -1,5 +1,7 @@
 <?php
 
+			# CHECK FAVICONs ETC>!!!!!!!!!
+
 	depreq('arr2textTable/arr2textTable.php');
 	
 	clireq('traits/Apache.php');

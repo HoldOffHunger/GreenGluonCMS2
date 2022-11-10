@@ -68,6 +68,12 @@
 		public function basicConfirmDialogue($args) {
 			$message = $args['message'];
 			
+			if(array_key_exists('argv_index', $args)) {
+				$argv_index = $args['argv_index'];
+			} else {
+				$argv_index = 2;
+			}
+			
 			print($message);
 			print("\n\n");
 			print('Proceed? (y/n)');
@@ -78,8 +84,8 @@
 				}
 			}
 			
-			if(array_key_exists(2, $this->argv) && $this->argv[2]) {
-				$proceed = $this->argv[2];
+			if(array_key_exists($argv_index, $this->argv) && $this->argv[$argv_index]) {
+				$proceed = $this->argv[$argv_index];
 				print($proceed . "\n");
 			} else {
 				$proceed = strtolower(trim(fgets($this->handle)));
