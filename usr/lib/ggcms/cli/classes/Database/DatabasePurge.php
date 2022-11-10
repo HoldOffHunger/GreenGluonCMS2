@@ -44,21 +44,13 @@
 				
 				$domain_applications = array_diff($domain_applications_directory, ['.', '..']);
 				
-			#	print("BT: content dir::: " . $domain_dir . "\n");
-			#	print_r($domain_applications);
-			#	print("\n\n");
-				
 				foreach($domain_applications as $domain_application) {
 					$domain_application_location = $domain_dir . $domain_application . '/archive/';
 					
 					if(is_dir($domain_application_location)) {
-						#print("BT: PURGE!" . $domain_application_location . "|\n\n");
-						
 						$domain_application_archive_directories = scandir($domain_application_location);
 						
 						$domain_application_archives = array_diff($domain_application_archive_directories, ['.', '..']);
-						
-					#	print_r($domain_application_archive_directories);
 						
 						$domain_application_archives_count = count($domain_application_archives);
 						
@@ -68,42 +60,21 @@
 							$domain_application_archive_location = $domain_application_location . $domain_application_archive;
 							
 							$purge_files[] = $domain_application_archive_location;
-							
-						#	print("BT: killable archive????" . $domain_application_archive_location . "|\n\n\n");
 						}
 					}
-					
-				#	print("BT: possible archive????" . $domain_application_location . "|\n");
-					/*
-					$domain_subapplications_directory = scandir($domain_application_location);
-					
-					$domain_subapplications = array_diff($domain_subapplications_directory, ['.', '..']);
-					
-					print("BT: application dir::: " . $domain_application . "\n");
-					print_r($domain_application);
-					print("\n\n");
-					
-					if($domain_application === 'archive') {
-						$archive_location = $domain_application_location . 'archive/';
-						
-						print("FOUND!!!!" . $archive_location . "\n\n");
-					}
-					*/
 				}
 			}
-			
-		#	print_r($contents);
 		
 			$this->purge_files = $purge_files;
 			$purge_files_count = count($purge_files);
 			
 			print("Identified Archives to Purge?: ");
 			
+			print("\n\n");
+			
 			if($purge_files_count === 0) {
 				$this->failResults();
 			} else {
-				#print_r($purge_files);
-				
 				$purge_files_displayable = [];
 				
 				foreach($purge_files as $purge_file) {
