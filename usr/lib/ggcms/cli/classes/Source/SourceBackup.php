@@ -124,18 +124,10 @@
 			
 			$moved_files = [];
 			
-			/*
-			
-			$this->source_location = $source_backup_location;
-			$this->archive_location = $source_backup_archive_location;
-			$this->backup_location = $source_backup_backup_location;
-			
-			*/
-			
 			foreach (new DirectoryIterator($this->backup_location) as $backup_file) {
 				if($backup_file->isDot()) continue;
 				$backup_filename = $backup_file->getFilename();
-		#		print("BT: Move!!!!Backup file!!!" . $backup_filename . "\n");
+				
 				$moved_files[] = ['Archived Backup'=>$backup_filename];
 			}
 			
@@ -149,17 +141,16 @@
 					$from_location = $this->backup_location . $moved_file_location;
 					$to_location = $this->archive_location . $moved_file_location;
 					
-				#	print("\n\nBT: " . $from_location . "\n\n" . $to_location . "\n\n");
 					if(!rename($from_location, $to_location)) {
-						print("\n\n\t\tMOVE FILE FAILED!!!\n\n");
+						print(PHP_EOL . PHP_EOL . "\t\tMOVE FILE FAILED!!!" . PHP_EOL . PHP_EOL);
 						
-						print("Source: " . $from_location . "\n");
-						print("Destination: " . $to_location . "\n\n");
+						print("Source: " . $from_location . PHP_EOL);
+						print("Destination: " . $to_location . PHP_EOL . PHP_EOL);
 					}
 				}
 			}
 			
-			print("\nMove Backup Files to Archive Results: [moved files: " . $moved_files_count . "] ");
+			print(PHP_EOL . 'Move Backup Files to Archive Results: [moved files: ' . $moved_files_count . '] ');
 			
 			$this->successResults();
 			
@@ -167,32 +158,26 @@
 		}
 		
 		public function backupSource() {
-			print("\n\nBT:  Backup TYPE????|" . $this->backup . "|\n\n");
+			if($this->output === 'l') {
+				print(PHP_EOL . PHP_EOL . 'Proceeding with Backup Type: ' . $this->backup . PHP_EOL . PHP_EOL);
+			}
 			
 			foreach($this->backup_filenames as $backup_location_constant => $backup_filename) {
-				print("BT: Initiate backup for!!!" . $backup_filename . "|\n\n");
-				
 				$backup_location = constant($backup_location_constant);
 				
 				$destination_location = $this->backup_location . $backup_filename;
 				
 				if(!is_dir($backup_location)) {
-					print("\n\n\t\tINVALID DESTINATION LOCATION!!!\n\n");
+					print(PHP_EOL . PHP_EOL . "\t\tINVALID DESTINATION LOCATION!!!" . PHP_EOL . PHP_EOL);
 				}
-				#print("Source!" . $backup_location . "\n");
-				#print("Destination!" . $destination_location . "\n\n");
 				
 				$tar_file = new PharData($destination_location);
-				
-				print("---------BT: Add empty directory to tar file...|" . $backup_location . "|\n\n");
 				
 				$this->backupSourceRecursive([
 					'tar_file'=>$tar_file,
 					'location'=>$backup_location,
 					'recursive_max'=>1,
 				]);
-			//	$tar_file->addEmptyDir($backup_location);
-				
 				$tar_file->compress(Phar::GZ);
 				
 				unlink($destination_location);
@@ -210,10 +195,7 @@
 			
 			foreach (new DirectoryIterator($location) as $backup_folder_item) {
 				if($backup_folder_item->isDot()) continue;
-			#	print("BT: BACKUP FOLDER!!!" . $backup_folder_item->getPath() . " | ");
 				
-			#	print($backup_folder_item->getFilename() . "|");
-			
 				$backup_folder_item_location = $location . $backup_folder_item->getFilename();
 				
 				if($this->output === 'l') {
@@ -289,26 +271,26 @@
 			*/
 		
 		public function userConfirmSourceCodeTypeMessage() {
-			print("\t" . '(a)ll : backup all code' . "\n");
+			print("\t" . '(a)ll : backup all code' . PHP_EOL);
 			print(PHP_EOL);
-			print("\t\t" . 'Backup GGCMS_DIR + GGCMS_DEP_DIR + GGCMS_DOC_ROOT: ' . GGCMS_DIR  . ' + ' . GGCMS_DEP_DIR . ' + ' . GGCMS_DOC_ROOT . "\n");
+			print("\t\t" . 'Backup GGCMS_DIR + GGCMS_DEP_DIR + GGCMS_DOC_ROOT: ' . GGCMS_DIR  . ' + ' . GGCMS_DEP_DIR . ' + ' . GGCMS_DOC_ROOT . PHP_EOL);
 			print(PHP_EOL);
 			
-			print("\t" . '(b)asics : basics' . "\n");
-			print("\n");
-			print("\t\t" . 'Backup GGCMS_DIR: ' . GGCMS_DIR . "\n");
-			print("\n");
+			print("\t" . '(b)asics : basics' . PHP_EOL);
+			print(PHP_EOL);
+			print("\t\t" . 'Backup GGCMS_DIR: ' . GGCMS_DIR . PHP_EOL);
+			print(PHP_EOL);
 			
-			print("\t" . '(d)ependencies : dependencies' . "\n");
-			print("\n");
-			print("\t\t" . 'Backup GGCMS_DEP_DIR: ' . GGCMS_DEP_DIR . "\n");
-			print("\n");
+			print("\t" . '(d)ependencies : dependencies' . PHP_EOL);
+			print(PHP_EOL);
+			print("\t\t" . 'Backup GGCMS_DEP_DIR: ' . GGCMS_DEP_DIR . PHP_EOL);
+			print(PHP_EOL);
 			
-			print("\t" . '(r)oot : docroot' . "\n");
-			print("\n");
-			print("\t\t" . 'Backup GGCMS_DOC_ROOT: ' . GGCMS_DOC_ROOT . "\n");
+			print("\t" . '(r)oot : docroot' . PHP_EOL);
+			print(PHP_EOL);
+			print("\t\t" . 'Backup GGCMS_DOC_ROOT: ' . GGCMS_DOC_ROOT . PHP_EOL);
 			
-			print("\n");
+			print(PHP_EOL);
 			
 			return TRUE;
 		}
