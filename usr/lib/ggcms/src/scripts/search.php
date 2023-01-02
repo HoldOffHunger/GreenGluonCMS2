@@ -142,7 +142,7 @@
 		
 		public function SetEntryParents() {
 			foreach($this->entries as $entry_key => $entry) {
-				$this->entries[$entry_key]['parents'] = $this->GetEntryParents([entry=>$entry])['parents'];
+				$this->entries[$entry_key]['parents'] = $this->GetEntryParents(['entry'=>$entry])['parents'];
 			}
 			
 			return TRUE;
