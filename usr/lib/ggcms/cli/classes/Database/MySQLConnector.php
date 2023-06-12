@@ -18,7 +18,7 @@
 			$this->setGlobals();
 			$this->setMySQLArgs();
 			
-			$mysql_connect_command = 'mysql ' . $this->base_sql_args;
+			$mysql_connect_command = 'mysql ';
 			
 		#	return pnctl_exec('/usr/bin/mysql');
 		#	return pcntl_exec($mysql_connect_command);

@@ -392,8 +392,8 @@
 		#	$clonefrom_get_user_sql = 'use clonefrom;' . $base_sql . ';';
 		#	$host_get_user_sql = 'use ' . $this->host . ';' . $base_sql . ';';
 			
-		#	$clonefrom_database_command = 'mysql ' . $this->base_sql_args . '-e "' . $clonefrom_get_user_sql . ';"';
-		#	$host_database_command = 'mysql ' . $this->base_sql_args . '-e "' . $host_get_user_sql . ';"';
+		#	$clonefrom_database_command = 'mysql -e "' . $clonefrom_get_user_sql . ';"';
+		#	$host_database_command = 'mysql -e "' . $host_get_user_sql . ';"';
 			
 		#	$host_primary_record_results = trim(shell_exec($host_database_command));
 		#	$host_primary_records = explode("\n", $host_primary_record_results);

@@ -33,7 +33,7 @@
 			$sql_command = 'SELECT COUNT(URL) as Count, URL from ' . $this->host . '.InternalServerIssue WHERE IssueType = \'404\' GROUP BY URL ORDER BY Count DESC LIMIT ' . $this->answer_type . ';';
 			print("Getting 404's for " . $this->domain . ".\n\n");
 			
-			$create_database_command = 'mysql ' . $this->base_sql_args . '-e "' . $sql_command . '"';
+			$create_database_command = 'mysql -e "' . $sql_command . '"';
 				
 			$output = shell_exec($create_database_command);
 			

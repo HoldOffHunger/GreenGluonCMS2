@@ -32,10 +32,10 @@
 			    "WHERE table_schema = '" . $this->host . "' " .
 			") AS table1";
 			
-			$ssh_command = 'mysql ' . $this->base_sql_args . '-e "' . $sql_generator . '"';
+			$ssh_command = 'mysql -e "' . $sql_generator . '"';
 			
 			#print('Soybeans');
-	#		$create_database_command = 'mysql ' . $this->base_sql_args . '-e "SHOW DATABASES;"';
+	#		$create_database_command = 'mysql -e "SHOW DATABASES;"';
 			
 		#	print($create_database_command);
 				
@@ -50,7 +50,7 @@
 		#	print($output);
 			$good_sql = $output_pieces[1];
 		#	print($good_sql);
-			$tables_sql = 'mysql ' . $this->base_sql_args . '-e "use ' . $this->host . ';' . $good_sql . '"';
+			$tables_sql = 'mysql -e "use ' . $this->host . ';' . $good_sql . '"';
 			
 			$real_output = trim(shell_exec($tables_sql));
 			
@@ -96,7 +96,7 @@
 		
 		public function enableGroupConcatMax() {
 			# this no work =\
-			$create_database_command = 'mysql ' . $this->base_sql_args . '-e "SET SESSION group_concat_max_len = 1000000;"';
+			$create_database_command = 'mysql -e "SET SESSION group_concat_max_len = 1000000;"';
 			
 			$output = shell_exec($create_database_command);
 			

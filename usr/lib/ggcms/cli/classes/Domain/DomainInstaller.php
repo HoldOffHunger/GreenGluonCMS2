@@ -33,7 +33,7 @@
 				$this->setGlobals();
 				$this->setMySQLArgs();
 				
-				$this->runMySQLTest();
+				$this->runMySQLTest([]);
 				
 				if($this->userConfirmBuild()) {
 					$this->buildDatabase();
@@ -110,7 +110,13 @@
 			print("\n\n");
 			print('Answer type?  (y)es to all, (o)ne at a time?');
 			
-			$this->answer_type = strtolower(trim(fgets($this->handle)));
+			if(array_key_exists(3, $this->argv) && $this->argv[3]) {
+				$this->answer_type = $this->argv[3];
+				print($this->answer_type);
+				print(PHP_EOL);
+			} else {
+				$this->answer_type = strtolower(trim(fgets($this->handle)));
+			}
 			
 			return true;
 		}
@@ -246,7 +252,7 @@
 		public function buildDatabase() {
 			print("Building " . $this->host . " database.\n\n");
 			
-			$create_database_command = 'mysql ' . $this->base_sql_args . '-e "CREATE DATABASE ' . $this->host . ' CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci"';
+			$create_database_command = 'mysql -e "CREATE DATABASE ' . $this->host . ' CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci"';
 				
 			shell_exec($create_database_command);
 			
@@ -258,7 +264,7 @@
 		public function importCloneFromSource() {
 			print("Importing clonefrom.sql template database.\n\n");
 			
-			$import_sql_command = 'mysql ' . $this->base_sql_args . ' ' . $this->host . ' < ' . GGCMS_CLI_DIR . $this->source_filename;
+			$import_sql_command = 'mysql ' . $this->host . ' < ' . GGCMS_CLI_DIR . $this->source_filename;
 			
 			$output = shell_exec($import_sql_command);
 			
@@ -287,7 +293,7 @@
 			}
 			
 			$mysql_dump_args = '--default-character-set=latin1 --skip-set-charset --no-tablespaces -N --routines --skip-triggers --set-gtid-purged=OFF';
-			$mysql_dump_command = 'mysqldump ' . $this->base_sql_args . ' ' . $mysql_dump_args . ' clonefrom > ' . GGCMS_CLI_DIR . $this->source_filename;
+			$mysql_dump_command = 'mysqldump ' . $mysql_dump_args . ' clonefrom > ' . GGCMS_CLI_DIR . $this->source_filename;
 			
 			$output = shell_exec($mysql_dump_command);
 			

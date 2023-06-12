@@ -7,14 +7,14 @@
 			/*		BROKEN!!!
 			
 			$raw_test_sql = "select 'hello, world!' as TEST_STRING";
-			$test_sql_command = 'mysql ' . $this->base_sql_args . '-e "' . escapeshellarg($raw_test_sql) . '"';
+			$test_sql_command = 'mysql -e "' . escapeshellarg($raw_test_sql) . '"';
 			
 			$raw_test_sql = "select 'hello, world!' as TEST_STRING;";
-			$test_sql_command = escapeshellcmd('mysql ' . $this->base_sql_args . '-e "' . $raw_test_sql . '"');
+			$test_sql_command = escapeshellcmd('mysql -e "' . $raw_test_sql . '"');
 			*/
 			
 			/*
-			$test_sql_command = 'mysql ' . $this->base_sql_args . '-e "select \'hello, world\\!\' as TEST_STRING"';
+			$test_sql_command = 'mysql -e "select \'hello, world\\!\' as TEST_STRING"';
 			
 			
 			
