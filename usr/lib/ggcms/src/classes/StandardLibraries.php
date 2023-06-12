@@ -1,5 +1,6 @@
 <?php
 		
+	function loadStandardGGCMSLibraries() {
 				// Define Trait Classes
 				// -----------------------------------------------------------------
 		
@@ -98,5 +99,7 @@
 		foreach($standard_classes as $class) {
 			require($folder_location_prefix . $class . '.php');
 		}
+	}
 	
+	loadStandardGGCMSLibraries();	
 ?>
