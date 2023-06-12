@@ -27,7 +27,7 @@
 				$this->setMySQLArgs();
 				
 				#if($this->confirmArchiveOrBackup()) {
-				#	print("\n\nBT: CONFIRMED!\n\n|" . $this->archive_or_backup . "|\n\n");
+				#	print(PHP_EOL . PHP_EOL . "BT: CONFIRMED!" . PHP_EOL . PHP_EOL . "|" . $this->archive_or_backup . "|" . PHP_EOL . PHP_EOL);
 					$this->runMySQLTest(['display'=>'short']);
 					$this->verifyBackupFolderLocation();
 					$this->confirmArchiveOrBackup();
@@ -41,7 +41,7 @@
 				#}
 			}
 			
-#			print("\n\nSOYBEANS!!!!");
+#			print(PHP_EOL . PHP_EOL . "SOYBEANS!!!!");
 			
 			return TRUE;
 		}
@@ -74,7 +74,7 @@
 			
 			$this->successResults();
 			
-			print("\n");
+			print(PHP_EOL);
 			
 			return TRUE;
 		}
@@ -123,7 +123,7 @@
 		}
 		
 		public function verifyBackupFolderLocation() {
-			print("Verify Backup Folder Location(s) -- \n\n");
+			print('Verify Backup Folder Location(s) -- ' . PHP_EOL . PHP_EOL);
 			
 			$log_base_dir = GGCMS_LOG_DIR . $this->domain . '/';
 			
@@ -162,31 +162,25 @@
 			
 			if($error_count === 0) {
 				print("\t" . 'Backup Directory: ' . $backup_dir);
-				print("\n");
+				print(PHP_EOL);
 				print("\t" . 'Archive Directory: ' . $archive_dir);
-				print("\n\n");
+				print(PHP_EOL . PHP_EOL);
 				
-				print("Verify Backup Folder Location(s): ");
+				print('Verify Backup Folder Location(s): ');
 				$this->successResults();
 			} else {
-				print("Verify Backup Folder Location(s): ");
+				print('Verify Backup Folder Location(s): ');
 				$this->failResults();
 				print(' (errors: ' . implode(', ', $errors) . ')');
 			}
 			
-			print("\n");
-			
-		#	print("BT: BACKUP DIR!" . $backup_dir . "|\n\n");
-			
-		#	print("BT: ARCHIVE DIR!" . $archive_dir . "|\n\n");
-			
-			// /var/log/ggcms/holdoffhunger.com/stats/
+			print(PHP_EOL);
 			
 			return TRUE;
 		}
 		
 		public function verifyBackupFileLocation() {
-			print("Verify Backup File Location(s) -- \n\n");
+			print("Verify Backup File Location(s) -- " . PHP_EOL . PHP_EOL);
 			
 			$errors = [];
 		
@@ -206,14 +200,6 @@
 			$file_location = $folder_location . $backup_file_name;
 			
 			$this->file_location = $file_location;
-			/*
-			print($folder_location);
-			print("\n\n");
-			print("|" . $backup_file_name . "|");
-			print("\n\n");
-			print("BT: fulllll!" . $file_location . "|");
-			print("\n\n");
-			*/
 			
 			if(is_file($file_location)) {
 				$errors[] = 'file already exists - ' . $file_location;
@@ -223,26 +209,26 @@
 			
 			if($error_count === 0) {
 				print("\t" . $dir_type . ' File Location: ' . $file_location);
-				print("\n\n");
+				print(PHP_EOL . PHP_EOL);
 				
-				print("Verify Backup File Location(s): ");
+				print('Verify Backup File Location(s): ');
 				$this->successResults();
 			} else {
-				print("Verify Backup File Location(s): ");
+				print('Verify Backup File Location(s): ');
 				$this->failResults();
 				print(' (errors: ' . implode(', ', $errors) . ')');
 			}
 			
-			print("\n");
+			print(PHP_EOL);
 			
 			return TRUE;
 		}
 		
 		public function mySQLDump() {
-			print("Run MySQL Dump --");
+			print('Run MySQL Dump --');
 			
-			print("\n\n");
-			print("    ");
+			print(PHP_EOL . PHP_EOL);
+			print('    ');
 			
 			$mysqldump = 'nice mysqldump --max_allowed_packet=1M --default-character-set=latin1 --skip-set-charset --no-tablespaces -N --routines --quick --skip-triggers --set-gtid-purged=OFF ' . $this->host . ' > ' . $this->file_location;
 			
@@ -252,9 +238,9 @@
 		#	$mysqldump_results = '';	# BT: turn me on for testing
 			$mysqldump_results = shell_exec($mysqldump);
 			
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			
-			print("MySQL Dump: ");
+			print('MySQL Dump: ');
 			
 			if(strlen($mysqldump_results) === 0) {
 				$this->successResults();
@@ -262,15 +248,15 @@
 				$this->failResults();
 			}
 			
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			
 			return TRUE;
 		}
 		
 		public function moveLastBackupToArchive() {
-			print("Move Last Backups to Archives Directory --");
+			print('Move Last Backups to Archives Directory --');
 			
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			
 			$backups_to_move = $this->backup_databases[$this->domain];
 			$backup_dir = $this->backup_dir;
@@ -294,7 +280,7 @@
 					$this->failResults();
 				}
 				
-				print("\n\n");
+				print(PHP_EOL . PHP_EOL);
 			}
 			
 			return TRUE;

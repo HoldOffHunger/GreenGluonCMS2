@@ -87,6 +87,105 @@
 			
 			$this->checkDomainRecordsForDomain_SOA($check_records_args);
 			$this->checkDomainRecordsForDomain_A($check_records_args);
+			$this->checkDomainRecordsForDomain_AAAA($check_records_args);
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_AAAA($args) {
+			$this->checkDomainRecordsForDomain_AAAA_2Records($args);
+			$this->checkDomainRecordsForDomain_AAAA_Type($args);
+			$this->checkDomainRecordsForDomain_AAAA_Data($args);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_AAAA_Data($args) {
+			$formatted_records = $args['formatted_records'];
+			
+			print('Check AAAA DNS Record - Data: ');
+			$specific_records = $formatted_records['AAAA'];
+			$specific_records_count = count($specific_records);
+			
+			$ipv6_addresses = $this->getIPv6AddressLookup();
+			
+			$invalid_a_records = [];
+			
+			for($i = 0; $i < $specific_records_count; $i++) {
+				$specific_record = $specific_records[$i];
+				
+				if(!array_key_exists($specific_record['Data'], $ipv6_addresses)) {
+					$invalid_a_records[] = $specific_record;
+				}
+			}
+			
+			$invalid_a_records_count = count($invalid_a_records);
+			
+			if($invalid_a_records_count !== 0) {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_AAAA_Type($args) {
+			$args['type'] = 'AAAA';
+			
+			return $this->checkDomainRecordsForDomain_genericCheck_Type($args);
+		}
+		
+		public function checkDomainRecordsForDomain_AAAA_2Records($args) {
+			$formatted_records = $args['formatted_records'];
+			
+			print('Check AAAA DNS Record - 2 Records: ');
+			
+			$specific_records = $formatted_records['AAAA'];
+			
+			$specific_records_count = count($specific_records);
+			
+			if($specific_records_count !== 2) {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_genericCheck_Type($args) {
+			$formatted_records = $args['formatted_records'];
+			$type = $args['type'];
+			
+			print('Check ' . $type . ' DNS Record - Type: ');
+			
+			$specific_records = $formatted_records[$type];
+			$specific_records_count = count($specific_records);
+			
+			$invalid_a_records = [];
+			
+			for($i = 0; $i < $specific_records_count; $i++) {
+				$specific_record = $specific_records[$i];
+				
+				if($specific_record['Type'] !== $type) {
+					$invalid_a_records[] = $specific_record;
+				}
+			}
+			
+			$invalid_a_records_count = count($invalid_a_records);
+			
+			if($invalid_a_records_count !== 0) {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
 			
 			print(PHP_EOL);
 			
@@ -97,21 +196,35 @@
 			$this->checkDomainRecordsForDomain_A_2Records($args);
 			$this->checkDomainRecordsForDomain_A_Type($args);
 			$this->checkDomainRecordsForDomain_A_Data($args);
+			
+			return TRUE;
+		}
+		
+		public function getLookup($args) {
+			$array = $args['array'];
+			
+			$array_lookup = [];
+			$array_count = count($array);
+			
+			for($i = 0; $i < $array_count; $i++) {
+				$array_item = $array[$i];
+				
+				$array_lookup[$array_item] = TRUE;
+			}
+			
+			return $array_lookup;
 		}
 		
 		public function getIPv4AddressLookup() {
-			$ipv4_addresses = $this->globals->IPv4Addresses();
-			
-			$ipv4_address_lookup = [];
-			$ipv4_addresses_count = count($ipv4_addresses);
-			
-			for($i = 0; $i < $ipv4_addresses_count; $i++) {
-				$ipv4_address = $ipv4_addresses[$i];
-				
-				$ipv4_address_lookup[$ipv4_address] = TRUE;
-			}
-			
-			return $ipv4_address_lookup;
+			return $this->getLookup([
+				'array'=>$this->globals->IPv4Addresses(),
+			]);
+		}
+		
+		public function getIPv6AddressLookup() {
+			return $this->getLookup([
+				'array'=>$this->globals->IPv6Addresses(),
+			]);
 		}
 		
 		public function checkDomainRecordsForDomain_A_Data($args) {
@@ -147,34 +260,9 @@
 		}
 		
 		public function checkDomainRecordsForDomain_A_Type($args) {
-			$formatted_records = $args['formatted_records'];
+			$args['type'] = 'A';
 			
-			print('Check A DNS Record - Type: ');
-			
-			$specific_records = $formatted_records['A'];
-			$specific_records_count = count($specific_records);
-			
-			$invalid_a_records = [];
-			
-			for($i = 0; $i < $specific_records_count; $i++) {
-				$specific_record = $specific_records[$i];
-				
-				if($specific_record['Type'] !== 'A') {
-					$invalid_a_records[] = $specific_record;
-				}
-			}
-			
-			$invalid_a_records_count = count($invalid_a_records);
-			
-			if($invalid_a_records_count !== 0) {
-				$this->failResults();
-			} else {
-				$this->successResults();
-			}
-			
-			print(PHP_EOL);
-			
-			return TRUE;
+			return $this->checkDomainRecordsForDomain_genericCheck_Type($args);
 		}
 		
 		public function checkDomainRecordsForDomain_A_2Records($args) {
