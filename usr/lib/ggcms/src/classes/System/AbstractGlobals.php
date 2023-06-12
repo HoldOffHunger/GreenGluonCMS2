@@ -1,6 +1,7 @@
 <?php
 
 	class AbstractGlobals {
+		use ReverseDNSNotation;
 		public function __construct($args) {
 			$this->setHandler($args);
 			$this->prepareAbstractGlobals();
@@ -25,7 +26,7 @@
 		
 		public function buildAbstractGlobals() {
 			$shared_scripts_dir = 'clonefrom/scripts/' . $this->script . '.php';
-			$domain_scripts_dir = $this->domain . '/scripts/' . $this->script . '.php';
+			$domain_scripts_dir = $this->ReverseDomainName($this->domain->$primary_domain_lowercased) . '/scripts/' . $this->script . '.php';
 			
 		#	print("BT:" . $script . "|");
 			if(conf_isfile($shared_scripts_dir)) {

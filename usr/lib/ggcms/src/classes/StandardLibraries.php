@@ -1,6 +1,23 @@
 <?php
+		
+				// Define Trait Classes
+				// -----------------------------------------------------------------
+		
+		$standard_classes = [
+			'ReverseDNSNotation',
+			'GGCMSDateFormat',
+		];
 	
-	function loadStandardGGCMSLibraries() {
+		$traits_folder_location_prefix = GGCMS_DIR . 'traits/';
+		
+				// Call Trait Classes
+				// -----------------------------------------------------------------
+		
+		foreach($standard_classes as $class) {
+			$location = $traits_folder_location_prefix . $class . '.php';
+			require($location);
+		}
+	
 				// Define Standard Class Folder
 				// -----------------------------------------------------------------
 		
@@ -81,25 +98,5 @@
 		foreach($standard_classes as $class) {
 			require($folder_location_prefix . $class . '.php');
 		}
-		
-				// Define Trait Classes
-				// -----------------------------------------------------------------
-		
-		$standard_classes = [
-			'ReverseDNSNotation',
-			'GGCMSDateFormat',
-		];
-	
-		$traits_folder_location_prefix = GGCMS_DIR . 'traits/';
-		
-				// Call Trait Classes
-				// -----------------------------------------------------------------
-		
-		foreach($standard_classes as $class) {
-			require($traits_folder_location_prefix . $class . '.php');
-		}
-	}
-	
-	loadStandardGGCMSLibraries();
 	
 ?>

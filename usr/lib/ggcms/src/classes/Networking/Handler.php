@@ -1,6 +1,7 @@
 <?php
 	
 	class Handler {
+		use ReverseDNSNotation;
 		public function __construct() {
 			$this->ValidateSecurity();
 			$this->Construct_SetErrorLogging();
@@ -107,7 +108,7 @@
 		
 		public function Construct_Globals() {
 			confreq('clonefrom.php');
-			$base_globals_classname = $this->domain->host . '.php';
+			$base_globals_classname = $this->ReverseDomainName(['domain'=>$this->domain->primary_domain_lowercased]) . '.php';
 			
 			$client_globals_location = $base_globals_classname;
 			
