@@ -93,6 +93,7 @@
 					'Hostname'=>$this->domain,
 					'Value'=>$name_server,
 					'TTL'=>$standard_ttl,
+					'Type'=>'~',
 				];
 			}
 			

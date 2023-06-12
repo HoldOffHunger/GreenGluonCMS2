@@ -1,7 +1,18 @@
 <?php
 
 	trait DNSRecords {
+		public function getDNSRecordValue() {
+			return '_______your.server.address________';
+		}
+		
+		public function getStandardTTL() {
+			return 3600;
+		}
+		
 		public function getDNSRecords() {
+			$standard_ttl = $this->getStandardTTL();
+			$default_server = $this->getDNSRecordValue();
+			
 			$dns_records = [
 				[
 					'Record Type'=>'A',

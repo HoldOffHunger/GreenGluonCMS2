@@ -9,7 +9,7 @@
 	clireq('traits/DNSRecords.php');
 	clireq('traits/CLIAccess.php');
 	clireq('traits/GlobalsTrait.php');
-	clireq('traits/ReverseDNSNotation.php');
+	ggreq('traits/ReverseDNSNotation.php');
 	
 	class DomainInstaller {
 		use Apache;
@@ -63,6 +63,10 @@
 					$this->buildGGCMSConfig();
 				}
 				
+				if($this->userConfirmDNSRecords()) {
+					$this->buildDNSRecords();
+				}
+				
 				if($this->userConfirmApacheEnable()) {
 					$this->enableApacheConf();
 				}
@@ -106,6 +110,7 @@
 					'Hostname'=>$this->domain,
 					'Value'=>$name_server,
 					'TTL'=>$standard_ttl,
+					'Type'=>'~',
 				];
 			}
 			
@@ -113,6 +118,9 @@
 			
 			return TRUE;
 		}
+		
+		// IPv4Addresses()
+		// IPv6Addresses()
 		
 		public function userInputType() {
 			print("\n\n");
@@ -256,6 +264,53 @@
 			return TRUE;
 		}
 		
+		/*
+
+			doctl compute domain records create pronouncethat.com --record-type "NS" --record-name "pronouncethat.com" --record-ttl 1800 --record-data "ns1.digitalocean.com"
+			doctl compute domain records create pronouncethat.com --record-type "NS" --record-name "pronouncethat.com" --record-ttl 1800 --record-data "ns2.digitalocean.com"
+			doctl compute domain records create pronouncethat.com --record-type "NS" --record-name "pronouncethat.com" --record-ttl 1800 --record-data "ns3.digitalocean.com"
+			
+			doctl compute domain records create pronouncethat.com --record-type "AAAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-data "2604:a880:400:d0::188f:3001"
+			doctl compute domain records create pronouncethat.com --record-type "AAAA" --record-name "*.pronouncethat.com" --record-ttl 3600 --record-data "2604:a880:400:d0::188f:3001"
+			
+			doctl compute domain records create pronouncethat.com --record-type "A" --record-name "pronouncethat.com" --record-ttl 3600 --record-data "198.199.120.211"
+			doctl compute domain records create pronouncethat.com --record-type "A" --record-name "*.pronouncethat.com" --record-ttl 3600 --record-data "198.199.120.211"
+			
+					DIZ IZ BROKEN!!!!
+			
+			doctl compute domain records create pronouncethat.com --record-type "CAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-tag "iodef" --record-data "mailto:holdoffhunger@gmail.com"
+			doctl compute domain records create pronouncethat.com --record-type "CAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-tag "issue" --record-data "letsencrypt.org"
+			doctl compute domain records create pronouncethat.com --record-type "CAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-tag "issuewild" --record-data "letsencrypt.org"
+		
+		*/
+		
+		public function buildDNSRecords() {
+			$this->buildDNSRecords_NameServers();
+			$this->buildDNSRecords_IPv4Addresses();
+			$this->buildDNSRecords_IPv6Addresses();
+			$this->buildDNSRecords_CertificateAuthorities();
+			
+			return TRUE;
+		}
+		
+		public function buildDNSRecords_NameServers() {
+			// doctl compute domain records create pronouncethat.com --record-type "NS" --record-name "pronouncethat.com" --record-ttl 1800 --record-data "ns1.digitalocean.com"
+			
+			return TRUE;
+		}
+		
+		public function buildDNSRecords_IPv4Addresses() {
+			return TRUE;
+		}
+		
+		public function buildDNSRecords_IPv6Addresses() {
+			return TRUE;
+		}
+		
+		public function buildDNSRecords_CertificateAuthorities() {
+			return TRUE;
+		}
+		
 		public function userConfirmApacheConf() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to build apache config file `' . $this->domain . '.conf`?',
@@ -265,6 +320,14 @@
 		public function userConfirmGGCMSConfig() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to build GGCMS config file `' . GGCMS_CONFIG_DIR . $this->domain . '.php`?',
+			]);
+		}
+		
+		public function userConfirmDNSRecords() {
+			$web_host_services = implode(', ', $this->globals->WebHostServices());
+			
+			return $this->basicConfirmDialogue([
+				'message'=>'Ready to commit DNS records to ' . $web_host_services . '?',
 			]);
 		}
 		

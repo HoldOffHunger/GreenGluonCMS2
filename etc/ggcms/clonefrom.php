@@ -40,9 +40,25 @@
 		
 		public function NameServers() {
 			return [
-				'ns1.digitalocean.com',
-				'ns2.digitalocean.com',
-				'ns3.digitalocean.com',
+				'Your NameServers Here',
+			];
+		}
+		
+		public function IPv4Addresses() {
+			return [
+				'Your IPv4 Addresses Here',
+			];
+		}
+		
+		public function IPv6Addresses() {
+			return [
+				'Your IPv6 Addresses Here',
+			];
+		}
+		
+		public function WebHostServices() {
+			return [
+				'Your Web Host Service Here',
 			];
 		}
 		

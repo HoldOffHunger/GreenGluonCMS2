@@ -23,7 +23,6 @@
 			$this->Construct_Dictionaries();
 			$this->Construct_PresetAuthentication();
 			$this->CheckPermalinkRedirect();
-
 			
 			if($this->script_name) {
 				$this->Construct_ScriptLocation();
@@ -34,7 +33,9 @@
 		}
 		
 		public function getArgs() {
-			return ['handler'=>$this];
+			return [
+				'handler'=>$this,
+			];
 		}
 		
 		public function ValidateSecurity() {
