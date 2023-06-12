@@ -23,6 +23,14 @@
 				'query'=>$full_mysql,
 			]);
 			
+			$skip_hash = $this->skipDatabasesHash();
+			
+			foreach($host_count_records as $host_count_record_key => $host_count_record)  {
+				if(array_key_exists($host_count_record['Database'], $skip_hash)) {
+					unset($host_count_records[$host_count_record_key]);
+				}
+			}
+			
 			print(arr2textTable($host_count_records));
 			
 			return TRUE;
@@ -48,6 +56,7 @@
 				'mysql',
 				'performance_schema',
 				'sys',
+				'alldictionaries',
 			];
 		}
 	}

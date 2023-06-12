@@ -17,6 +17,7 @@
 	clireq('traits/VersionNumber.php');
 	ggreq('traits/ReverseDNSNotation.php');
 	clireq('traits/DigitalOceanDNSRecords.php');
+	clireq('traits/DomainValidation.php');
 	
 	class DomainRecordChecker {
 		use Apache;
@@ -34,6 +35,7 @@
 		use VersionNumber;
 		use ReverseDNSNotation;
 		use DigitalOceanDNSRecords;
+		use DomainValidation;
 		
 		public function checkDomainRecords() {
 			$this->setHandle();
@@ -88,6 +90,153 @@
 			$this->checkDomainRecordsForDomain_SOA($check_records_args);
 			$this->checkDomainRecordsForDomain_A($check_records_args);
 			$this->checkDomainRecordsForDomain_AAAA($check_records_args);
+			$this->checkDomainRecordsForDomain_NS($check_records_args);
+			$this->checkDomainRecordsForDomain_CAA($check_records_args);
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_CAA($args) {
+			$this->checkDomainRecordsForDomain_CAA_3Records($args);
+			$this->checkDomainRecordsForDomain_CAA_Type($args);
+			$this->checkDomainRecordsForDomain_CAA_Data($args);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_CAA_Data($args) {
+			$formatted_records = $args['formatted_records'];
+			
+			print('Check CAA DNS Record - Data: ');
+			
+			if(!array_key_exists('CAA', $formatted_records)) {
+				$this->failResults();
+				print(PHP_EOL);
+				return FALSE;
+			}
+			
+			$specific_records = $formatted_records['CAA'];
+			$specific_records_count = count($specific_records);
+			
+			$invalid_a_records = [];
+			
+			$email_address = $this->globals->AdminEmailAddress();
+			$email_address_field = 'mailto:' . $email_address;
+			
+			for($i = 0; $i < $specific_records_count; $i++) {
+				$specific_record = $specific_records[$i];
+				if($specific_record['Data'] !== 'letsencrypt.org' && $specific_record['Data'] !== $email_address_field) {
+					$invalid_a_records[] = $specific_record;
+				}
+			}
+			
+			$invalid_a_records_count = count($invalid_a_records);
+			
+			if($invalid_a_records_count !== 0) {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_CAA_3Records($args) {
+			$formatted_records = $args['formatted_records'];
+			
+			print('Check CAA DNS Record - 3 Records: ');
+			
+			if(!array_key_exists('CAA', $formatted_records)) {
+				$this->failResults();
+				print(PHP_EOL);
+				return FALSE;
+			}
+			
+			$specific_records = $formatted_records['CAA'];
+			
+			$specific_records_count = count($specific_records);
+			
+			if($specific_records_count !== 3) {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_CAA_Type($args) {
+			$args['type'] = 'CAA';
+			
+			return $this->checkDomainRecordsForDomain_genericCheck_Type($args);
+		}
+		
+		public function checkDomainRecordsForDomain_NS($args) {
+			$this->checkDomainRecordsForDomain_NS_3Records($args);
+			$this->checkDomainRecordsForDomain_NS_Type($args);
+			$this->checkDomainRecordsForDomain_NS_Data($args);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_NS_Data($args) {
+			$formatted_records = $args['formatted_records'];
+			
+			print('Check NS DNS Record - Data: ');
+			$specific_records = $formatted_records['NS'];
+			$specific_records_count = count($specific_records);
+			
+			$invalid_a_records = [];
+			
+			for($i = 0; $i < $specific_records_count; $i++) {
+				$specific_record = $specific_records[$i];
+				
+				$domain_parts = explode('.', $specific_record['Data']);
+				if(!$this->validateDomain(['domain_parts'=>$domain_parts])) {
+					
+					$invalid_a_records[] = $specific_record;
+				}
+			}
+			
+			$invalid_a_records_count = count($invalid_a_records);
+			
+			if($invalid_a_records_count !== 0) {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_NS_Type($args) {
+			$args['type'] = 'NS';
+			
+			return $this->checkDomainRecordsForDomain_genericCheck_Type($args);
+		}
+		
+		public function checkDomainRecordsForDomain_NS_3Records($args) {
+			$formatted_records = $args['formatted_records'];
+			
+			print('Check NS DNS Record - 3 Records: ');
+			
+			$specific_records = $formatted_records['NS'];
+			
+			$specific_records_count = count($specific_records);
+			
+			if($specific_records_count !== 3) {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
 			
 			print(PHP_EOL);
 			
@@ -165,6 +314,12 @@
 			$type = $args['type'];
 			
 			print('Check ' . $type . ' DNS Record - Type: ');
+			
+			if(!array_key_exists($type, $formatted_records)) {
+				$this->failResults();
+				print(PHP_EOL);
+				return FALSE;
+			}
 			
 			$specific_records = $formatted_records[$type];
 			$specific_records_count = count($specific_records);

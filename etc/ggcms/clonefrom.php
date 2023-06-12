@@ -78,7 +78,7 @@
 		}
 		
 		public function NewRandomPasswordSeed() {
-			return 'do you believe in magic?  any young girl would!11123';
+			return 'Do NOT be so RANDOM!';
 		}
 		
 		public function SetSQLModePerSession() {
@@ -99,11 +99,11 @@
 		}
 		
 		public function AdminEmailAddress() {
-			return 'holdoffhunger@gmail.com';
+			return 'Your E-mail Address';
 		}
 		
 		public function AdminName() {
-			return 'HoldOffHunger';
+			return 'Your Admin Name';
 		}
 		
 		public function minNewsItemsAllowed() {
