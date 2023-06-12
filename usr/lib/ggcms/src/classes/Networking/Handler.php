@@ -896,6 +896,8 @@
 				$possible_script = array_pop($new_url_pieces);
 			}
 			
+			$possible_script = parse_url($possible_script, PHP_URL_PATH);
+			
 			$filename = pathinfo($possible_script, PATHINFO_FILENAME); // returns 'filename' for 'filename.md'
 			
 			if(is_file(GGCMS_DIR . '/scripts/' . $filename . '.php') || is_file(GGCMS_DIR . '/scripts/' . $possible_script)) {

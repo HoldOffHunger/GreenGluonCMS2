@@ -26,7 +26,6 @@
 						$this->moveBackupToArchive();
 						$this->backupSource();
 					}
-				} else {
 				}
 			}
 			
@@ -199,7 +198,7 @@
 				$backup_folder_item_location = $location . $backup_folder_item->getFilename();
 				
 				if($this->output === 'l') {
-					print("Backing Up ");
+					print('Backing Up ');
 				}
 				
 				if($backup_folder_item->isDir()) {
