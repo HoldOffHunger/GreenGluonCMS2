@@ -9,6 +9,7 @@
 	clireq('traits/DNSRecords.php');
 	clireq('traits/CLIAccess.php');
 	clireq('traits/GlobalsTrait.php');
+	clireq('traits/ReverseDNSNotation.php');
 	
 	class DomainInstaller {
 		use Apache;
@@ -18,6 +19,7 @@
 		use DNSRecords;
 		use CLIAccess;
 		use GlobalsTrait;
+		use ReverseDNSNotation;
 		
 		public function installDomain() {
 			$this->setHandle();
@@ -27,6 +29,8 @@
 			if(!$this->setDomain()) {
 				return $this->cancelAction(['message'=>'Invalid domain.  Please submit a FQDN in the form of `example.com`.']);
 			}
+			
+			$this->ReverseThisDomainName();
 			
 			if($this->userConfirm()) {
 				$this->userInputType();
@@ -214,7 +218,7 @@
 		}
 		
 		public function buildGGCMSConfig() {
-			$file_location = GGCMS_CONFIG_DIR . $this->domain . '.php';
+			$file_location = GGCMS_CONFIG_DIR . $this->reversed_domain . '.php';
 			
 			print("Building GGCMS Config file `" . $file_location . "`.\n\n");
 			
