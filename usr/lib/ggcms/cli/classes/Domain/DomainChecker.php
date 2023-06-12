@@ -17,6 +17,7 @@
 	clireq('traits/GlobalsTrait.php');
 	clireq('traits/SSL.php');
 	clireq('traits/VersionNumber.php');
+	clireq('traits/ReverseDNSNotation.php');
 	
 	class DomainChecker {
 		use Apache;
@@ -32,6 +33,7 @@
 		use GlobalsTrait;
 		use SSL;
 		use VersionNumber;
+		use ReverseDNSNotation;
 		
 		public function checkDomain() {
 			$this->setHandle();
@@ -40,6 +42,8 @@
 			if(!$this->setDomain()) {
 				return $this->cancelAction(['message'=>'Invalid domain.  Please submit a FQDN in the form of `example.com`.']);
 			}
+			
+			$this->ReverseThisHostName();
 			
 			if($this->userConfirm()) {
 				$this->setGlobals();
@@ -489,7 +493,7 @@
 			
 			$errors = [];
 			
-			$config_filename = $this->host . '.php';
+			$config_filename = $this->reversed_host . '.php';
 			
 			if(!conf_isfile($config_filename)) {
 				$errors[] = 'missing config file, ' . $config_filename . ', from ' . GGCMS_CONFIG_DIR;
