@@ -55,6 +55,10 @@
 					$this->buildApacheConf();
 				}
 				
+				if($this->userConfirmGGCMSConfig()) {
+					$this->buildGGCMSConfig();
+				}
+				
 				if($this->userConfirmApacheEnable()) {
 					$this->enableApacheConf();
 				}
@@ -209,9 +213,33 @@
 			return TRUE;
 		}
 		
+		public function buildGGCMSConfig() {
+			$file_location = GGCMS_CONFIG_DIR . $this->domain . '.php';
+			
+			print("Building GGCMS Config file `" . $file_location . "`.\n\n");
+			
+			$ggcms_conf =
+				'<?php' . PHP_EOL . PHP_EOL .
+				'	class globals extends defaultglobals {' . PHP_EOL .
+				'	}' . PHP_EOL . PHP_EOL .	
+				'?>';
+			
+			file_put_contents($file_location, $ggcms_conf, LOCK_EX);
+			
+			print("Successfully built Apache Config file `" . $file_location . "`.\n\n");
+			
+			return TRUE;
+		}
+		
 		public function userConfirmApacheConf() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to build apache config file `' . $this->domain . '.conf`?',
+			]);
+		}
+		
+		public function userConfirmGGCMSConfig() {
+			return $this->basicConfirmDialogue([
+				'message'=>'Ready to build GGCMS config file `' . GGCMS_CONFIG_DIR . $this->domain . '.php`?',
 			]);
 		}
 		
