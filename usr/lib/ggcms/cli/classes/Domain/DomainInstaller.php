@@ -248,8 +248,8 @@
 			$mkdir_command_base = 'mkdir --mode=744 ' . $folder_location;
 			$chown_command_base = 'chown -R ' . $this->defaultWebServerUser() . ' ' . $folder_location;
 			
-			shell_exec($directory_make_command);
-			shell_exec($directory_chown_command);
+			shell_exec($mkdir_command_base);
+			shell_exec($chown_command_base);
 			
 			print("Successfully built GGCMS Config folder `" . $folder_location . "`." . PHP_EOL . PHP_EOL);
 			

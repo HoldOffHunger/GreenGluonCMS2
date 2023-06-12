@@ -489,7 +489,14 @@
 		}
 		
 		public function GGCMSConfigCheck() {
-			print("Check GGCMS Config Check: ");
+			$this->GGCMSConfigFileCheck();
+			$this->GGCMSConfigFolderCheck();
+			
+			return TRUE;
+		}
+		
+		public function GGCMSConfigFileCheck() {
+			print("Check GGCMS Config File Check: ");
 			
 			$errors = [];
 			
@@ -497,6 +504,22 @@
 			
 			if(!conf_isfile($config_filename)) {
 				$errors[] = 'missing config file, ' . $config_filename . ', from ' . GGCMS_CONFIG_DIR;
+			}
+			
+			$this->DisplaySuccessFailResults(['errors'=>$errors]);
+			
+			return TRUE;
+		}
+		
+		public function GGCMSConfigFolderCheck() {
+			print("Check GGCMS Config Folder Check: ");
+			
+			$errors = [];
+			
+			$config_folder = GGCMS_CONFIG_DIR . $this->reversed_domain . '/';
+			
+			if(!is_dir($config_folder)) {
+				$errors[] = 'missing config folder, ' . $config_folder . ', from ' . GGCMS_CONFIG_DIR;
 			}
 			
 			$this->DisplaySuccessFailResults(['errors'=>$errors]);
