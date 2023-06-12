@@ -54,20 +54,6 @@
 			return $this->cancelAction(['message'=>'User cancelled.']);
 		}
 		
-		public function checkDomainRecordsForDomain() {
-			$total_records = $this->getDigitalOceanDNSRecords([
-				'quiet'=>TRUE,
-			]);
-			
-			$formatted_records = $this->formatDomainRecords([
-				'total_records'=>$total_records,
-			]);
-			
-			print_r($formatted_records);
-			
-			$this->checkDomainRecordsForDomain_SOA();
-		}
-		
 		public function formatDomainRecords($args) {
 			$total_records = $args['total_records'];
 			
@@ -78,13 +64,105 @@
 					$formatted_records[$total_record['Type']] = [];
 				}
 				
-				$formatted_records[$total_record['Type']][$total_record['Data']] = $total_record;
+				$formatted_records[$total_record['Type']][] = $total_record;
 			}
 			
 			return $formatted_records;
 		}
 		
-		public function checkDomainRecordsForDomain_SOA() {
+		public function checkDomainRecordsForDomain() {
+			$total_records = $this->getDigitalOceanDNSRecords([
+				'quiet'=>TRUE,
+			]);
+			
+			$formatted_records = $this->formatDomainRecords([
+				'total_records'=>$total_records,
+			]);
+			
+		#	print_r($formatted_records);
+			
+			$check_records_args = [
+				'formatted_records'=>$formatted_records,
+			];
+			
+			$this->checkDomainRecordsForDomain_SOA($check_records_args);
+			$this->checkDomainRecordsForDomain_A($check_records_args);
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_A($args) {
+			$this->checkDomainRecordsForDomain_A_2Records($args);
+			$this->checkDomainRecordsForDomain_A_Type($args);
+			$this->checkDomainRecordsForDomain_A_Data($args);
+		}
+		
+		public function checkDomainRecordsForDomain_A_2Records($args) {
+			$formatted_records = $args['formatted_records'];
+			
+			print('Check A DNS Record - 2 Records: ');
+			
+			$specific_records = $formatted_records['SOA'];
+			
+			$specific_records_count = count($specific_records);
+			
+			if($specific_records_count !== 2) {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_SOA($args) {
+			$this->checkDomainRecordsForDomain_SOA_1Record($args);
+			$this->checkDomainRecordsForDomain_SOA_Type($args);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_SOA_1Record($args) {
+			$formatted_records = $args['formatted_records'];
+			
+			print('Check SOA (Start of Authority) DNS Record - 1 Record: ');
+			
+			$specific_records = $formatted_records['SOA'];
+			
+			$specific_records_count = count($specific_records);
+			
+			if($specific_records_count !== 1) {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
+			
+			print(PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function checkDomainRecordsForDomain_SOA_Type($args) {
+			$formatted_records = $args['formatted_records'];
+			
+			print('Check SOA (Start of Authority) DNS Record - Type: ');
+			
+			$specific_records = $formatted_records['SOA'];
+			$specific_record = $specific_records[0];
+			
+			if($specific_record['Type'] !== 'SOA') {
+				$this->failResults();
+			} else {
+				$this->successResults();
+			}
+			
+			print(PHP_EOL);
+			
+			return TRUE;
 		}
 		
 					// Script-Level Functions
