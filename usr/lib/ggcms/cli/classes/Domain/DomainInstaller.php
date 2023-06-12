@@ -212,12 +212,19 @@
 			
 			file_put_contents($file_location, $apache_conf, LOCK_EX);
 			
-			print("Successfully built Apache Config file `" . $file_location . "`.\n\n");
+			print("Successfully built Apache Config file `" . $file_location . "`." . PHP_EOL . PHP_EOL);
 			
 			return TRUE;
 		}
 		
 		public function buildGGCMSConfig() {
+			$this->buildGGCMSConfigFile();
+			$this->buildGGCMSConfigFolder();
+			
+			return TRUE;
+		}
+		
+		public function buildGGCMSConfigFile() {
 			$file_location = GGCMS_CONFIG_DIR . $this->reversed_domain . '.php';
 			
 			print("Building GGCMS Config file `" . $file_location . "`.\n\n");
@@ -230,7 +237,21 @@
 			
 			file_put_contents($file_location, $ggcms_conf, LOCK_EX);
 			
-			print("Successfully built Apache Config file `" . $file_location . "`.\n\n");
+			print("Successfully built GGCMS Config file `" . $file_location . "`." . PHP_EOL . PHP_EOL);
+			
+			return TRUE;
+		}
+		
+		public function buildGGCMSConfigFolder() {
+			$folder_location = GGCMS_CONFIG_DIR . $this->reversed_domain . '/';
+			
+			$mkdir_command_base = 'mkdir --mode=744 ' . $folder_location;
+			$chown_command_base = 'chown -R ' . $this->defaultWebServerUser() . ' ' . $folder_location;
+			
+			shell_exec($directory_make_command);
+			shell_exec($directory_chown_command);
+			
+			print("Successfully built GGCMS Config folder `" . $folder_location . "`." . PHP_EOL . PHP_EOL);
 			
 			return TRUE;
 		}
