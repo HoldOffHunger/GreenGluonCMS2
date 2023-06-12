@@ -927,7 +927,7 @@
 				}
 			} else {
 				$this->failResults();
-				print(' (file does not exist: ' . $live_file_location . ')');
+				print(' (file does not exist: ' . $available_file_location . ')');
 			}
 			
 			print("\n");
