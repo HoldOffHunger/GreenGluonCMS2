@@ -18,12 +18,6 @@
 				'domain'=>$this->domain,
 			]);
 		}
-		
-		public function ReverseThisHostName() {
-			return $this->reversed_host = $this->ReverseDomainName([
-				'domain'=>$this->host,
-			]);
-		}
 	}
 
 ?>

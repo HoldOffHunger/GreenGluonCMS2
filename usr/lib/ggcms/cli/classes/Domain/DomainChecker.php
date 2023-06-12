@@ -43,7 +43,7 @@
 				return $this->cancelAction(['message'=>'Invalid domain.  Please submit a FQDN in the form of `example.com`.']);
 			}
 			
-			$this->ReverseThisHostName();
+			$this->ReverseThisDomainName();
 			
 			if($this->userConfirm()) {
 				$this->setGlobals();
@@ -493,7 +493,7 @@
 			
 			$errors = [];
 			
-			$config_filename = $this->reversed_host . '.php';
+			$config_filename = $this->reversed_domain . '.php';
 			
 			if(!conf_isfile($config_filename)) {
 				$errors[] = 'missing config file, ' . $config_filename . ', from ' . GGCMS_CONFIG_DIR;
