@@ -56,30 +56,8 @@
 			return $this->cancelAction(['message'=>'User cancelled.']);
 		}
 		
-		public function formatDomainRecords($args) {
-			$total_records = $args['total_records'];
-			
-			$formatted_records = [];
-			
-			foreach($total_records as $total_record) {
-				if(!array_key_exists($total_record['Type'], $formatted_records)) {
-					$formatted_records[$total_record['Type']] = [];
-				}
-				
-				$formatted_records[$total_record['Type']][] = $total_record;
-			}
-			
-			return $formatted_records;
-		}
-		
 		public function checkDomainRecordsForDomain() {
-			$total_records = $this->getDigitalOceanDNSRecords([
-				'quiet'=>TRUE,
-			]);
-			
-			$formatted_records = $this->formatDomainRecords([
-				'total_records'=>$total_records,
-			]);
+			$formatted_records = $this->getFormattedDomainRecords();
 			
 		#	print_r($formatted_records);
 			

@@ -57,6 +57,7 @@
 				'performance_schema',
 				'sys',
 				'alldictionaries',
+				'clonefrom',
 			];
 		}
 	}

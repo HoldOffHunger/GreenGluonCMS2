@@ -84,7 +84,7 @@
 				}
 			}
 			
-			if(array_key_exists($argv_index, $this->argv) && $this->argv[$argv_index]) {
+			if(array_key_exists($argv_index, $this->argv) &&($this->argv[$argv_index] === 'y' || $this->argv[$argv_index] === 'yes')) {
 				$proceed = $this->argv[$argv_index];
 				print($proceed . "\n");
 			} else {

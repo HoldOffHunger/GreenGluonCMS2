@@ -10,6 +10,8 @@
 	clireq('traits/CLIAccess.php');
 	clireq('traits/GlobalsTrait.php');
 	ggreq('traits/ReverseDNSNotation.php');
+	clireq('traits/DigitalOceanDNSRecords.php');
+	clireq('traits/DomainValidation.php');
 	
 	class DomainInstaller {
 		use Apache;
@@ -20,6 +22,8 @@
 		use CLIAccess;
 		use GlobalsTrait;
 		use ReverseDNSNotation;
+		use DigitalOceanDNSRecords;
+		use DomainValidation;
 		
 		public function installDomain() {
 			$this->setHandle();
@@ -39,7 +43,7 @@
 				
 				$this->runMySQLTest([]);
 				
-				if($this->userConfirmBuild()) {
+				if($this->userConfirmBuildDatabase()) {
 					$this->buildDatabase();
 				}
 				
@@ -138,7 +142,7 @@
 		}
 		
 		public function certBot() {
-			print("CertBot SSL installing...\n\n");
+			print("CertBot SSL installing..." . PHP_EOL . PHP_EOL);
 			
 			$stop_line = '/etc/init.d/apache2 stop';
 			shell_exec($stop_line);
@@ -170,12 +174,14 @@
 		public function userConfirmApacheReload() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Restart apache?',
+				'argv_index'=>3,
 			]);
 		}
 		
 		public function userConfirmCertBot() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Run CertBot? (Note: This will bring down the server.)',
+				'argv_index'=>3,
 			]);
 		}
 		
@@ -200,6 +206,7 @@
 		public function userConfirmApacheEnable() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to enable apache config file `' . $this->domain . '.conf`?',
+				'argv_index'=>3,
 			]);
 		}
 		
@@ -285,6 +292,8 @@
 		*/
 		
 		public function buildDNSRecords() {
+			$this->formatted_records = $this->getFormattedDomainRecords();
+			
 			$this->buildDNSRecords_NameServers();
 			$this->buildDNSRecords_IPv4Addresses();
 			$this->buildDNSRecords_IPv6Addresses();
@@ -295,31 +304,79 @@
 		
 		public function buildDNSRecords_NameServers() {
 			// doctl compute domain records create pronouncethat.com --record-type "NS" --record-name "pronouncethat.com" --record-ttl 1800 --record-data "ns1.digitalocean.com"
+			$name_servers = $this->globals->NameServers();
+			$name_server_lookup = [];
+			
+			foreach($name_servers as $name_server) {
+				$name_server_lookup[$name_server] = $name_server;
+			}
+			
+			foreach($this->formatted_records['NS'] as $ns_server) {
+				if(array_key_exists($ns_server['Data'], $name_server_lookup)) {
+					unset($name_server_lookup[$ns_server['Data']]);
+				}
+			}
 			
 			return TRUE;
 		}
 		
 		public function buildDNSRecords_IPv4Addresses() {
+			$name_server_missing = ['*'=>TRUE, '@'=>TRUE,];
+			
+			foreach($this->formatted_records['A'] as $ns_server) {
+				if(array_key_exists($ns_server['Name'], $name_server_missing)) {
+					unset($name_server_missing[$ns_server['Name']]);
+				}
+			}
+			
+			$ip_addresses = $this->globals->IPv4Addresses();
+			
+			foreach($name_server_missing as $name_server_missing_id => $truth) {
+				$command = 'doctl compute domain records create ' . $this->domain . ' --record-type "A" --record-name "' . $name_server_missing_id . '" --record-ttl 3600 --record-data "' . $ip_addresses[0] . '"';
+				
+				shell_exec($command);
+			}
+			
 			return TRUE;
 		}
 		
 		public function buildDNSRecords_IPv6Addresses() {
+			$name_server_missing = ['*'=>TRUE, '@'=>TRUE,];
+			
+			foreach($this->formatted_records['AAAA'] as $ns_server) {
+				if(array_key_exists($ns_server['Name'], $name_server_missing)) {
+					unset($name_server_missing[$ns_server['Name']]);
+				}
+			}
+			
+			$ip_addresses = $this->globals->IPv6Addresses();
+			
+			foreach($name_server_missing as $name_server_missing_id => $truth) {
+				$command = 'doctl compute domain records create ' . $this->domain . ' --record-type "AAAA" --record-name "' . $name_server_missing_id . '" --record-ttl 3600 --record-data "' . $ip_addresses[0] . '"';
+				
+				shell_exec($command);
+			}
+			
 			return TRUE;
 		}
 		
 		public function buildDNSRecords_CertificateAuthorities() {
+				// do this by hand, sigh =\
+			
 			return TRUE;
 		}
 		
 		public function userConfirmApacheConf() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to build apache config file `' . $this->domain . '.conf`?',
+				'argv_index'=>3,
 			]);
 		}
 		
 		public function userConfirmGGCMSConfig() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to build GGCMS config file `' . GGCMS_CONFIG_DIR . $this->domain . '.php`?',
+				'argv_index'=>3,
 			]);
 		}
 		
@@ -328,18 +385,21 @@
 			
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to commit DNS records to ' . $web_host_services . '?',
+				'argv_index'=>3,
 			]);
 		}
 		
 		public function userConfirmDirectories() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to create directories for `' . $this->host . '`?',
+				'argv_index'=>3,
 			]);
 		}
 		
-		public function userConfirmBuild() {
+		public function userConfirmBuildDatabase() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to create a new database named `' . $this->host . '`.',
+				'argv_index'=>3,
 			]);
 		}
 		
@@ -394,6 +454,7 @@
 		public function userConfirmImport() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Ready to import clonefrom.sql database.',
+				'argv_index'=>3,
 			]);
 		}
 		
@@ -423,6 +484,7 @@
 		public function userConfirm() {
 			return $this->basicConfirmDialogue([
 				'message'=>'Overall installation beginning.',
+				'argv_index'=>2,
 			]);
 		}
 		
@@ -450,6 +512,7 @@
 			
 			return $this->basicConfirmDialogue([
 				'message'=>'Rebuild?',
+				'argv_index'=>3,
 			]);
 		}
 		
