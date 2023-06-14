@@ -233,7 +233,7 @@
 			$mysqldump = 'nice mysqldump --max_allowed_packet=1M --default-character-set=latin1 --skip-set-charset --no-tablespaces -N --routines --quick --skip-triggers --set-gtid-purged=OFF ' . $this->host . ' > ' . $this->file_location;
 			
 			$mysqldump_pieces = explode(' ', $mysqldump);
-			print(implode("\n    ", $mysqldump_pieces));
+			print(implode(PHP_EOL . '    ', $mysqldump_pieces));
 			
 		#	$mysqldump_results = '';	# BT: turn me on for testing
 			$mysqldump_results = shell_exec($mysqldump);
@@ -267,9 +267,9 @@
 				$destination_location = $archive_dir . $backup_to_move;
 				
 				print('    ');
-				print('Source: ' . $source_location . "\n");
+				print('Source: ' . $source_location . PHP_EOL);
 				print('    ');
-				print('Destination: ' . $destination_location . "\n");
+				print('Destination: ' . $destination_location . PHP_EOL);
 				
 				print('    ');
 				print('Move: ');

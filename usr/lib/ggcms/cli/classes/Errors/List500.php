@@ -31,14 +31,14 @@
 		
 		public function getAndList500Errors(){
 			$sql_command = 'SELECT COUNT(URL) as Count, URL from ' . $this->host . '.InternalServerError GROUP BY URL ORDER BY Count DESC LIMIT ' . $this->answer_type . ';';
-			print("Getting 500's for " . $this->domain . ".\n\n");
+			print("Getting 500's for " . $this->domain . '.' . PHP_EOL . PHP_EOL);
 			
 			$create_database_command = 'mysql -e "' . $sql_command . '"';
 				
 			$output = shell_exec($create_database_command);
 			
 			if(strlen($output) === 0) {
-				print("\n" . 'No 500\'s.  Hooray!' . "\n\n");
+				print(PHP_EOL . 'No 500\'s.  Hooray!' . PHP_EOL . PHP_EOL);
 			} else {
 				print($this->formatTable(['output'=>$output]));
 			}
@@ -46,13 +46,13 @@
 		#	$output_pieces = explode("\t", $output);
 		#	print("BT: COUNT!" . count($output_pieces) . "|");
 			
-			print("500's successfully retrieved for " . $this->domain . ".\n\n");
+			print("500's successfully retrieved for " . $this->domain . '.' . PHP_EOL . PHP_EOL);
 			
 			return TRUE;
 		}
 		
 		public function userInputType() {
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			print('How many?  (Default is 10.)');
 			
 			$this->answer_type = strtolower(trim(fgets($this->handle)));

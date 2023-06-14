@@ -18,7 +18,7 @@
 			
 			
 			
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			
 			$output = shell_exec($test_sql_command);
 			*/
@@ -39,11 +39,11 @@
 				}
 	#			print("|" . $output_pieces[1] . "|");
 			} else {
-				print("\n");
+				print(PHP_EOL);
 				print(arr2textTable([$output[0]]));
 			}
 			
-			print("\n");
+			print(PHP_EOL);
 			
 			return TRUE;
 		}

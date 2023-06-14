@@ -75,7 +75,7 @@
 			}
 			
 			print($message);
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			print('Proceed? (y/n)');
 			
 			if(property_exists($this, 'answer_type')) {
@@ -84,14 +84,23 @@
 				}
 			}
 			
-			if(array_key_exists($argv_index, $this->argv) &&($this->argv[$argv_index] === 'y' || $this->argv[$argv_index] === 'yes')) {
+			$all_yes_argv_index = 0;
+			
+			if(array_key_exists('all_yes_argv_index', $args)) {
+				$all_yes_argv_index = $args['all_yes_argv_index'];
+			}
+			
+			if(array_key_exists($argv_index, $this->argv) && ($this->argv[$argv_index] === 'y' || $this->argv[$argv_index] === 'yes')) {
 				$proceed = $this->argv[$argv_index];
-				print($proceed . "\n");
+				print($proceed . PHP_EOL);
+			} elseif($all_yes_argv_index && ($this->argv[$all_yes_argv_index] === 'y' || $this->argv[$all_yes_argv_index] === 'yes')) {
+				$proceed = $this->argv[$all_yes_argv_index];
+				print($proceed . PHP_EOL);
 			} else {
 				$proceed = strtolower(trim(fgets($this->handle)));
 			}
 			
-			print("\n");
+			print(PHP_EOL);
 			
 			if($proceed === 'y' || $proceed === 'yes') {
 				return TRUE;
@@ -101,7 +110,7 @@
 		}
 		
 		public function cancelAction($args) {
-			print($args['message'] .  "  Exiting...\n\n");
+			print($args['message'] .  "  Exiting..." . PHP_EOL . PHP_EOL);
 			return exit(1);
 		}
 		
@@ -110,7 +119,7 @@
 			
 			if(array_key_exists(1, $this->argv) && $this->argv[1]) {
 				$this->domain = $this->argv[1];
-				print($this->domain . "\n");
+				print($this->domain . PHP_EOL);
 			} else {
 				$this->domain = strtolower(trim(fgets($this->handle)));
 			}

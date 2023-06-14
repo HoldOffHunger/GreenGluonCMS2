@@ -107,6 +107,11 @@
 		}
 		
 		public function Display_Attributes() {
+			print('body {' . PHP_EOL);
+			print('   margin: 0;' . PHP_EOL);
+			print('   padding: 0;' . PHP_EOL);
+			print('}' . PHP_EOL . PHP_EOL);
+			
 			print('.document-image-holder {');
 			print("\n");
 			

@@ -31,14 +31,14 @@
 		
 		public function getAndList404Errors(){
 			$sql_command = 'SELECT COUNT(URL) as Count, URL from ' . $this->host . '.InternalServerIssue WHERE IssueType = \'404\' GROUP BY URL ORDER BY Count DESC LIMIT ' . $this->answer_type . ';';
-			print("Getting 404's for " . $this->domain . ".\n\n");
+			print("Getting 404's for " . $this->domain . '.' . PHP_EOL . PHP_EOL);
 			
 			$create_database_command = 'mysql -e "' . $sql_command . '"';
 				
 			$output = shell_exec($create_database_command);
 			
 			if(strlen($output) === 0) {
-				print("\n" . 'No 404\'s.  Hooray!' . "\n\n");
+				print(PHP_EOL . 'No 404\'s.  Hooray!' . PHP_EOL . PHP_EOL);
 			} else {
 				print($this->formatTable(['output'=>$output]));
 			}
@@ -46,13 +46,13 @@
 		#	$output_pieces = explode("\t", $output);
 		#	print("BT: COUNT!" . count($output_pieces) . "|");
 			
-			print("404's successfully retrieved for " . $this->domain . ".\n\n");
+			print("404's successfully retrieved for " . $this->domain . '.' . PHP_EOL . PHP_EOL);
 			
 			return TRUE;
 		}
 		
 		public function userInputType() {
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			print('How many?  (Default is 10.)');
 			
 			$this->answer_type = strtolower(trim(fgets($this->handle)));
@@ -73,10 +73,10 @@
 		public function userConfirmSource() {
 			$source_filename = $this->source_filename;
 			
-			print('Rebuild template database (`' . $source_filename . '`)?' . "\n");
+			print('Rebuild template database (`' . $source_filename . '`)?' . PHP_EOL);
 			
 			if(!cli_isfile($source_filename)) {
-				print("\n" . 'Source file does not exist!  Install will crash if you attempt to proceed with "n"!' . "\n");
+				print(PHP_EOL . 'Source file does not exist!  Install will crash if you attempt to proceed with "n"!' . PHP_EOL);
 			}
 			
 			$creation_time = filectime(GGCMS_CLI_DIR . $source_filename);
@@ -90,7 +90,7 @@
 				date('Y-m-d H:i:s', $modification_time) .
 				'; Last Access: ' .
 				date('Y-m-d H:i:s', $access_time)
-			. "\n");
+			. PHP_EOL);
 			
 			return $this->basicConfirmDialogue([
 				'message'=>'Rebuild?',

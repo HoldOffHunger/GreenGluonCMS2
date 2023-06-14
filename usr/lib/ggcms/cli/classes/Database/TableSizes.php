@@ -39,14 +39,14 @@
 			
 		#	print($create_database_command);
 				
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 	#		print($sql_generator);
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			$output = trim(shell_exec($ssh_command));
 			
-			print("\n\nEyyy???\n\n");
+			print(PHP_EOL . PHP_EOL . "Eyyy???" . PHP_EOL . PHP_EOL);
 			
-			$output_pieces = explode("\n", $output);
+			$output_pieces = explode(PHP_EOL, $output);
 		#	print($output);
 			$good_sql = $output_pieces[1];
 		#	print($good_sql);
@@ -54,13 +54,13 @@
 			
 			$real_output = trim(shell_exec($tables_sql));
 			
-			$real_output_pieces = explode("\n", $real_output);
+			$real_output_pieces = explode(PHP_EOL, $real_output);
 			
 			$header = trim($real_output_pieces[0]);
 			$data = trim($real_output_pieces[1]);
 			
-			print("HEADER!" . $header . "\n\n");
-			print("DATA!" . $data . "\n\n");
+			print("HEADER!" . $header . PHP_EOL . PHP_EOL);
+			print("DATA!" . $data . PHP_EOL . PHP_EOL);
 			
 			$table_names = [];
 			$data_values = [];
@@ -88,7 +88,7 @@
 			
 		#	print_r($real_output);
 		#	print_r($output);
-			print("\n");
+			print(PHP_EOL);
 			print(arr2textTable($formatted_output));
 			
 			return TRUE;

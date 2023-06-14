@@ -168,196 +168,15 @@
 		'education-struggle'=>2,
 	];
 	
-			// Newest-Entries Record List
-		
-		// -------------------------------------------------------------
-	
-	$newest_entries_count = count($this->newest_entries);
-	
-	if($newest_entries_count > 0) {
-		print('<center>');
-		print('<div class="horizontal-center width-80percent">');
-		print('<div class="border-2px background-color-gray15 margin-5px float-left width-100percent">');
-		
-		print('<center>');
-		
-		print('<h2 class="horizontal-left margin-5px font-family-arial font-size-250percent">');
-		print('<strong>');
-		print('<div class="border-2px" style="display:inline;margin:20px;">');
-		print('<div style="display:inline;margin:20px;">');
-		print('Newest Additions :');
-		print('</div>');
-		print('</div>');
-		print('</strong>');
-		print('</h2>');
-		
-		print('<div class="horizontal-center width-95percent font-family-arial margin-bottom-5px font-size-75percent">');
-		
-		print('<table>');
-		for($i = 0; $i < $newest_entries_count; $i++) {
-			$newest_entry = $this->newest_entries[$i];
-			$parent_count = $newest_entry['parents'] ? count($newest_entry['parents']) : 0;
-			$parent_codes = [];
-			
-			for($j = 0; $j < $parent_count; $j++) {
-				if($j + 1 < $parent_count) {
-					$parent = $newest_entry['parents'][$j];
-					$parent_codes[] = $parent['Code'];
-					$last_parent = $parent;
-				}
-			}
-			
-			print('<tr>');
-			print('<td width="1%">');
-			
-			print('<div class="border-2px background-color-gray14 horizontal-left font-size-75percent">');
-			print('<div class="margin-2px">');
-			print('<nobr><strong>');
-			$date_epoch_time = strtotime($newest_entry['OriginalCreationDate']);
-			$full_date = date("F d, Y", $date_epoch_time);
-			print($full_date);
-			print('</strong></nobr>');
-			
-			print('</div>');
-			print('</div>');
-			
-			print('</td>');
-			
-			print('<td>');
-			
-			print('<div class="border-2px background-color-gray13 horizontal-left font-size-75percent">');
-			print('<div class="margin-2px">');
-			print('<em>');
-			
-			$sub_dir = '';
-			
-			#if(array_key_exists($child['Code'], $title_hash) && count($parent_codes) == 1) {
-			#	$sub_dir = '/quotes';
-			#}
-			
-			$script = 'view.php';
-			
-			if($newest_entry['Code'] == 'writings' || $newest_entry['Code'] == 'people') {
-				$script .= '?action=index';
-			}
-			
-			if($this->parent['id'] !== $newest_entry['id']) {
-				print('<a href="' . implode('/', $parent_codes) . '/' . $newest_entry['Code'] . $sub_dir . '/' . $script . '">');
-			}
-			
-			#$parent_codes[] = $newest_entry['Code'];
-			if($last_parent && $last_parent['Title']) {
-				print($last_parent['Title']);
-				print(' : ');
-			}
-			print($newest_entry['Title']);
-			
-			if($this->parent['id'] !== $newest_entry['id']) {
-				print('</a>');
-			} else {
-				print(': Main Page');
-			}
-			
-			print('</em>');
-			print('</div>');
-			print('</div>');
-			
-			print('</td>');
-			print('</tr>');
-		}
-		print('</table>');
-		
-		print('</div>');
-		print('</center>');
-		
-		print('</div>');
-		print('</div>');
-		print('</center>');
-								
-		print('<div class="clear-float"></div>');
-	}
-	
-			// Quick-View Selected Record List
-		
-		// -------------------------------------------------------------
-	
-	if(count($this->children) > 0) {
-		print('<center>');
-		print('<div class="horizontal-center width-80percent">');
-		print('<div class="border-2px background-color-gray15 margin-5px float-left width-100percent">');
-		
-		print('<center>');
-		
-		print('<h2 class="horizontal-left margin-5px font-family-arial font-size-250percent">');
-		print('<strong>');
-		print('<div class="border-2px" style="display:inline;margin:20px;">');
-		print('<div style="display:inline;margin:20px;">');
-		print('Sections :');
-		print('</div>');
-		print('</div>');
-		print('</strong>');
-		print('</h2>');
-		
-		print('<div class="horizontal-center width-95percent font-family-arial">');
-		
-		foreach($this->children as $child) {
-			print('<div class="border-2px background-color-gray13 margin-5px float-left">');
-			print('<div class="margin-5px">');
-			
-			$sub_dir = '';
-			
-			#if(array_key_exists($child['Code'], $title_hash)) {
-			#	$sub_dir = '/quotes';
-			#}
-			
-			$script = 'view.php';
-			
-			if($child['Code'] == 'writings' || $child['Code'] == 'people') {
-				$script .= '?action=index';
-			}
-			
-			print('<a href="' . implode('/', $parent_codes) . '/' . $newest_entry['Code'] . $sub_dir . '/' . $script . '">');
-			
-			print('<a href="' . $child['Code'] . $sub_dir . '/' . $script . '">');
-			
-			print('<img height="50" width="50" class="border-2px margin-5px" src="');
-			print($this->domain_object->GetPrimaryDomain(['lowercase'=>1, 'www'=>1]));
-			print('/image/');
-			print(implode('/', str_split($child['image'][0]['FileDirectory'])));
-			print('/');
-			print($child['image'][0]['IconFileName']);
-			print('"><br>');
-			
-			print('<h3 style="margin:5px;">');
-			
-			$print_child = $child['Title'];
-			$print_child = str_replace(' ', '<br>', $print_child);
-			
-			print($print_child);
-			print('</h3>');
-			print('</a>');
-				
-			print('<div class="clear-float"></div>');
-			
-			print('</div>');
-			print('</div>');
-		}
-		
-		print('</div>');
-		print('</center>');
-		
-		print('</div>');
-		print('</div>');
-		print('</center>');
-		
-		print('<div class="clear-float"></div>');
-	}
-	
 			// View Selected Record List
 		
 		// -------------------------------------------------------------
 	
-	foreach($this->children as $child) {
+	#foreach($this->children as $child) {
+	
+	for($i = 0 ; $i < 5 ; $i++) {
+		$child = $this->children[$i];
+		if($child) {
 		$sub_dir = '';
 		
 		#if(array_key_exists($child['Code'], $title_hash)) {
@@ -372,11 +191,10 @@
 		
 		$child_title =
 			'<a href="' . $child['Code'] . $sub_dir . '/' . $script . '">' .
-			$child['Title'] . ' : ' . $child['Subtitle'] .
+			$child['Title'] .# ' : ' . $child['Subtitle'] .
 			'</a>';
 		
-		print('<center>');
-		print('<div class="horizontal-center width-95percent">');
+		print('<div class="horizontal-center" style="width:15%;">');
 		print('<div class="border-2px vertical-center background-color-gray15 margin-5px float-left width-100percent">');
 		
 		print('<div class="border-2px vertical-center background-color-gray15 margin-5px float-left">');
@@ -395,16 +213,17 @@
 		print('</div>');
 		print('</div>');
 		
-		print('<h2 class="horizontal-left margin-5px font-family-arial font-size-250percent">');
+		print('<center>');
+		print('<h2 class="margin-5px font-family-arial font-size-250percent">');
 		print('<strong>');
 		print('<a href="' . $child['Code'] . $sub_dir . '/' . $script . '">');
 		print($child_title);
 		print('</a>');
 		print('</strong>');
 		print('</h2>');
+		print('</center>');
 		
-		if($child['description'][0]['Description'])
-		{
+		if($child['description'][0]['Description']) {
 			print('<p class="horizontal-left font-family-arial margin-5px">');
 			
 			print('<b>' . $child['description'][0]['Description'] . '</b><br>');
@@ -412,8 +231,7 @@
 			print('</p>');
 		}
 		
-		if($child['quote'][0])
-		{
+		if($child['quote'][0]) {
 			$random_quote = $child['quote'][array_rand($child['quote'], 1)];
 			
 			print('<center>');
@@ -421,8 +239,7 @@
 			print('<blockquote class="horizontal-left font-family-arial"><em>"');
 			print(str_replace('"', '\'', $random_quote['Quote']));
 			print('"');
-			if($random_quote['Source'])
-			{
+			if($random_quote['Source']) {
 				print(' -- ');
 				print($random_quote['Source']);
 			}
@@ -447,31 +264,26 @@
 		if($grandchildren && $acceptable_child_codes[$child['Code']]) {
 			$grandchildren_count = count($grandchildren);
 			
-			if($grandchildren_count)
-			{
+			if($grandchildren_count) {
 				print('<div class="horizontal-center width-90percent">');
-				for($j = 0; $j < $grandchildren_count; $j++)
-				{
+				for($j = 0; $j < $grandchildren_count; $j++) {
 					$grandchild = $grandchildren[$j];
 					
 					print('<div class="horizontal-center width-100percent background-color-gray14 border-2px margin-top-5px">');
 					
 					unset($display_image);
 					
-					if($grandchild['image'])
-					{
+					if($grandchild['image']) {
 						$grandchild_images = $grandchild['image'];
 						$grandchild_image_count = count($grandchild_images);
-						if($grandchild_image_count)
-						{
+						if($grandchild_image_count) {
 							shuffle($grandchild_images);
 							$grandchild_image = $grandchild_images[0];
 							$display_image = $grandchild_image;
 						}
 					}
 					
-					if(!$display_image)
-					{
+					if(!$display_image) {
 						$display_image = [
 							'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
 							'IconPixelWidth'=>200,
@@ -862,6 +674,7 @@
 				}
 				print('</div>');
 			}
+		}
 		}
 	}
 	

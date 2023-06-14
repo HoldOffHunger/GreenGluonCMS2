@@ -13,7 +13,7 @@
 				print(' (' . implode(', ', $errors) . ')');
 			}
 			
-			print("\n");
+			print(PHP_EOL);
 			
 			return TRUE;
 		}

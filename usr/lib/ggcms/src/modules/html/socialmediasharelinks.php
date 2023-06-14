@@ -51,7 +51,7 @@
 			$divider = $this->divider;
 			
 			if($this->share_text) {
-				print("<div 'class'='width-90percent horizontal-center margin-top-14px border-1px'>");
+				print("<div 'class'='horizontal-center margin-top-14px border-1px'>");
 				print("<div 'class'='display-inline-block'>");
 				
 						// Display "Share" Text

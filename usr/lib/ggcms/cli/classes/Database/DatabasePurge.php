@@ -29,7 +29,7 @@
 		public function identifyArchivesToPurge() {
 			print("Archives to Purge --");
 			
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			
 			$purge_files = [];
 			
@@ -70,7 +70,7 @@
 			
 			print("Identified Archives to Purge?: ");
 			
-			print("\n\n");
+			print(PHP_EOL . PHP_EOL);
 			
 			if($purge_files_count === 0) {
 				$this->failResults();
@@ -87,7 +87,7 @@
 				
 				foreach($purge_files as $purge_file) {
 					if(is_file($purge_file)) {
-						print('Removing: ' . $purge_file . "\n");
+						print('Removing: ' . $purge_file . PHP_EOL);
 						
 						unlink($purge_file);
 					}
@@ -96,7 +96,7 @@
 				$this->successResults();
 			}
 			
-			print("\n");
+			print(PHP_EOL);
 			
 			return TRUE;
 		}

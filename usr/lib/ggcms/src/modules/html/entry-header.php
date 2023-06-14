@@ -65,14 +65,16 @@
 				$background_image_location = '/image/background/header/night-sky-of-our-hearts-night-sky-of-our-minds-2.jpg';
 			}
 			
-			print('<div id="header_backgroundimageurl" class="horizontal-center width-100percent border-2px margin-top-5px background-color-gray13" title="');
+			print('<div id="header_backgroundimageurl" class="horizontal-center width-100percent border-2px background-color-gray13" title="');
 			print($background_image_title);
 			print('"');
+			print(' style="');
 			if($background_image_location) {
-				print(' style="background-image:url(\'');
+				print('background-image:url(\'');
 				print($background_image_location);
-				print('\');"');
+				print('\');');
 			}
+			print('"');
 			print('>');
 			
 			return TRUE;

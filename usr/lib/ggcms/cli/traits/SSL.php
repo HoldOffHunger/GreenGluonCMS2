@@ -238,7 +238,7 @@
 			
 			$lets_encrypt_renewal_contents = $this->getLetsEncryptRenewal($args);
 			
-			#print("\nBT validate LETS ENC!!!!\n\n");
+			#print(PHP_EOL . "BT validate LETS ENC!!!!" . PHP_EOL . PHP_EOL);
 			
 		#	print_r($lets_encrypt_renewal_contents);
 			
@@ -381,7 +381,7 @@
 		public function getLetsEncryptRenewal_splitLine($args) {
 			$line = $args['line'];
 			
-			#print("\n\nLINE!" . $line . "\n\n");
+			#print(PHP_EOL . PHP_EOL . "LINE!" . $line . PHP_EOL . PHP_EOL);
 			$line_pieces = explode(' = ', $line);
 			
 			return [
@@ -411,7 +411,7 @@
 			
 			$errors = [];
 			
-			#print("\n\nBT: validateLetsEncryptRenewal80_formatCheck!!!!\n\n");
+			#print(PHP_EOL . PHP_EOL . "BT: validateLetsEncryptRenewal80_formatCheck!!!!" . PHP_EOL . PHP_EOL);
 			
 			$lets_encrypt_renewal_80_config = $this->getLetsEncryptRenewal80($args);
 			
@@ -558,7 +558,7 @@
 			$nodes = $dom->getElementsByTagName('VirtualHost');
 			$node = $nodes[0];
 			
-			$node_lines = explode("\n", $node->nodeValue);
+			$node_lines = explode(PHP_EOL, $node->nodeValue);
 			
 			foreach($node_lines as &$node_line) {
 				$node_line = trim($node_line);

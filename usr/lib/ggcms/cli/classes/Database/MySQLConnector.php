@@ -126,9 +126,9 @@ $exitCode = proc_close($proc);
 
 
 			
-			print("___________\n");
+			print('___________' . PHP_EOL);
 		#	print($stderr);
-			print("___________\n");
+			print('___________' . PHP_EOL);
 			
 		#	print($this->formatTable(['output'=>$output]));
 			

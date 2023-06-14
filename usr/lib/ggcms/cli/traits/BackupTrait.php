@@ -9,7 +9,7 @@
 			
 			$microtime = microtime();
 			
-			#print("BT: MICRO TIIIIIIIIIIIME!" . $microtime . "|\n\n");
+			#print("BT: MICRO TIIIIIIIIIIIME!" . $microtime . '|' . PHP_EOL . PHP_EOL);
 			
 			$microtime_pieces = explode(' ', $microtime);
 			

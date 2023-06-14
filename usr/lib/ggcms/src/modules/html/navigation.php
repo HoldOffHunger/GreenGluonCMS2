@@ -10,7 +10,7 @@
 		}
 		
 		public function DisplayBottomNavigation($args) {
-			print('<div class="width-95percent horizontal-center margin-top-14px border-2px">');
+			print('<div class="horizontal-center margin-top-14px border-2px">');
 			
 			print('<div class="padding-10px horizontal-center font-family-arial background-color-' . $this->globals->styling['PrimaryColor'] . '"><span class="font-family-verdana">');
 			

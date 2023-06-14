@@ -120,6 +120,9 @@
 			
 			print(arr2textTable($dns_records));
 			
+			print("Please run this command:" . PHP_EOL . PHP_EOL);
+			print("\t\t" . 'sudo certbot --apache -d example.com' . PHP_EOL . PHP_EOL);
+			
 			return TRUE;
 		}
 		
