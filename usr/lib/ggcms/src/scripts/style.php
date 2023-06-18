@@ -107,7 +107,7 @@
 		}
 		
 		public function Display_Attributes() {
-			print('body {' . PHP_EOL);
+			print('body, h1, h2, h3, h4, h5, h6, h7 {' . PHP_EOL);
 			print('   margin: 0;' . PHP_EOL);
 			print('   padding: 0;' . PHP_EOL);
 			print('}' . PHP_EOL . PHP_EOL);

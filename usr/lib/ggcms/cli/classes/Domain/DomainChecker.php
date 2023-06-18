@@ -17,7 +17,8 @@
 	clireq('traits/GlobalsTrait.php');
 	clireq('traits/SSL.php');
 	clireq('traits/VersionNumber.php');
-	clireq('traits/ReverseDNSNotation.php');
+	ggreq('traits/ReverseDNSNotation.php');
+	clireq('traits/DomainValidation.php');
 	
 	class DomainChecker {
 		use Apache;
@@ -34,6 +35,7 @@
 		use SSL;
 		use VersionNumber;
 		use ReverseDNSNotation;
+		use DomainValidation;
 		
 		public function checkDomain() {
 			$this->setHandle();
@@ -312,7 +314,7 @@
 				$this->successResults();
 			}
 			
-			print("\n");
+			print(PHP_EOL);
 			
 			return TRUE;
 		}
@@ -353,7 +355,7 @@
 				$this->failResults();
 			}
 			
-			print("\n");
+			print(PHP_EOL);
 			
 			return TRUE;
 		}

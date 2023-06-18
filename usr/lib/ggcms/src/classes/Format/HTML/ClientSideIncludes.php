@@ -236,6 +236,7 @@
 				print("\n\t" . '<link type="text/css" rel="stylesheet" href="' . $domain . '/css/jquery-ui.min.css">');
 				print("\n\t" . '<link type="text/css" rel="stylesheet" href="' . $domain . '/css/jquery-ui.structure.min.css">');
 				print("\n\t" . '<link type="text/css" rel="stylesheet" href="' . $domain . '/css/jquery-ui.theme.min.css">');
+				print("\n\t" . '<link type="text/css" rel="stylesheet" href="' . $domain . '/css/jquery.timepicker.min.css">');
 			} elseif($include_type === 'javascript') {
 				print("\n\t" . '<script src="' . $domain . '/javascript/jquery.min.js"></script>');
 				print("\n\t" . '<script src="' . $domain . '/javascript/jquery-ui.min.js"></script>');

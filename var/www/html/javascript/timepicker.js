@@ -1,7 +1,11 @@
 $(document).ready(function(event){
 	$(function() {
 		$( ".timepicker" ).timepicker({
-			scrollbar: true,
+			timeFormat: 'h:mm p',
+			interval: 10,
+			dynamic: false,
+			dropdown: true,
+			scrollbar: true
 		});
 	});
 });

@@ -191,9 +191,11 @@
 		public function enableApacheConf() {
 			$apache_conf_location = '/etc/apache2/sites-available/' . $this->domain . '.conf';
 			
-			print("Enabling Apache Config file `" . $file_location . "`.\n\n");
+			print("Enabling Apache Config file `" . $apache_conf_location . "`.\n\n");
 			
 			$enable_apache_line = 'a2ensite ' . $apache_conf_location;
+			
+			print("OWN!" . $enable_apache_line . "!");
 			
 			shell_exec($enable_apache_line);
 			
@@ -201,7 +203,7 @@
 			
 			shell_exec($change_ownership_line);
 			
-			print("Successfully enabled Apache Config file `" . $file_location . "`.\n\n");
+			print("Successfully enabled Apache Config file `" . $apache_conf_location . "`.\n\n");
 			
 			return TRUE;
 		}
@@ -407,7 +409,7 @@
 		}
 		
 		public function buildDirectories() {
-			print("Building " . $this->host . " directories.\n\n");
+			print('Building ' . $this->host . ' directories.' . PHP_EOL . PHP_EOL);
 			$mkdir_command_base = 'mkdir --mode=744 ';
 			$chown_command_base = 'chown -R ' . $this->defaultWebServerUser() . ' ';
 			
@@ -420,22 +422,22 @@
 				shell_exec($directory_make_command);
 				shell_exec($directory_chown_command);
 				
-				print('Created directory owned by ' . $this->defaultWebServerUser() . ': ' . $directory . "\n");
+				print('Created directory owned by ' . $this->defaultWebServerUser() . ': ' . $directory . PHP_EOL);
 			}
 			
-			print("Successfully built " . $this->host . " directories.\n\n");
+			print("Successfully built " . $this->host . " directories." . PHP_EOL . PHP_EOL);
 			
 			return TRUE;
 		}
 		
 		public function buildDatabase() {
-			print("Building " . $this->host . " database.\n\n");
+			print("Building " . $this->host . " database." . PHP_EOL . PHP_EOL);
 			
 			$create_database_command = 'mysql -e "CREATE DATABASE ' . $this->host . ' CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci"';
 				
 			shell_exec($create_database_command);
 			
-			print("Successfully built " . $this->host . " database.\n\n");
+			print("Successfully built " . $this->host . " database." . PHP_EOL . PHP_EOL);
 			
 			return TRUE;
 		}
