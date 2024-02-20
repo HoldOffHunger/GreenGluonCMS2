@@ -163,7 +163,7 @@
 	} elseif ($this->script_format_lower == 'pdf') {
 		$this->source_content = $html_document;
 	} elseif($this->script_format_lower == 'epub') {
-		$this->record_to_use = $this->primary_host_record;
+		$this->record_to_use = $this->entry;
 		$this->source_content = $html_document;
 	} elseif ($this->script_format_lower == 'daisy') {
 		$this->source_content = $html_document;
@@ -218,7 +218,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -244,22 +244,6 @@
 		$description = $this->entry['description'][0];
 		
 		$image_mouseover = str_replace('"', '\'', $description['Description']);
-	}
-	
-	if(!$div_mouseover)
-	{
-		if($this->primary_host_record['Classification'])
-		{
-			$div_mouseover = str_replace('"', '\'', $this->primary_host_record['Classification']);
-		}
-	}
-	
-	if(!$image_mouseover)
-	{
-		if($this->primary_host_record['Subject'])
-		{
-			$image_mouseover = str_replace('"', '\'', $this->primary_host_record['Subject']);
-		}
 	}
 	
 			// Display Header

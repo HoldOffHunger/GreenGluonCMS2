@@ -57,22 +57,6 @@
 		$image_mouseover = str_replace('"', '\'', $description['Description']);
 	}
 	
-	if(!$div_mouseover)
-	{
-		if($this->primary_host_record['Classification'])
-		{
-			$div_mouseover = str_replace('"', '\'', $this->primary_host_record['Classification']);
-		}
-	}
-	
-	if(!$image_mouseover)
-	{
-		if($this->primary_host_record['Subject'])
-		{
-			$image_mouseover = str_replace('"', '\'', $this->primary_host_record['Subject']);
-		}
-	}
-	
 	if($this->entry['image'][0] && $this->entry['image'][0]['id']) {
 		$image = $this->entry['image'][0];
 		
@@ -207,111 +191,10 @@
 		
 		// -------------------------------------------------------------
 	
-	#print("CB:");
-	#print_r($this->newest_entries);
+	ggreq('modules/html/entry-newest.php');
+	$entry_newest = new module_entrynewest(['that'=>$this]);
 	
-	print('<center>');
-	print('<div class="horizontal-center width-80percent">');
-	print('<div class="border-2px background-color-gray15 margin-5px float-left width-100percent">');
-	
-	print('<center>');
-	
-	print('<h2 class="horizontal-left margin-5px font-family-arial font-size-250percent">');
-	print('<strong>');
-	print('<div class="border-2px" style="display:inline;margin:20px;">');
-	print('<div style="display:inline;margin:20px;">');
-	print('Newest Additions :');
-	print('</div>');
-	print('</div>');
-	print('</strong>');
-	print('</h2>');
-	
-	print('<div class="horizontal-center width-95percent font-family-arial margin-bottom-5px font-size-75percent">');
-	
-	$newest_entries_count = count($this->newest_entries);
-	
-	print('<table>');
-	for($i = 0; $i < $newest_entries_count; $i++) {
-		$newest_entry = $this->newest_entries[$i];
-		$parent_count = count($newest_entry['parents']);
-		$parent_codes = [];
-		
-		for($j = 0; $j < $parent_count; $j++) {
-			if($j + 1 < $parent_count) {
-				$parent = $newest_entry['parents'][$j];
-				$parent_codes[] = $parent['Code'];
-				$last_parent = $parent;
-			}
-		}
-		
-		print('<tr>');
-		print('<td width="1%">');
-		
-		print('<div class="border-2px background-color-gray14 horizontal-left font-size-75percent">');
-		print('<div class="margin-2px">');
-		print('<nobr><strong>');
-		$date_epoch_time = strtotime($newest_entry['OriginalCreationDate']);
-		$full_date = date("F d, Y", $date_epoch_time);
-		print($full_date);
-		print('</strong></nobr>');
-		
-		print('</div>');
-		print('</div>');
-		
-		print('</td>');
-		
-		print('<td>');
-		
-		print('<div class="border-2px background-color-gray13 horizontal-left font-size-75percent">');
-		print('<div class="margin-2px">');
-		print('<em>');
-		
-		$sub_dir = '';
-		
-		if(array_key_exists($child['Code'], $title_hash) && count($parent_codes) == 1) {
-			$sub_dir = '/quotes';
-		}
-		
-		$script = 'view.php';
-		
-		if($newest_entry['Code'] == 'writings' || $newest_entry['Code'] == 'people') {
-			$script .= '?action=index';
-		}
-		
-		print('<a href="' . implode('/', $parent_codes) . '/' . $newest_entry['Code'] . $sub_dir . '/' . $script . '">');
-		
-		#$parent_codes[] = $newest_entry['Code'];
-		print($last_parent['Title']);
-		print(' : ');
-		print($newest_entry['Title']);
-		print('</a>');
-		print('</em>');
-		print('</div>');
-		print('</div>');
-		
-		
-		print('</td>');
-		print('</tr>');
-	}
-	print('</table>');
-	
-	print('</div>');
-	print('</center>');
-	
-	print('</div>');
-	print('</div>');
-	print('</center>');
-							
-	$clear_float_divider_start_args = [
-		'class'=>'clear-float',
-	];
-	
-	$divider->displaystart($clear_float_divider_start_args);
-	
-	$clear_float_divider_end_args = [
-	];
-	
-	$divider->displayend($clear_float_divider_end_args);
+	$entry_newest->Display();
 	
 			// Quick-View Selected Record List
 		
@@ -334,6 +217,12 @@
 	print('</h2>');
 	
 	print('<div class="horizontal-center width-95percent font-family-arial">');
+	
+	$parent_codes = [];
+	
+	foreach($this->record_list as $record) {
+		$parent_codes[] = $record['Code'];
+	}
 	
 	foreach($this->children as $child) {
 		print('<div class="border-2px background-color-gray13 margin-5px float-left">');
@@ -530,15 +419,6 @@
 						}
 					}
 					
-					if(!$display_image)
-					{
-						$display_image = [
-							'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-							'IconPixelWidth'=>200,
-							'IconPixelHeight'=>200,
-						];
-					}
-					
 					print('<div class="border-2px background-color-gray15 margin-5px float-left">');
 					print('<div class="border-2px background-color-gray15 margin-5px float-left">');
 					print('<div class="height-100px width-100px background-color-gray0">');
@@ -636,8 +516,6 @@
 					
 					$header_secondary_args = [
 						'title'=>$grandchild_title,
-					//	'image'=>$this->primary_host_record['PrimaryImageLeft'],
-					//	'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
 						'divmouseover'=>$div_mouseover,
 						'level'=>3,
 						'divclass'=>'border-2px background-color-gray15 margin-5px float-left',
@@ -963,7 +841,7 @@
 	
 	ggreq('modules/html/socialmediasharelinks.php');
 	$social_media_share_links_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'textonly'=>$this->mobile_friendly,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,

@@ -26,7 +26,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -39,7 +39,7 @@
 	
 	ggreq('modules/html/socialmediasharelinks.php');
 	$social_media_share_links_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'textonly'=>$this->mobile_friendly,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
@@ -61,8 +61,6 @@
 	
 	$header_primary_args = [
 		'title'=>'Transfer: ' . $this->master_record['Title'],
-		'image'=>$this->primary_host_record['PrimaryImageLeft'],
-		'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
 		'imagemouseover'=>$primary_image_text,
 		'level'=>1,
 		'divclass'=>'horizontal-center width-100percent border-2px margin-top-5px background-color-gray13',
@@ -71,7 +69,6 @@
 		'imageclass'=>$vertical_attribute,
 		'domainobject'=>$this->domain_object,
 		'leftimageenable'=>1,
-	#	'rightimageenable'=>1,
 	];
 	
 	$header->display($header_primary_args);

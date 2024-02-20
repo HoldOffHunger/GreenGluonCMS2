@@ -701,7 +701,7 @@
 			if($about_language_list && count($about_language_list)) {
 				$links[] = [
 					'url'=>[
-						'loc'=>$this->handler->domain->domain->GetPrimaryDomain(['lowercase'=>1, 'www'=>1]) . '/about.php?language=en',
+						'loc'=>$this->handler->domain->GetPrimaryDomain(['lowercase'=>1, 'www'=>1]) . '/about.php?language=en',
 						'lastmod'=>$about_last_mod,
 						'changefreq'=>$about_change_freq,
 						'priority'=>$about_priority,

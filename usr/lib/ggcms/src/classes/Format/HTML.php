@@ -935,27 +935,15 @@
 				$displayed = 1;
 			}
 			
-			if(($this->script->entry['image'] && $this->script->entry['image'][0]) || ($this->script->primary_host_record['FullImage'] || $this->script->primary_host_record['PrimaryImageLeft'])) {
-				if($this->script->entry['image'] && $this->script->entry['image'][0]) {
-					$image = $this->script->entry['image'][0];
-					print("\t" . '<meta property="og:image" content="');
-					print($primary_domain);
-					print('/image/');
-					print(implode('/', str_split($image['FileDirectory'])));
-					print('/');
-					print($image['IconFileName']);
-					print('">' . "\n");
-				} else {
-					print("\t" . '<meta property="og:image" content="' . $primary_domain . '/image/');
-					
-					if($this->script->primary_host_record['FullImage']) {
-						print($this->script->primary_host_record['FullImage']);
-					} elseif($this->script->primary_host_record['PrimaryImageLeft']) {
-						print($this->script->primary_host_record['PrimaryImageLeft']);
-					}
-					
-					print('">' . "\n");
-				}
+			if(($this->script->entry['image'] && $this->script->entry['image'][0])) {
+				$image = $this->script->entry['image'][0];
+				print("\t" . '<meta property="og:image" content="');
+				print($primary_domain);
+				print('/image/');
+				print(implode('/', str_split($image['FileDirectory'])));
+				print('/');
+				print($image['IconFileName']);
+				print('">' . "\n");
 				$displayed = 1;
 			}
 			

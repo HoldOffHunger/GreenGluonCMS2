@@ -61,7 +61,7 @@
 		} elseif ($this->script_format_lower == 'sgml') {
 			$this->source_content = $html_document;
 		} elseif($this->script_format_lower == 'epub') {
-			$this->record_to_use = $this->primary_host_record;
+			$this->record_to_use = $this->entry;
 			$this->source_content = $html_document;
 		} elseif($this->script_format_lower == 'txt') {
 			$text_document = strip_tags($html_document);
@@ -111,14 +111,13 @@
 		ggreq('modules/' . $this->script_format_lower . '/languages.php');
 		$languages_args = [
 			'languageobject'=>$this->language_object,
-			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
 		];
 		$languages = new module_languages($languages_args);
 		
 		ggreq('modules/' . $this->script_format_lower . '/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,

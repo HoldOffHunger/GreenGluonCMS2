@@ -193,9 +193,11 @@
 			
 			print("Enabling Apache Config file `" . $apache_conf_location . "`.\n\n");
 			
-			$enable_apache_line = 'a2ensite ' . $apache_conf_location;
+			#$enable_apache_line = 'a2ensite ' . $apache_conf_location;	// a2ensite does not require absolute path here
 			
-			print("OWN!" . $enable_apache_line . "!");
+			$enable_apache_line = 'a2ensite ' . $this->domain;
+			
+			#print("OWN!" . $enable_apache_line . "!");
 			
 			shell_exec($enable_apache_line);
 			
@@ -271,35 +273,17 @@
 			shell_exec($mkdir_command_base);
 			shell_exec($chown_command_base);
 			
-			print("Successfully built GGCMS Config folder `" . $folder_location . "`." . PHP_EOL . PHP_EOL);
+			print('Successfully built GGCMS Config folder `' . $folder_location . '`.' . PHP_EOL . PHP_EOL);
 			
 			return TRUE;
 		}
 		
-		/*
-
-			doctl compute domain records create pronouncethat.com --record-type "NS" --record-name "pronouncethat.com" --record-ttl 1800 --record-data "ns1.digitalocean.com"
-			doctl compute domain records create pronouncethat.com --record-type "NS" --record-name "pronouncethat.com" --record-ttl 1800 --record-data "ns2.digitalocean.com"
-			doctl compute domain records create pronouncethat.com --record-type "NS" --record-name "pronouncethat.com" --record-ttl 1800 --record-data "ns3.digitalocean.com"
-			
-			doctl compute domain records create pronouncethat.com --record-type "AAAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-data "2604:a880:400:d0::188f:3001"
-			doctl compute domain records create pronouncethat.com --record-type "AAAA" --record-name "*.pronouncethat.com" --record-ttl 3600 --record-data "2604:a880:400:d0::188f:3001"
-			
-			doctl compute domain records create pronouncethat.com --record-type "A" --record-name "pronouncethat.com" --record-ttl 3600 --record-data "198.199.120.211"
-			doctl compute domain records create pronouncethat.com --record-type "A" --record-name "*.pronouncethat.com" --record-ttl 3600 --record-data "198.199.120.211"
-			
-					DIZ IZ BROKEN!!!!
-			
-			doctl compute domain records create pronouncethat.com --record-type "CAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-tag "iodef" --record-data "mailto:holdoffhunger@gmail.com"
-			doctl compute domain records create pronouncethat.com --record-type "CAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-tag "issue" --record-data "letsencrypt.org"
-			doctl compute domain records create pronouncethat.com --record-type "CAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-tag "issuewild" --record-data "letsencrypt.org"
-		
-		*/
-		
 		public function buildDNSRecords() {
 			$this->formatted_records = $this->getFormattedDomainRecords();
 			
-			$this->buildDNSRecords_NameServers();
+			$this->buildDNSRecords_DigitalOceanConfig();
+			
+		#	$this->buildDNSRecords_NameServers();	# this is hanlded by DigitalOceanConfig, sigh
 			$this->buildDNSRecords_IPv4Addresses();
 			$this->buildDNSRecords_IPv6Addresses();
 			$this->buildDNSRecords_CertificateAuthorities();
@@ -307,8 +291,15 @@
 			return TRUE;
 		}
 		
+		public function buildDNSRecords_DigitalOceanConfig() {
+			$command = 'doctl compute domain create ' . $this->domain;
+			
+			shell_exec($command);
+			
+			return TRUE;
+		}
+		
 		public function buildDNSRecords_NameServers() {
-			// doctl compute domain records create pronouncethat.com --record-type "NS" --record-name "pronouncethat.com" --record-ttl 1800 --record-data "ns1.digitalocean.com"
 			$name_servers = $this->globals->NameServers();
 			$name_server_lookup = [];
 			
@@ -316,10 +307,24 @@
 				$name_server_lookup[$name_server] = $name_server;
 			}
 			
-			foreach($this->formatted_records['NS'] as $ns_server) {
-				if(array_key_exists($ns_server['Data'], $name_server_lookup)) {
-					unset($name_server_lookup[$ns_server['Data']]);
+			if(array_key_exists('NS', $this->formatted_records)) {
+				foreach($this->formatted_records['NS'] as $ns_server) {
+					if(array_key_exists($ns_server['Data'], $name_server_lookup)) {
+						unset($name_server_lookup[$ns_server['Data']]);
+					}
 				}
+			}
+			
+			$valid_name_servers_to_build = array_keys($name_server_lookup);
+			
+			foreach($valid_name_servers_to_build as $valid_name_server_to_build) {
+				$command = 'doctl compute domain records create ' . $this->domain . ' --record-type "NS" --record-name "." --record-ttl 1800 --record-data "' . $valid_name_server_to_build . '."';
+		#		$command = 'doctl compute domain records create ' . $this->domain . ' --record-type "NS" --record-name "' . $this->domain . '" --record-ttl 1800 --record-data "' . $valid_name_server_to_build . '."';		# this makes "domain.com.domain.com" record-name values
+				
+				shell_exec($command);
+			#	print(PHP_EOL);
+			#	print($command);
+			#	print(PHP_EOL);
 			}
 			
 			return TRUE;
@@ -328,9 +333,11 @@
 		public function buildDNSRecords_IPv4Addresses() {
 			$name_server_missing = ['*'=>TRUE, '@'=>TRUE,];
 			
-			foreach($this->formatted_records['A'] as $ns_server) {
-				if(array_key_exists($ns_server['Name'], $name_server_missing)) {
-					unset($name_server_missing[$ns_server['Name']]);
+			if(array_key_exists('A', $this->formatted_records)) {
+				foreach($this->formatted_records['A'] as $ns_server) {
+					if(array_key_exists($ns_server['Name'], $name_server_missing)) {
+						unset($name_server_missing[$ns_server['Name']]);
+					}
 				}
 			}
 			
@@ -348,9 +355,11 @@
 		public function buildDNSRecords_IPv6Addresses() {
 			$name_server_missing = ['*'=>TRUE, '@'=>TRUE,];
 			
-			foreach($this->formatted_records['AAAA'] as $ns_server) {
-				if(array_key_exists($ns_server['Name'], $name_server_missing)) {
-					unset($name_server_missing[$ns_server['Name']]);
+			if(array_key_exists('AAAA', $this->formatted_records)) {
+				foreach($this->formatted_records['AAAA'] as $ns_server) {
+					if(array_key_exists($ns_server['Name'], $name_server_missing)) {
+						unset($name_server_missing[$ns_server['Name']]);
+					}
 				}
 			}
 			
@@ -366,7 +375,46 @@
 		}
 		
 		public function buildDNSRecords_CertificateAuthorities() {
-				// do this by hand, sigh =\
+			#return TRUE;		// broken per https://github.com/digitalocean/doctl/issues/1436
+			
+			$caa_missing = ['iodef'=>TRUE, 'issue'=>TRUE, 'issuewild'=>TRUE,];
+			
+			if(array_key_exists('CAA', $this->formatted_records)) {
+				foreach($this->formatted_records['CAA'] as $caa_server) {
+					print_r($caa_server);
+					#if(array_key_exists($caa_server['CAA'], $caa_missing)) {
+					#	unset($caa_missing[$caa_server['Name']]);
+					#}
+				}
+			}
+			
+			foreach($caa_missing as $caa_missing_id => $truth) {
+				if($caa_missing_id === 'iodef') {
+					$record_data = 'mailto:' . $this->globals->CertificateAuthorityAdminEmailAddress() . '.';
+				} else {
+					$record_data = $this->globals->EncryptionAuthority() . '.';
+				}
+				
+				#print($caa_missing_id . ":::::::::::::::::::::::::::");
+				
+				$command = 'doctl compute domain records create ' . $this->domain . ' --record-type "CAA" --record-name "' . $this->domain . '" --record-ttl 3600 --record-tag "' . $caa_missing_id . '" --record-data "' . $record_data . '"';
+				
+				#print($command);
+				#print("\n\n");
+				
+				shell_exec($command);
+			}
+			/*
+			
+				doctl compute domain records create pronouncethat.com --record-type "CAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-tag "iodef" --record-data "mailto:holdoffhunger@gmail.com."
+				doctl compute domain records create pronouncethat.com --record-type "CAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-tag "issue" --record-data "letsencrypt.org."
+				doctl compute domain records create pronouncethat.com --record-type "CAA" --record-name "pronouncethat.com" --record-ttl 3600 --record-tag "issuewild" --record-data "letsencrypt.org."
+				
+				
+Error: POST https://api.digitalocean.com/v2/domains/sortwords.com/records: 422 (request "918e1b30-0c09-4463-b27e-53b9557d4061") Tag can't be empty, Tag can't be empty, Tag can't be blank, Tag must be issue, issuewild and or iodef
+
+			
+			*/
 			
 			return TRUE;
 		}

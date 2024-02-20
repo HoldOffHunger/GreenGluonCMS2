@@ -26,7 +26,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -42,7 +42,7 @@
 	
 	ggreq('modules/html/socialmediasharelinks.php');
 	$social_media_share_links_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'textonly'=>$this->mobile_friendly,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
@@ -208,15 +208,6 @@
 					$entry_image = $entry_images[0];
 					$display_image = $entry_image;
 				}
-			}
-			
-			if(!$display_image)
-			{
-				$display_image = [
-					'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-					'IconPixelWidth'=>200,
-					'IconPixelHeight'=>200,
-				];
 			}
 			
 			print('<div class="horizontal-left margin-5px">');
@@ -523,15 +514,6 @@
 					$entry_image = $entry_images[0];
 					$display_image = $entry_image;
 				}
-			}
-			
-			if(!$display_image)
-			{
-				$display_image = [
-					'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-					'IconPixelWidth'=>200,
-					'IconPixelHeight'=>200,
-				];
 			}
 			
 			$parent_codes = [];

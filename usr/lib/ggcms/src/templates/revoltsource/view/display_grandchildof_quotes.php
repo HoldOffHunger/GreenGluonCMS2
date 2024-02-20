@@ -741,7 +741,7 @@
 		
 		ggreq('modules/html/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
@@ -754,7 +754,7 @@
 		
 		ggreq('modules/html/socialmediasharelinks.php');
 		$social_media_share_links_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'textonly'=>$this->mobile_friendly,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
@@ -818,12 +818,6 @@
 				}
 			}
 			
-			if(!$primary_image)
-			{
-				$primary_image = $this->primary_host_record['PrimaryImageLeft'];
-				$primary_image_text = $this->primary_host_record['Classification'];
-			}
-			
 					// Mouseover Values
 				
 				// -------------------------------------------------------------
@@ -835,14 +829,6 @@
 				$random_quote = $this->entry['quote'][array_rand($this->entry['quote'], 1)];
 				
 				$div_mouseover = '&quot;' . str_replace('"', '\'', $random_quote['Quote']) . '&quot; -- ' . str_replace('"', '\'', $random_quote['Source']);
-			}
-			
-			if(!$div_mouseover)
-			{
-				if($this->primary_host_record['Subject'])
-				{
-					$div_mouseover = str_replace('"', '\'', $this->primary_host_record['Subject']);
-				}
 			}
 		}
 		

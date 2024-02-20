@@ -158,7 +158,7 @@
 			$date_epoch_time = strtotime($eventdate['EventDateTime']);
 			
 			if($event_date !== '0000-00-00') {
-				print(FormatDate(['date'=>$event_date]));
+				print($this->FormatDate(['date'=>$event_date]));
 			}
 			
 			if($event_time !== '00:00:00') {
@@ -168,6 +168,49 @@
 			print('</strong>');
 			print('</div>');
 			print('</div>');
+		}
+		
+		public function FormatDate($args) {
+			$date = $args['date'];
+			
+			if(!$date) {
+				return '?';
+			}
+			
+			$event_date_pieces = explode('-', $date);
+			
+			$date_epoch_time = strtotime($date);
+			
+			$month_format = 'F';
+			if($args['short-dates']) {
+				$month_format = 'M.';
+			}
+			
+			$year = $event_date_pieces[0];
+			/*
+			if(intval($event_date_pieces[0]) > 3000) {
+				if($year >= 3000) {
+					$diff = $year - 3000;
+					$real_year = 1000 - $diff;
+				} else {
+					$real_year = $year;
+				}
+			*/
+			$bce_check = mb_substr($year, 0, 3, 'utf-8');
+			if($bce_check === 'bce') {
+				$real_year = str_replace('bce', '', $year);
+				$formatted = $real_year . ' BCE';
+			} elseif($event_date_pieces[1] !== '00' && $event_date_pieces[2] !== '00') {
+				$formatted = date("$month_format j, Y", $date_epoch_time);
+			} elseif($event_date_pieces[1] !== '00') {
+				$new_date_epoch_time = $event_date_pieces[0] . '-' . $event_date_pieces[1] . '-01';
+				$formatted = date("$month_format, Y", strtotime($new_date_epoch_time));
+			} else {
+				$new_date_epoch_time = $event_date_pieces[0] . '-01-01';
+				$formatted = date("Y", strtotime($new_date_epoch_time));
+			}
+			
+			return $formatted;
 		}
 		
 		public function DisplayEventDatesHistory_singleDate_title($args) {
@@ -380,12 +423,12 @@
 				
 				$event_date_pieces = explode('-', $events[0]['EventDateTime']);
 				$year = $event_date_pieces[0];
-				return FormatDate(['date'=>$year . '-00-00', 'short-dates'=>$args['short-dates']]);
+				return $this->FormatDate(['date'=>$year . '-00-00', 'short-dates'=>$args['short-dates']]);
 			}
 			
 			$date1 = $events_hash['Birth Day']['date'];
 			$date2 = $events_hash['Death Day']['date'];
-			return FormatDate(['date'=>$date1, 'short-dates'=>$args['short-dates']]) . ' &mdash; ' . FormatDate(['date'=>$date2, 'short-dates'=>$args['short-dates']]);
+			return $this->FormatDate(['date'=>$date1, 'short-dates'=>$args['short-dates']]) . ' &mdash; ' . $this->FormatDate(['date'=>$date2, 'short-dates'=>$args['short-dates']]);
 		}
 		
 		public function getRelevantDate() {

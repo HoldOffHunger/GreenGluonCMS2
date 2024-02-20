@@ -30,12 +30,14 @@
 			if($_GET['forceregen'] || !is_file($epub_file_location) || $old_epub_input !== $epub_input) {
 				$this->ConvertHTMLToFormat();
 				
-				$file_handle_for_source = fopen($source_file_location, 'w+');
-				fwrite($file_handle_for_source, $epub_input);
-				fclose($file_handle_for_source);
+			#	$file_handle_for_source = fopen($source_file_location, 'w+');
+			#	fwrite($file_handle_for_source, $epub_input);
+			#	fclose($file_handle_for_source);
 			}
 			
-			return readfile($epub_file_location);
+			
+			
+			return readfile($this->SetOutputFileLocation());
 		}
 		
 		public function ConvertHTMLToFormat() {

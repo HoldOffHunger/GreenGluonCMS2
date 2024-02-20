@@ -45,7 +45,7 @@
 		} elseif ($this->script_format_lower == 'sgml') {
 			$this->source_content = $html_document;
 		} elseif($this->script_format_lower == 'epub') {
-			$this->record_to_use = $this->primary_host_record;
+			$this->record_to_use = $this->entry;
 			$this->source_content = $html_document;
 		} elseif($this->script_format_lower == 'txt') {
 			$text_document = strip_tags($html_document);
@@ -98,14 +98,13 @@
 		ggreq('modules/' . $this->script_format_lower . '/languages.php');
 		$languages_args = [
 			'languageobject'=>$this->language_object,
-			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
 		];
 		$languages = new module_languages($languages_args);
 		
 		ggreq('modules/' . $this->script_format_lower . '/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
@@ -167,38 +166,26 @@
 				break;
 		}
 		
-		if($this->language_object->getLanguageCode() == 'en')
-		{
+		if($this->language_object->getLanguageCode() == 'en') {
 			$div_mouseover = $this->master_record['description'][0]['Description'];
-		}
-		else
-		{
+		} else {
 			$instructions_language_translations = $this->getListAndItems(['ListTitle'=>'LanguagesMainInstructionsContent']);
 			
-			if($instructions_language_translations[$this->language_object->getLanguageCode()])
-			{
+			if($instructions_language_translations[$this->language_object->getLanguageCode()]) {
 				$div_mouseover = $instructions_language_translations[$this->language_object->getLanguageCode()];
-			}
-			else
-			{
+			} else {
 				$div_mouseover = $this->master_record['description'][0]['Description'];
 			}
 		}
 		
-		if($this->language_object->getLanguageCode() == 'en')
-		{
+		if($this->language_object->getLanguageCode() == 'en') {
 			$quote_text = $this->master_record['quote'][0]['Quote'];
-		}
-		else
-		{
+		} else {
 			$image_language_translations = $this->getListAndItems(['ListTitle'=>'LanguagesMainImageQuote']);
 			
-			if($image_language_translations[$this->language_object->getLanguageCode()])
-			{
+			if($image_language_translations[$this->language_object->getLanguageCode()]) {
 				$quote_text = $image_language_translations[$this->language_object->getLanguageCode()];
-			}
-			else
-			{
+			} else {
 				$quote_text = $this->master_record['quote'][0]['Quote'];
 			}
 		}
@@ -206,29 +193,12 @@
 				// Display Header
 			
 			// -------------------------------------------------------------
-			
-		if($this->primary_host_record['PrimaryColor'])
-		{
-			$primary_color = $this->primary_host_record['PrimaryColor'];
-		}
-		else
-		{
-			$primary_color = '6495ED';
-		}
 		
-		if($this->primary_host_record['ThirdColor'])
-		{
-			$third_color = $this->primary_host_record['ThirdColor'];
-		}
-		else
-		{
-			$third_color = 'B7CEEC';
-		}
+		$primary_color = '6495ED';
+		$third_color = 'B7CEEC';
 		
 		$header_primary_args = [
 			'title'=>$this->header_title_text,
-			'image'=>$this->primary_host_record['PrimaryImageLeft'],
-			'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
 			'divmouseover'=>$div_mouseover,
 			'imagemouseover'=>'&quot;' . $quote_text . '&quot;',
 			'level'=>1,

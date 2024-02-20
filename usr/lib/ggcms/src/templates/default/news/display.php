@@ -707,7 +707,7 @@
 		
 		ggreq('modules/html/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,

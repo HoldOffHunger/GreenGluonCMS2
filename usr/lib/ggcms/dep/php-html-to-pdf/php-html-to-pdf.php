@@ -54,7 +54,7 @@
 	
 */
 
-	require('../app/tfpdf/tfpdf.php');
+	depreq('tfpdf/tfpdf.php');
 	
 	class HTMLtoPDF extends tFPDF {
 		protected $HREF;
@@ -90,7 +90,7 @@
 			} else {
 				$format = $this->getDefaultFormat();
 			}
-			parent::__construct($orientation, $unit, $format);
+	#		parent::__construct($orientation, $unit, $format);
 			
 			return TRUE;
 		}

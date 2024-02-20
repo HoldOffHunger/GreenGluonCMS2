@@ -185,7 +185,8 @@ WHERE Assignment1.Parentid = 4
 				'AND (Entry7.id IS NULL || Entry7.Publish = 1) ';
 				
 			$sql .= ';';
-			
+#			print_r($entry['id']);
+#			print($sql);
 #			print_r($sql);
 #			print($entry['id']);
 			$fill_arrays_from_db_args = [

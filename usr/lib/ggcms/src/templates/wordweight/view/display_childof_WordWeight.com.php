@@ -12,15 +12,19 @@
 			
 			// -------------------------------------------------------------
 		
-	$image_count = count($this->entry['image']);
-	$tag_count = count($this->entry['tag']);
-	$description_count = count($this->entry['description']);
-	$quote_count = count($this->entry['quote']);
-	$textbody_count = count($this->entry['textbody']);
-	$association_count = count($this->entry['association']);
-	$eventdate_count = count($this->entry['eventdate']);
-	$link_count = count($this->entry['link']);
-	$children_count = count($this->children);
+	$image_count = $this->counts['image'];
+	$tag_count = $this->counts['tag'];
+	$description_count = $this->counts['description'];
+	$quote_count = $this->counts['quote'];
+	$textbody_count = $this->counts['textbody'];
+	$association_count = $this->counts['association'];
+	$eventdate_count = $this->counts['eventdate'];
+	$link_count = $this->counts['link'];
+	$definition_count = $this->counts['definition'];
+	$children_count = $this->counts['children'];
+	
+	$younger_sibling_count = $this->counts['younger_sibling'];
+	$older_sibling_count = $this->counts['older_sibling'];
 	
 				// Timeframe
 			
@@ -709,7 +713,7 @@
 		
 		ggreq('modules/html/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
@@ -722,7 +726,7 @@
 		
 		ggreq('modules/html/socialmediasharelinks.php');
 		$social_media_share_links_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'textonly'=>$this->mobile_friendly,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
@@ -762,12 +766,6 @@
 				}
 			}
 			
-			if(!$primary_image)
-			{
-				$primary_image = $this->primary_host_record['PrimaryImageLeft'];
-				$primary_image_text = $this->primary_host_record['Classification'];
-			}
-			
 					// Mouseover Values
 				
 				// -------------------------------------------------------------
@@ -783,14 +781,6 @@
 				if($random_quote['Source'])
 				{
 					$div_mouseover .= ' -- ' . str_replace('"', '\'', $random_quote['Source']);
-				}
-			}
-			
-			if(!$div_mouseover)
-			{
-				if($this->primary_host_record['Subject'])
-				{
-					$div_mouseover = str_replace('"', '\'', $this->primary_host_record['Subject']);
 				}
 			}
 		}
@@ -1138,8 +1128,7 @@
 	
 	print('<center>');
 	
-	if($this->search_term)
-	{
+	if($this->search_term) {
 		print("Sorry, no results for " . $this->search_term . ".  Please try again!");
 		print('<BR><BR>');
 	}
@@ -1210,11 +1199,10 @@
 	
 	$random_definitions = $this->dictionary->LookUpRandomWords([]);
 	
-	foreach ($random_definitions as $random_word => $random_definition)
-	{
+	foreach ($random_definitions as $random_word => $random_definition) {
 		print('<div id="header_backgroundimageurl" class="border-2px background-color-gray13 margin-5px" style="display: inline-block;">');
 		print('<div class="margin-5px">');
-		print('<a href="' . urlencode(ucwords($random_word)) . '/view.php">');
+		print('<a href="/' . urlencode(ucwords($random_word)) . '/">');
 		print(ucwords($random_word));
 		print('</a>');
 		print('</div>');

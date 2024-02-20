@@ -24,14 +24,13 @@
 	ggreq('modules/html/languages.php');
 	$languages_args = [
 		'languageobject'=>$this->language_object,
-		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
 	];
 	$languages = new module_languages($languages_args);
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -363,9 +362,14 @@
 	
 	$divider->displaystart($divider_instruction_area_start_args);
 	
-print('<center><h2 class="margin-5px font-family-tahoma">' . $contact_us_title_text . ' :</h2></center>');
+	print('<center><h2 class="margin-5px font-family-tahoma">' . $contact_us_title_text . ' :</h2></center>');
 	
-	
+	if($this->handler->abstractglobals->script->GetCreator()) {
+		$creator = $this->handler->abstractglobals->script->GetCreator();
+	} else {
+		$creator = $this->handler->globals->SiteCreator();
+	}
+	// $this->handler->abstractglobals->script->GetAboutSubHeader();
 	$contact_creator_value = $this->primary_host_record['Contact'];
 	if(strpos($contact_creator_value, '@') !== false) {
 		$contact_creator_value = '<a href="mailto:' . $contact_creator_value . '">' . $contact_creator_value . '</a>';
@@ -373,7 +377,7 @@ print('<center><h2 class="margin-5px font-family-tahoma">' . $contact_us_title_t
 	
 	print(
 			'<div class="padding-5px horizontal-left font-family-arial">' .
-			'<p class="margin-0px margin-top-5px"><strong>' . $site_creator_text . ' :</strong> ' . $this->primary_host_record['Creator'] . '</p>' .
+			'<p class="margin-0px margin-top-5px"><strong>' . $site_creator_text . ' :</strong> ' . $creator . '</p>' .
 			'<p class="margin-0px margin-top-5px"><strong>' . $site_created_on_text . ' :</strong> ' . $this->primary_host_record['PublicReleaseDate'] . '</p>' .
 			'<p class="margin-0px margin-top-5px"><strong>' . $contact_creator_text . ' :</strong> ' . $contact_creator_value . '</p>' .
 			'</div>');

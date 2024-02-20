@@ -486,9 +486,11 @@
 				'Entry1.ChildAdjective as Entry_1_ChildAdjective',
 				'Entry1.ChildNoun as Entry_1_ChildNoun',
 				'Entry1.ChildNounPlural as Entry_1_ChildNounPlural',
+				'Entry1.ChildAction as Entry_1_ChildAction',
 				'Entry1.GrandChildAdjective as Entry_1_GrandChildAdjective',
 				'Entry1.GrandChildNoun as Entry_1_GrandChildNoun',
 				'Entry1.GrandChildNounPlural as Entry_1_GrandChildNounPlural',
+				'Entry1.GrandChildAction as Entry_1_GrandChildAction',
 				'Entry1.Publish as Entry_1_Publish',
 				'Entry1.OriginalCreationDate as Entry_1_OriginalCreationDate',
 				'Entry1.LastModificationDate as Entry_1_LastModificationDate',
@@ -529,9 +531,11 @@
 				$selects[] = 'Entry' . $i . '.ChildAdjective as Entry_' . $i . '_ChildAdjective';
 				$selects[] = 'Entry' . $i . '.ChildNoun as Entry_' . $i . '_ChildNoun';
 				$selects[] = 'Entry' . $i . '.ChildNounPlural as Entry_' . $i . '_ChildNounPlural';
+				$selects[] = 'Entry' . $i . '.ChildAction as Entry_' . $i . '_ChildAction';
 				$selects[] = 'Entry' . $i . '.GrandChildAdjective as Entry_' . $i . '_GrandChildAdjective';
 				$selects[] = 'Entry' . $i . '.GrandChildNoun as Entry_' . $i . '_GrandChildNoun';
 				$selects[] = 'Entry' . $i . '.GrandChildNounPlural as Entry_' . $i . '_GrandChildNounPlural';
+				$selects[] = 'Entry' . $i . '.GrandChildAction as Entry_' . $i . '_GrandChildAction';
 				$selects[] = 'Entry' . $i . '.Publish as Entry_' . $i . '_Publish';
 				$selects[] = 'Entry' . $i . '.OriginalCreationDate as Entry_' . $i . '_OriginalCreationDate';
 				$selects[] = 'Entry' . $i . '.LastModificationDate as Entry_' . $i . '_LastModificationDate';
@@ -590,9 +594,11 @@
 				'Entry1.ChildAdjective as Entry_1_ChildAdjective',
 				'Entry1.ChildNoun as Entry_1_ChildNoun',
 				'Entry1.ChildNounPlural as Entry_1_ChildNounPlural',
+				'Entry1.ChildAction as Entry_1_ChildAction',
 				'Entry1.GrandChildAdjective as Entry_1_GrandChildAdjective',
 				'Entry1.GrandChildNoun as Entry_1_GrandChildNoun',
 				'Entry1.GrandChildNounPlural as Entry_1_GrandChildNounPlural',
+				'Entry1.GrandChildAction as Entry_1_GrandChildAction',
 				'Entry1.Publish as Entry_1_Publish',
 				'Entry1.OriginalCreationDate as Entry_1_OriginalCreationDate',
 				'Entry1.LastModificationDate as Entry_1_LastModificationDate',
@@ -616,9 +622,11 @@
 				$selects[] = 'Entry' . $i . '.ChildAdjective as Entry_' . $i . '_ChildAdjective';
 				$selects[] = 'Entry' . $i . '.ChildNoun as Entry_' . $i . '_ChildNoun';
 				$selects[] = 'Entry' . $i . '.ChildNounPlural as Entry_' . $i . '_ChildNounPlural';
+				$selects[] = 'Entry' . $i . '.ChildAction as Entry_' . $i . '_ChildAction';
 				$selects[] = 'Entry' . $i . '.GrandChildAdjective as Entry_' . $i . '_GrandChildAdjective';
 				$selects[] = 'Entry' . $i . '.GrandChildNoun as Entry_' . $i . '_GrandChildNoun';
 				$selects[] = 'Entry' . $i . '.GrandChildNounPlural as Entry_' . $i . '_GrandChildNounPlural';
+				$selects[] = 'Entry' . $i . '.GrandChildAction as Entry_' . $i . '_GrandChildAction';
 				$selects[] = 'Entry' . $i . '.Publish as Entry_' . $i . '_Publish';
 				$selects[] = 'Entry' . $i . '.OriginalCreationDate as Entry_' . $i . '_OriginalCreationDate';
 				$selects[] = 'Entry' . $i . '.LastModificationDate as Entry_' . $i . '_LastModificationDate';
@@ -679,9 +687,11 @@
 					$entry_childadjective = $parents['Entry_' . $i . '_ChildAdjective'];
 					$entry_childnoun = $parents['Entry_' . $i . '_ChildNoun'];
 					$entry_childnounplural = $parents['Entry_' . $i . '_ChildNounPlural'];
+					$entry_childaction = $parents['Entry_' . $i . '_ChildAction'];
 					$entry_grandchildadjective = $parents['Entry_' . $i . '_GrandChildAdjective'];
 					$entry_grandchildnoun = $parents['Entry_' . $i . '_GrandChildNoun'];
 					$entry_grandchildnounplural = $parents['Entry_' . $i . '_GrandChildNounPlural'];
+					$entry_grandchildaction = $parents['Entry_' . $i . '_GrandChildAction'];
 					$entry_publish = $parents['Entry_' . $i . '_Publish'];
 					$entry_originalcreationdate = $parents['Entry_' . $i . '_OriginalCreationDate'];
 					$entry_latsmodificationdate = $parents['Entry_' . $i . '_LastModificationDate'];
@@ -696,9 +706,11 @@
 						'ChildAdjective'=>$entry_childadjective,
 						'ChildNoun'=>$entry_childnoun,
 						'ChildNounPlural'=>$entry_childnounplural,
+						'ChildAction'=>$entry_childaction,
 						'GrandChildAdjective'=>$entry_grandchildadjective,
 						'GrandChildNoun'=>$entry_grandchildnoun,
 						'GrandChildNounPlural'=>$entry_grandchildnounplural,
+						'GrandChildAction'=>$entry_grandchildaction,
 						'Publish'=>$entry_publish,
 						'OriginalCreationDate'=>$entry_originalcreationdate,
 						'LastModificationDate'=>$entry_latsmodificationdate,
@@ -723,39 +735,61 @@
 		}
 		
 		public function GetMasterRecord() {
-			$sql = 'SELECT ';
+			if($this->handler->db_access->db_file_cache) {
+				$db_file_cache_results = $this->handler->db_access->db_file_cache->ReadCache([
+					'type'=>'ggcms_MasterRecord',
+					'arguments'=>['1',],
+				]);
+			}
 			
-			$sql .= 
-				'Entry.id as Entry_id, ' .
-				'Entry.Title as Entry_Title, ' .
-				'Entry.Subtitle as Entry_Subtitle, ' .
-				'Entry.ListTitle as Entry_ListTitle, ' .
-				'Entry.ListTitleSortKey as Entry_ListTitleSortKey, ' .
-				'Entry.Code as Entry_Code, ' .
-				'Entry.ChildAdjective as Entry_ChildAdjective, ' .
-				'Entry.ChildNoun as Entry_ChildNoun, ' .
-				'Entry.ChildNounPlural as Entry_ChildNounPlural, ' .
-				'Entry.GrandChildAdjective as Entry_GrandChildAdjective, ' .
-				'Entry.GrandChildNoun as Entry_GrandChildNoun, ' .
-				'Entry.GrandChildNounPlural as Entry_GrandChildNounPlural, ' .
-				'Entry.Publish as Entry_Publish, ' .
-				'Entry.OriginalCreationDate as Entry_OriginalCreationDate, ' .
-				'Entry.LastModificationDate as Entry_LastModificationDate, ' .
-				'Assignment.id as Assignment_id, ' .
-				'Assignment.Parentid as Assignment_Parentid, ' .
-				'Assignment.Childid as Assignment_Childid ' ;
-			
-			$sql .= 'FROM Entry JOIN Assignment ON Assignment.Parentid = Entry.id AND Assignment.Childid = 0;';
-			
-			$bind_string = '';
-			
-			$fill_arrays_from_db_args = [
-				'query'=>$sql,
-				'sqlbindstring'=>$bind_string,
-				'recordvalues'=>[],
-			];
-			
-			$master_records = $this->handler->db_access->FillArraysFromDB($fill_arrays_from_db_args);
+			if(is_array($db_file_cache_results)) {
+				$master_records = $db_file_cache_results;
+			} else {
+				$sql = 'SELECT ';
+				
+				$sql .= 
+					'Entry.id as Entry_id, ' .
+					'Entry.Title as Entry_Title, ' .
+					'Entry.Subtitle as Entry_Subtitle, ' .
+					'Entry.ListTitle as Entry_ListTitle, ' .
+					'Entry.ListTitleSortKey as Entry_ListTitleSortKey, ' .
+					'Entry.Code as Entry_Code, ' .
+					'Entry.ChildAdjective as Entry_ChildAdjective, ' .
+					'Entry.ChildNoun as Entry_ChildNoun, ' .
+					'Entry.ChildNounPlural as Entry_ChildNounPlural, ' .
+					'Entry.ChildAction as Entry_ChildAction, ' .
+					'Entry.GrandChildAdjective as Entry_GrandChildAdjective, ' .
+					'Entry.GrandChildNoun as Entry_GrandChildNoun, ' .
+					'Entry.GrandChildNounPlural as Entry_GrandChildNounPlural, ' .
+					'Entry.GrandChildAction as Entry_GrandChildAction, ' .
+					'Entry.Publish as Entry_Publish, ' .
+					'Entry.OriginalCreationDate as Entry_OriginalCreationDate, ' .
+					'Entry.LastModificationDate as Entry_LastModificationDate, ' .
+					'Assignment.id as Assignment_id, ' .
+					'Assignment.Parentid as Assignment_Parentid, ' .
+					'Assignment.Childid as Assignment_Childid ' ;
+				
+				$sql .= 'FROM Entry JOIN Assignment ON Assignment.Parentid = Entry.id AND Assignment.Childid = 0;';
+				
+				$bind_string = '';
+				
+				$fill_arrays_from_db_args = [
+					'query'=>$sql,
+					'sqlbindstring'=>$bind_string,
+					'recordvalues'=>[],
+				];
+				
+				$master_records = $this->handler->db_access->FillArraysFromDB($fill_arrays_from_db_args);
+				
+				if($this->handler->db_access->db_file_cache) {
+					$this->handler->db_access->db_file_cache->WriteCache([
+						'type'=>'ggcms_MasterRecord',
+						'arguments'=>['1',],
+						'data'=>$master_records,
+						'field'=>'Entry_id',
+					]);
+				}
+			}
 			
 			$new_master_records = [];
 			
@@ -770,9 +804,11 @@
 					'ChildAdjective'=>$master_record['Entry_ChildAdjective'],
 					'ChildNoun'=>$master_record['Entry_ChildNoun'],
 					'ChildNounPlural'=>$master_record['Entry_ChildNounPlural'],
+					'ChildAction'=>$master_record['Entry_ChildAction'],
 					'GrandChildAdjective'=>$master_record['Entry_GrandChildAdjective'],
 					'GrandChildNoun'=>$master_record['Entry_GrandChildNoun'],
 					'GrandChildNounPlural'=>$master_record['Entry_GrandChildNounPlural'],
+					'GrandChildAction'=>$master_record['Entry_GrandChildAction'],
 					'Publish'=>$master_record['Entry_Publish'],
 					'OriginalCreationDate'=>$master_record['Entry_OriginalCreationDate'],
 					'LastModificationDate'=>$master_record['Entry_LastModificationDate'],
@@ -799,93 +835,122 @@
 		public function GetRecordTree($args) {
 			$entries_list = $this->GetRecordTree_GetEntries($args);
 			
-			$entries_list_args = $args;
-			$entries_list_args['entrieslist'] = $entries_list;
-			$entries_list = $this->GetRecordTree_StructureRecords($entries_list_args);
-			
-			$entries_list_args['entrieslist'] = $entries_list;
-			
-			$entries_list = $this->GetRecordTree_GetEntryChildRecords($entries_list_args);
+			if(count($entries_list) !== 0) {
+				$entries_list_args = $args;
+				$entries_list_args['entrieslist'] = $entries_list;
+				$entries_list = $this->GetRecordTree_StructureRecords($entries_list_args);
+				
+				$entries_list_args['entrieslist'] = $entries_list;
+				
+				$entries_list = $this->GetRecordTree_GetEntryChildRecords($entries_list_args);
+			}
 			
 			return $entries_list;
 		}
 		
 		public function GetRecordTree_GetEntries($args) {
 			$code_list = $args['codelist'];
-			$availability_limit = $args['availabilitylimit'];
 			
-			$code_list_count = count($code_list);
+			$code_list_cache_code = implode('%2F', $code_list);
+
+			if($this->handler->db_access->db_file_cache) {			
+				$db_file_cache_results = $this->handler->db_access->db_file_cache->ReadCache([
+					'type'=>'ggcms_RecordTree',
+					'arguments'=>[$code_list_cache_code,],
+				]);
+			}
 			
-			$code_index = 1;
-			$joins = [];
-			$wheres = [];
-			
-			$get_base_select_args = [
-				'index'=>$code_index,
-			];
-			
-			$selects = $this->GetRecordTree_GetEntries_GetBaseSelect($get_base_select_args);
-			
-			if($code_list_count) {
-				$joins[] = 'JOIN Assignment AS Assignment' . $code_index . ' ON Assignment1.Childid = Entry' . $code_index . '.id';
+			if(is_array($db_file_cache_results)) {
+				$record_tree = $db_file_cache_results;
 			} else {
-				$joins[] = 'JOIN Assignment AS Assignment' . $code_index . ' ON Assignment1.Parentid = Entry' . $code_index . '.id AND Assignment' . $code_index . '.Childid = 0';
-			}
-			
-			if($code_list_count) {
-				$wheres[] = 'Entry' . $code_index . '.Code = ?'; #. $code_list[0];
-			}
-			
-			$code_index++;
-			
-			$parseable_code_list = $code_list;
-			array_shift($parseable_code_list);
-			
-			foreach ($parseable_code_list as $code) {
-				$previous_code_index = $code_index - 1;
+				$code_list_count = count($code_list);
+				
+				$code_index = 1;
+				$joins = [];
+				$wheres = [];
 				
 				$get_base_select_args = [
 					'index'=>$code_index,
-					'list'=>$selects,
 				];
 				
 				$selects = $this->GetRecordTree_GetEntries_GetBaseSelect($get_base_select_args);
 				
-				$joins[] = 'JOIN Assignment AS Assignment' . $code_index . ' ON Assignment' . $code_index . '.Parentid = Entry' . $previous_code_index . '.id';
-				$joins[] = 'JOIN Entry AS Entry' . $code_index . ' ON Assignment' . $code_index . '.Childid = Entry' . $code_index . '.id';
+				if($code_list_count) {
+					$joins[] = 'JOIN Assignment AS Assignment' . $code_index . ' ON Assignment1.Childid = Entry' . $code_index . '.id';
+				} else {
+					$joins[] = 'JOIN Assignment AS Assignment' . $code_index . ' ON Assignment1.Parentid = Entry' . $code_index . '.id AND Assignment' . $code_index . '.Childid = 0';
+				}
 				
-				$wheres[] = 'Entry' . $code_index . '.Code = ?'; # . $code_list[$previous_code_index];
+				if($code_list_count) {
+					$wheres[] = 'Entry' . $code_index . '.Code = ?'; #. $code_list[0];
+				}
 				
 				$code_index++;
+				
+				$parseable_code_list = $code_list;
+				array_shift($parseable_code_list);
+				
+				foreach ($parseable_code_list as $code) {
+					$previous_code_index = $code_index - 1;
+					
+					$get_base_select_args = [
+						'index'=>$code_index,
+						'list'=>$selects,
+					];
+					
+					$selects = $this->GetRecordTree_GetEntries_GetBaseSelect($get_base_select_args);
+					
+					$joins[] = 'JOIN Assignment AS Assignment' . $code_index . ' ON Assignment' . $code_index . '.Parentid = Entry' . $previous_code_index . '.id';
+					$joins[] = 'JOIN Entry AS Entry' . $code_index . ' ON Assignment' . $code_index . '.Childid = Entry' . $code_index . '.id';
+					
+					$wheres[] = 'Entry' . $code_index . '.Code = ?'; # . $code_list[$previous_code_index];
+					
+					$code_index++;
+				}
+				
+				$joins[] = 'JOIN Assignment AS Assignmentx ON Assignmentx.Childid = 0 ';
+				$joins[] = 'JOIN Assignment AS Assignmenty ON Assignmenty.Parentid = Assignmentx.Parentid AND Assignmenty.Childid = Entry1.id ';
+				
+				$sql = 'SELECT ';
+				$sql .= implode(', ', $selects) . ' ';
+				$sql .= 'FROM ';
+				$sql .= 'Entry as Entry1 ';
+				$sql .= implode(' ', $joins) . ' ';
+				
+				if($code_list_count) {
+					$sql .= 'WHERE ';
+					$sql .= implode(' AND ', $wheres);
+				}
+				
+				$sql_bind_string = str_repeat('s', $code_list_count);
+				
+				$fill_arrays_from_db_args = [
+					'query'=>$sql,
+					'sqlbindstring'=>$sql_bind_string,
+					'recordvalues'=>$code_list,
+				];
+				
+	#			print($sql);
+	#			print("<BR><BR>");
+	#			print_r($code_list);
+				
+				$record_tree = $this->handler->db_access->FillArraysFromDB($fill_arrays_from_db_args);
+				
+				if(is_array($record_tree) && count($record_tree) !== 0) {
+					if($_GET['soybeans']) {
+					#	print_r($record_tree);
+					#	die('soybeans');
+					}
+					$this->handler->db_access->db_file_cache->WriteCache([
+						'type'=>'ggcms_RecordTree',
+						'arguments'=>[$code_list_cache_code,],
+					#	'field'=>'Entry_1_id',
+						'data'=>$record_tree,
+					]);
+				}
 			}
 			
-			$joins[] = 'JOIN Assignment AS Assignmentx ON Assignmentx.Childid = 0 ';
-			$joins[] = 'JOIN Assignment AS Assignmenty ON Assignmenty.Parentid = Assignmentx.Parentid AND Assignmenty.Childid = Entry1.id ';
-			
-			$sql = 'SELECT ';
-			$sql .= implode(', ', $selects) . ' ';
-			$sql .= 'FROM ';
-			$sql .= 'Entry as Entry1 ';
-			$sql .= implode(' ', $joins) . ' ';
-			
-			if($code_list_count) {
-				$sql .= 'WHERE ';
-				$sql .= implode(' AND ', $wheres);
-			}
-			
-			$sql_bind_string = str_repeat('s', $code_list_count);
-			
-			$fill_arrays_from_db_args = [
-				'query'=>$sql,
-				'sqlbindstring'=>$sql_bind_string,
-				'recordvalues'=>$code_list,
-			];
-			
-#			print($sql);
-#			print("<BR><BR>");
-#			print_r($code_list);
-			
-			return $this->handler->db_access->FillArraysFromDB($fill_arrays_from_db_args);
+			return $record_tree;
 		}
 		
 		public function GetRecordTree_StructureChildRecords($args) {
@@ -911,9 +976,11 @@
 					'ChildAdjective'=>$entry['Entry_1_ChildAdjective'],
 					'ChildNoun'=>$entry['Entry_1_ChildNoun'],
 					'ChildNounPlural'=>$entry['Entry_1_ChildNounPlural'],
+					'ChildAction'=>$entry['Entry_1_ChildAction'],
 					'GrandChildAdjective'=>$entry['Entry_1_GrandChildAdjective'],
 					'GrandChildNoun'=>$entry['Entry_1_GrandChildNoun'],
 					'GrandChildNounPlural'=>$entry['Entry_1_GrandChildNounPlural'],
+					'GrandChildAction'=>$entry['Entry_1_GrandChildAction'],
 					'Publish'=>$entry['Entry_1_Publish'],
 					'OriginalCreationDate'=>$entry['Entry_1_OriginalCreationDate'],
 					'LastModificationDate'=>$entry['Entry_1_LastModificationDate'],
@@ -963,9 +1030,11 @@
 						'ChildAdjective'=>$entry_data['Entry_' . $i . '_ChildAdjective'],
 						'ChildNoun'=>$entry_data['Entry_' . $i . '_ChildNoun'],
 						'ChildNounPlural'=>$entry_data['Entry_' . $i . '_ChildNounPlural'],
+						'ChildAction'=>$entry_data['Entry_' . $i . '_ChildAction'],
 						'GrandChildAdjective'=>$entry_data['Entry_' . $i . '_GrandChildAdjective'],
 						'GrandChildNoun'=>$entry_data['Entry_' . $i . '_GrandChildNoun'],
 						'GrandChildNounPlural'=>$entry_data['Entry_' . $i . '_GrandChildNounPlural'],
+						'GrandChildAction'=>$entry_data['Entry_' . $i . '_GrandChildAction'],
 						'Publish'=>$entry_data['Entry_' . $i . '_Publish'],
 						'OriginalCreationDate'=>$entry_data['Entry_' . $i . '_OriginalCreationDate'],
 						'LastModificationDate'=>$entry_data['Entry_' . $i . '_LastModificationDate'],
@@ -1293,9 +1362,11 @@
 					'ChildAdjective'=>$entry['Entry_1_ChildAdjective'],
 					'ChildNoun'=>$entry['Entry_1_ChildNoun'],
 					'ChildNounPlural'=>$entry['Entry_1_ChildNounPlural'],
+					'ChildAction'=>$entry['Entry_1_ChildAction'],
 					'GrandChildAdjective'=>$entry['Entry_1_GrandChildAdjective'],
 					'GrandChildNoun'=>$entry['Entry_1_GrandChildNoun'],
 					'GrandChildNounPlural'=>$entry['Entry_1_GrandChildNounPlural'],
+					'GrandChildAction'=>$entry['Entry_1_GrandChildAction'],
 					'Publish'=>$entry['Entry_1_Publish'],
 					'OriginalCreationDate'=>$entry['Entry_1_OriginalCreationDate'],
 					'LastModificationDate'=>$entry['Entry_1_LastModificationDate'],
@@ -1534,6 +1605,9 @@
 			
 			$child_entries = $this->handler->db_access->FillArraysFromDB($fill_arrays_from_db_args);
 			
+		#	if($_GET['coolass']) {
+		#		print_r($child_entries);
+		#	}
 			
 ##			print_r($child_entries);
 #			print_r($sql_bind_values);
@@ -1547,7 +1621,9 @@
 				$no_textbodies = 0;
 			}
 #			print_r($args);
-			$child_entries = $this->GetRecordTree_GetEntryChildRecords(['entrieslist'=>$child_entries, 'notextbodies'=>$no_textbodies]);
+			if(count($child_entries) !== 0) {
+				$child_entries = $this->GetRecordTree_GetEntryChildRecords(['entrieslist'=>$child_entries, 'notextbodies'=>$no_textbodies]);
+			}
 			
 			return $child_entries;
 		}
@@ -1941,6 +2017,10 @@
 			$no_textbodies = $args['notextbodies'];
 			$child_records = [];
 			
+			if($_GET['coolass']) {
+				#print_r($entries_list);
+			}
+			
 			if(count($entries_list)) {
 				$queries = [];
 				$query_values = [];
@@ -1985,7 +2065,39 @@
 						'recordvalues'=>$ids,
 					];
 					
-					$query_results[$table] = $this->handler->db_access->FillArraysFromDB($fill_arrays_from_db_args);
+					$subtype = $no_textbodies && $table === 'TextBody' ? $table . '_short' : $table;
+					
+					if($this->handler->db_access->db_file_cache) {
+						$db_file_cache_results = $this->handler->db_access->db_file_cache->ReadCache([
+							'type'=>'ggcms_EntryChildRecords',
+							'subtype'=>$subtype,
+							'arguments'=>$ids,
+						]);
+					} else {
+						$db_file_cache_results = FALSE;
+					}
+					
+					if(is_array($db_file_cache_results)) {
+						$query_results[$table] = $db_file_cache_results;
+					} else {
+						$query_results[$table] = $this->handler->db_access->FillArraysFromDB($fill_arrays_from_db_args);
+						
+						if($this->handler->db_access->db_file_cache) {
+							if($table === 'Associated') {
+								$field = 'ChosenEntryid';
+							} else {
+								$field = 'Entryid';
+							}
+							$this->handler->db_access->db_file_cache->WriteCache([
+								'type'=>'ggcms_EntryChildRecords',
+								'subtype'=>$subtype,
+								'field'=>$field,
+								'arguments'=>$ids,
+								'data'=>$query_results[$table],
+							]);
+						}
+					}
+					
 					$query_results[$table] = $this->GetRecordTree_GetEntryChildRecords_PostProcessing(['table'=>$table, 'records'=>$query_results[$table]]);
 				}
 			
@@ -2046,9 +2158,11 @@
 			$selects[] = 'Entry' . $index . '.ChildAdjective as Entry_' . $index . '_ChildAdjective';
 			$selects[] = 'Entry' . $index . '.ChildNoun as Entry_' . $index . '_ChildNoun';
 			$selects[] = 'Entry' . $index . '.ChildNounPlural as Entry_' . $index . '_ChildNounPlural';
+			$selects[] = 'Entry' . $index . '.ChildAction as Entry_' . $index . '_ChildAction';
 			$selects[] = 'Entry' . $index . '.GrandChildAdjective as Entry_' . $index . '_GrandChildAdjective';
 			$selects[] = 'Entry' . $index . '.GrandChildNoun as Entry_' . $index . '_GrandChildNoun';
 			$selects[] = 'Entry' . $index . '.GrandChildNounPlural as Entry_' . $index . '_GrandChildNounPlural';
+			$selects[] = 'Entry' . $index . '.GrandChildAction as Entry_' . $index . '_GrandChildAction';
 			$selects[] = 'Entry' . $index . '.Publish as Entry_' . $index . '_Publish';
 			$selects[] = 'Entry' . $index . '.OriginalCreationDate as Entry_' . $index . '_OriginalCreationDate';
 			$selects[] = 'Entry' . $index . '.LastModificationDate as Entry_' . $index . '_LastModificationDate';

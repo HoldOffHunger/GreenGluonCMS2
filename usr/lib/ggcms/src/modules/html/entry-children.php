@@ -159,7 +159,9 @@
 					
 					$child_title = '<a target="_parent" href="/' . $url_prefix . implode('/', $codes) . '/view.php';
 					
-					if($url_action) {
+					if($this->that->entry['ChildAction']) {
+						$child_title .= '?action=' . $this->that->entry['ChildAction'];
+					} elseif($url_action) {
 						$child_title .= '?action=' . $url_action;
 					}
 					
@@ -167,7 +169,9 @@
 				} else {
 					$child_title = '<a target="_parent" href="' . $url_prefix . $child['Code'] . '/view.php';
 					
-					if($url_action) {
+					if($this->that->entry['ChildAction']) {
+						$child_title .= '?action=' . $this->that->entry['ChildAction'];
+					} elseif($url_action) {
 						$child_title .= '?action=' . $url_action;
 					}
 					
@@ -198,7 +202,9 @@
 					
 					print('<a target="_parent" href="' . $link . '/view.php');
 					
-					if($url_action) {
+					if($this->that->entry['ChildAction']) {
+						print('?action=' . $this->that->entry['ChildAction']);
+					} elseif($url_action) {
 						print('?action=' . $url_action);
 					}
 					

@@ -26,7 +26,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -39,7 +39,7 @@
 	
 	ggreq('modules/html/socialmediasharelinks.php');
 	$social_media_share_links_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'textonly'=>$this->mobile_friendly,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
@@ -418,7 +418,7 @@
 		print('<div class="border-2px background-color-gray13 margin-5px horizontal-center width-50percent font-family-tahoma">');
 		
 		$new_url = str_replace('/view.php', '/view.php#comments', $_SERVER['SCRIPT_URL']);
-		print('<p><b><a href="' . $this->domain_object->GetPrimaryDomain(['secure'=>1, ''lowercase'=>'=>0, 'www'=>1]) . $new_url . '">Login to Comment</a></b></p>');
+		print('<p><b><a href="' . $this->domain_object->GetPrimaryDomain(['secure'=>1, 'lowercase'=>0, 'www'=>1]) . $new_url . '">Login to Comment</a></b></p>');
 		
 		print('</div>');
 		print('</center>');

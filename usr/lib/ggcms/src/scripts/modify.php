@@ -120,7 +120,6 @@
 				$prefix = $this->entry['id'] . '-';
 				for($i = 0; $i < $image_count; $i++) {
 					$image = $this->image[$i];
-					
 					if($this->startsWith($image['FileName'], $prefix)) {
 						$pos = strpos($this->startsWith($image['FileName'], $prefix));
 						if ($pos !== FALSE) {
@@ -996,15 +995,15 @@
 			foreach($child_record_types as $child_record_index => $child_record_type) {
 				$unformatted_saved_records = $this->$child_record_type;
 				
-				$records_to_delete = [];
 				$record_ids_to_keep = [];
 				
 				if(is_array($unformatted_saved_records) && count($unformatted_saved_records) && !$this->delete_in_progress) {
+				#	if($child_record_type === 'image') {
+				#	print("DEL-A");
+				#	}
 					foreach($unformatted_saved_records as $unformatted_saved_record) {
 						if($unformatted_saved_record && $unformatted_saved_record['id']) {
 							$record_ids_to_keep[] = $unformatted_saved_record['id'];
-						} else {
-							$records_to_delete[] = $unformatted_saved_record;
 						}
 					}
 					
@@ -1013,6 +1012,17 @@
 						'recordtype'=>$child_record_index,
 						'recordidstokeep'=>$record_ids_to_keep,
 					];
+					
+				#	if($child_record_type === 'image') {
+				#	print("<PRE>");
+					#print_r($record_ids_to_keep);
+				#	print("\n\n_______\n\n");
+					#print_r($records_to_delete);
+				#	#print_r($this->entry);
+				#	print("\n\n_______\n\n");
+				#	print_r($this->entry_unset['image']);
+				#	print("</PRE>");
+				#	}
 					
 					if(!$this->orm->DeleteChildRecords($delete_record_tree_args)) {
 						die("Record delete error.");
@@ -1032,22 +1042,48 @@
 				}
 				
 				if($child_record_type === 'image') {
+					#print("BT: DELETE CHILD IMAGES!");
 					$image_directory_location = $this->GetImageFolderDirectory();
 					
+					$preserved_record_id_hash = [];
+					$records_to_delete = [];
+					
+					foreach($record_ids_to_keep as $record_id_to_keep) {
+						$preserved_record_id_hash[$record_id_to_keep] = TRUE;
+					}
+					
+					foreach($this->entry_unset['image'] as $image) {
+						if(!$preserved_record_id_hash[$image['id']]) {
+							$records_to_delete[] = $image;
+						}
+					}
+					
+				#	print("<PRE>");
+				#	print_r($records_to_remove);
+				#	print("</PRE>");
+					
+				#	print_r($records_to_delete);
+					#print("<PRE>");
 					for($i = 0; $i < count($records_to_delete); $i++) {
 						$record_to_delete = $records_to_delete[$i];
+						
+					#	print("BT: DELETE!");
+					#	print_r($record_to_delete);
 						
 						if($record_to_delete && $record_to_delete['FileName']) {
 							$original_image_location_pieces = str_split($record_to_delete['FileDirectory']);
 							$dir_pieces = implode('/', $original_image_location_pieces);
 							
-							$image_file_location = $image_directory_location . $dir_pieces . '/' . $record_to_delete['FileName'];
-							$icon_file_location = $image_directory_location . $dir_pieces . '/' . $record_to_delete['IconFileName'];
+							$image_file_location = '../' . $image_directory_location . $dir_pieces . '/' . $record_to_delete['FileName'];
+							$icon_file_location = '../' . $image_directory_location . $dir_pieces . '/' . $record_to_delete['IconFileName'];
+							$standard_file_location = '../' . $image_directory_location . $dir_pieces . '/' . $record_to_delete['StandardFileName'];
 							
 							unlink($icon_file_location);
 							unlink($image_file_location);
+							unlink($standard_file_location);
 						}
 					}
+					#print("</PRE>");
 				}
 			}
 			
@@ -2693,9 +2729,12 @@
 			
 			$swap_hash = [];
 			
+		#	print_r($this->image);
 			for($i = 0; $i < count($this->image); $i++) {
-				$image = $this->image[$i];
-				$swap_hash[$image['id']] = $image['swapped'];
+				if($this->image[$i] && $this->image[$i]['id']) {
+					$image = $this->image[$i];
+					$swap_hash[$image['id']] = $image['swapped'];
+				}
 			}
 			
 			$prefix = $this->entry['id'] . '-';

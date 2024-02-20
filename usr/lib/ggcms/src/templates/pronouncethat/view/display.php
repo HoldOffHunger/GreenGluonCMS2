@@ -24,14 +24,13 @@
 	ggreq('modules/html/languages.php');
 	$languages_args = [
 		'languageobject'=>$this->language_object,
-		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
 	];
 	$languages = new module_languages($languages_args);
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -245,7 +244,7 @@
 	
 	ggreq('modules/html/socialmediasharelinks.php');
 	$social_media_share_links_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,

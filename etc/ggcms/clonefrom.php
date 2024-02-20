@@ -40,25 +40,27 @@
 		
 		public function NameServers() {
 			return [
-				'Your NameServers Here',
+				'ns1.digitalocean.com',
+				'ns2.digitalocean.com',
+				'ns3.digitalocean.com',
 			];
 		}
 		
 		public function IPv4Addresses() {
 			return [
-				'Your IPv4 Addresses Here',
+				'YOUR IPv4 ADDRESSES HERE',
 			];
 		}
 		
 		public function IPv6Addresses() {
 			return [
-				'Your IPv6 Addresses Here',
+				'YOUR IPv6 ADDRESSES HERE',
 			];
 		}
 		
 		public function WebHostServices() {
 			return [
-				'Your Web Host Service Here',
+				'Your Web Hosting Services Here',
 			];
 		}
 		
@@ -72,13 +74,13 @@
 			return [
 				'username'=>$info['username'],
 				'password'=>$info['password'],
-				'hostname'=>'mysql.ourbooklife.com',	# this should be the name of the server hosting this mysql db
+				'hostname'=>'your host here',	# this should be the name of the server hosting this mysql db
 				'database'=>'alldictionaries',
 			];
 		}
 		
 		public function NewRandomPasswordSeed() {
-			return 'Do NOT be so RANDOM!';
+			return 'aoeuia4y';
 		}
 		
 		public function SetSQLModePerSession() {
@@ -99,11 +101,47 @@
 		}
 		
 		public function AdminEmailAddress() {
-			return 'Your E-mail Address';
+			return 'Your Admin Email Address';
+		}
+		
+		public function CertificateAuthorityAdminEmailAddress() {
+			return $this->AdminEmailAddress();
 		}
 		
 		public function AdminName() {
-			return 'Your Admin Name';
+			return 'Your Admin Username';
+		}
+		
+		public function EncryptionAuthority() {
+			return 'Your Encryption Authority in Domain Format';	# i.e., 'letsencrypt.org'
+		}
+		
+		public function EnableDictionaries() {
+			return TRUE;
+		}
+		
+		public function EnableErrorLogging() {
+			return TRUE;
+		}
+		
+		public function EnableStats() {
+			return TRUE;
+		}
+		
+		public function EnableStats_LogMemoryUse() {
+			return TRUE;
+		}
+		
+		public function EnableStats_LogExcessiveMemoryUse() {
+			return TRUE;
+		}
+		
+		public function EnableStats_Log404Pages() {
+			return FALSE;
+		}
+		
+		public function EnableStats_LogExcessiveMemoryUse_MaxSize() {
+			return 1000000;
 		}
 		
 		public function minNewsItemsAllowed() {
@@ -570,6 +608,10 @@
 		
 		public function SiteLinks_ExtraURL() {
 			return '';
+		}
+		
+		public function useDBFileCache() {
+			return TRUE;
 		}
 		
 						// Styling Info

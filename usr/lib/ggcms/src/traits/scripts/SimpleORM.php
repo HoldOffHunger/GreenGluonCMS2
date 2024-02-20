@@ -41,8 +41,14 @@
 		}
 		
 		public function SetORM() {
-			ggreq('classes/Database/ORM.php');
-			
+			if($this->orm) {
+				return TRUE;
+			}
+			if($this->handler->orm) {
+				$this->orm = $this->handler->orm;
+				
+				return TRUE;
+			}
 			$this->orm = new ORM([
 				'handler'=>$this->handler,
 			]);
@@ -1549,8 +1555,14 @@
 				$exclude_ids[] = $child['id'];
 			}
 			
+			$sql = 'WHERE Entry1.Publish = 1 ';
+			
+			if(count($exclude_ids)) {
+				$sql .= ' AND Entry1.id NOT IN(' . implode(',', array_fill(0, count($exclude_ids), '?')) .  ') ';
+			}
+			
 			$this->where = [
-				'sql'=>'WHERE Entry1.Publish = 1 AND Entry1.id NOT IN(' . implode(',', array_fill(0, count($exclude_ids), '?')) .  ') ',
+				'sql'=>$sql,
 				'bind'=>str_repeat('i', count($exclude_ids)),
 				'value'=>$exclude_ids,
 			];
@@ -1564,8 +1576,14 @@
 				$exclude_ids[] = $child['id'];
 			}
 			
+			$sql = 'WHERE Entry1.Publish = 1';
+			
+			if(count($exclude_ids)) {
+				$sql .= ' AND Entry1.id NOT IN(' . implode(',', array_fill(0, count($exclude_ids), '?')) .  ') ';
+			}
+			
 			$this->where = [
-				'sql'=>'WHERE Entry1.Publish = 1 AND Entry1.id NOT IN(' . implode(',', array_fill(0, count($exclude_ids), '?')) .  ') ',
+				'sql'=>$sql,
 				'bind'=>str_repeat('i', count($exclude_ids)),
 				'value'=>$exclude_ids,
 			];
@@ -1811,7 +1829,7 @@
 			
 			if($this->object_code) {
 				$start_index = 1;
-				$end_index = $this->globals->IndexMaxRandomChildren();
+				$end_index = $this->handler->globals->IndexMaxRandomChildren();
 				$orderby = 'RAND()';
 			} else {
 				$orderby = '';
@@ -2523,6 +2541,7 @@
 				$objects_saved = [];
 				
 				foreach($object as $object_item) {
+					if(!$object_item) { continue;}
 					if($this->handler->desired_action === 'Update' && !$this->isUserAdmin()) {
 						$object_item['id'] = 0;
 						$object_item['Entryid'] = $this->entry['id'];
@@ -3029,11 +3048,30 @@
 					$user_ids[] = $entry_permission['Userid'];
 				}
 				
-				$sql = 'SELECT id, Username, EmailAddress FROM User WHERE id IN(' . implode(',', array_fill(0, count($user_ids), '?')) . ')';
-				$users = $this->handler->db_access->RunQuery([
-					'sql'=>$sql,
-					'args'=>$user_ids,
-				]);
+				if($this->handler->db_access->db_file_cache) {
+					$users = $this->handler->db_access->db_file_cache->ReadCache([
+						'type'=>'ggcms_UserIds',
+						'arguments'=>$user_ids,
+					]);
+				}
+				
+				if(!is_array($users)) {
+					$sql = 'SELECT id, Username, EmailAddress FROM User WHERE id IN(' . implode(',', array_fill(0, count($user_ids), '?')) . ')';
+					$users = $this->handler->db_access->RunQuery([
+						'sql'=>$sql,
+						'args'=>$user_ids,
+					]);
+					
+					if($this->handler->db_access->db_file_cache) {
+						if(count($users) !== 0) {
+							$this->handler->db_access->db_file_cache->WriteCache([
+								'type'=>'ggcms_UserIds',
+								'arguments'=>$user_ids,
+								'data'=>$users,
+							]);
+						}
+					}
+				}
 				
 				$user_hash = [];
 				

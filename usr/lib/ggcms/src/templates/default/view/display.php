@@ -21,29 +21,20 @@
 	ggreq('modules/html/list/generic.php');
 	$generic_list = new module_genericlist;
 	
-	ggreq('modules/html/header.php');
-	$header = new module_header;
-	
 			// Display Header
 		
 		// -------------------------------------------------------------
+		
+	ggreq('modules/html/entry-header.php');
+	ggreq('modules/html/entry-index-header.php');
+	$entryheader = new module_entryindexheader([
+		'that'=>$this,
+		'main_text'=>$this->header_title_text,
+		'sub_text'=>$sub_text,
+		'sub_title'=>$sub_title,
+	]);
 	
-	$header_primary_args = [
-		'title'=>'Master Control Program',
-		'image'=>'master-c-icon.jpg',
-		'divmouseover'=>'The Grand Master C.',
-		'imagemouseover'=>'Master C is in the house!',
-		'level'=>1,
-		'divclass'=>'horizontal-center width-100percent border-2px margin-top-5px background-color-gray13',
-		'textclass'=>'padding-0px margin-0px horizontal-center vertical-center padding-top-22px',
-		'imagedivclass'=>'border-2px margin-5px background-color-gray10',
-		'imageclass'=>'border-1px height-75px',
-		'domainobject'=>$this->domain_object,
-		'leftimageenable'=>1,
-		'rightimageenable'=>1,
-	];
-	
-	$header->display($header_primary_args);
+	$entryheader->Display();
 	
 			// Basic Divider Arguments
 		

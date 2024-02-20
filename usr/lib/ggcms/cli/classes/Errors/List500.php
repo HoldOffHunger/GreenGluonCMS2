@@ -17,7 +17,7 @@
 			$this->setHandle();
 			$this->bannerMessage();
 			
-			if(!$this->setDomain()) {
+			$this->setDomain()) {
 				return $this->cancelAction(['message'=>'Invalid domain.  Please submit a FQDN in the form of `example.com`.']);
 			}
 			
@@ -26,7 +26,7 @@
 			$this->setMySQLArgs();
 			$this->getAndList500Errors();
 			
-			return $this->cancelAction(['message'=>'User cancelled.']);
+			return TRUE;
 		}
 		
 		public function getAndList500Errors(){

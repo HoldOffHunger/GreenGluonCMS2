@@ -721,7 +721,7 @@
 		
 		ggreq('modules/html/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
@@ -734,7 +734,7 @@
 		
 		ggreq('modules/html/socialmediasharelinks.php');
 		$social_media_share_links_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'textonly'=>$this->mobile_friendly,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
@@ -798,12 +798,6 @@
 				}
 			}
 			
-			if(!$primary_image)
-			{
-				$primary_image = $this->primary_host_record['PrimaryImageLeft'];
-				$primary_image_text = $this->primary_host_record['Classification'];
-			}
-			
 					// Mouseover Values
 				
 				// -------------------------------------------------------------
@@ -815,14 +809,6 @@
 				$random_quote = $this->entry['quote'][array_rand($this->entry['quote'], 1)];
 				
 				$div_mouseover = '&quot;' . str_replace('"', '\'', $random_quote['Quote']) . '&quot; -- ' . str_replace('"', '\'', $random_quote['Source']);
-			}
-			
-			if(!$div_mouseover)
-			{
-				if($this->primary_host_record['Subject'])
-				{
-					$div_mouseover = str_replace('"', '\'', $this->primary_host_record['Subject']);
-				}
 			}
 		}
 		
@@ -1168,15 +1154,6 @@
 						$child_image = $child_images[0];
 						$display_image = $child_image;
 					}
-				}
-				
-				if(!$display_image)
-				{
-					$display_image = [
-						'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-						'IconPixelWidth'=>200,
-						'IconPixelHeight'=>200,
-					];
 				}
 				
 				print('<div class="border-2px background-color-gray15 margin-5px float-left">');
@@ -1949,12 +1926,10 @@
 				
 				unset($display_image);
 				
-				if($child['image'])
-				{
+				if($child['image']) {
 					$child_images = $child['image'];
 					$child_image_count = count($child_images);
-					if($child_image_count)
-					{
+					if($child_image_count) {
 						shuffle($child_images);
 						$child_image = $child_images[0];
 						$display_image = $child_image;
@@ -1962,16 +1937,7 @@
 				}
 				
 				if(!$display_image) {
-			#		print_r($this->entry['association'][0]['entry']['image']);die();
-					if(count($this->entry['association'][0]['entry']['image'])) {
-						$display_image = $this->entry['association'][0]['entry']['image'][0];
-					} else {
-						$display_image = [
-							'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-							'IconPixelWidth'=>200,
-							'IconPixelHeight'=>200,
-						];
-					}
+					$display_image = $this->entry['association'][0]['entry']['image'][0];
 				}
 				
 				print('<div class="border-2px background-color-gray15 margin-5px float-left">');

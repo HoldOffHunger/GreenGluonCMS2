@@ -33,14 +33,13 @@
 		require(GGCMS_DIR . 'modules/' . $this->script_format_lower . '/languages.php');
 		$languages_args = [
 			'languageobject'=>$this->language_object,
-			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
 		];
 		$languages = new module_languages($languages_args);
 		
 		require(GGCMS_DIR . 'modules/' . $this->script_format_lower . '/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
@@ -90,24 +89,9 @@
 				// Display Header
 			
 			// -------------------------------------------------------------
-			
-		if($this->primary_host_record['PrimaryColor'])
-		{
-			$primary_color = $this->primary_host_record['PrimaryColor'];
-		}
-		else
-		{
-			$primary_color = '6495ED';
-		}
 		
-		if($this->primary_host_record['ThirdColor'])
-		{
-			$third_color = $this->primary_host_record['ThirdColor'];
-		}
-		else
-		{
-			$third_color = 'B7CEEC';
-		}
+		$primary_color = '6495ED';
+		$third_color = 'B7CEEC';
 		
 		require(GGCMS_DIR . 'modules/html/entry-header.php');
 		require(GGCMS_DIR . 'modules/html/entry-index-header.php');
@@ -293,13 +277,5 @@ print($this->robots_txt_file);
 		);
 		$generic_list->Display($version_list_display_args);
 	}
-	
-	
-	
-	#print("<PRE>");
-	#print_r($this->all_domains);
-	#print_r($this->primary_host_record['AlternateDomain']);
-	#print_r($this->domain_object);
-	#print("</PRE>");
 	
 ?>

@@ -27,14 +27,13 @@
 	ggreq('modules/html/languages.php');
 	$languages_args = [
 		'languageobject'=>$this->language_object,
-		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
 	];
 	$languages = new module_languages($languages_args);
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -129,48 +128,36 @@ print('<center><h2 class="margin-5px font-family-tahoma">' . $select_language_ti
 				}
 			}
 			
-			if($this->language_object->getLanguageCode() == 'en')
-			{
+			if($this->language_object->getLanguageCode() == 'en') {
 				$other_country_text = 'other country';
-			}
-			else
-			{
+			} else {
 				$other_country_language_translations = $this->getListAndItems(['ListTitle'=>'LanguagesOtherCountry']);
 				
-				if($other_country_language_translations[$this->language_object->getLanguageCode()])
-				{
+				if($other_country_language_translations[$this->language_object->getLanguageCode()]) {
 					$other_country_text = $other_country_language_translations[$this->language_object->getLanguageCode()];
-				}
-				else
-				{
+				} else {
 					$other_country_text = 'other country';
 				}
 			}
 			
-			if($this->language_object->getLanguageCode() == 'en')
-			{
+			if($this->language_object->getLanguageCode() === 'en') {
 				$other_countries_text = 'other countries';
-			}
-			else
-			{
+			} else {
 				$other_countries_language_translations = $this->getListAndItems(['ListTitle'=>'LanguagesOtherCountries']);
 				
-				if($other_countries_language_translations[$this->language_object->getLanguageCode()])
-				{
+				if($other_countries_language_translations[$this->language_object->getLanguageCode()]) {
 					$other_countries_text = $other_countries_language_translations[$this->language_object->getLanguageCode()];
-				}
-				else
-				{
+				} else {
 					$other_countries_text = 'other countries';
 				}
 			}
 			
 			$current_language_code = $this->language_object->getLanguageCode();
 			
-			$language_codes = $this->language_object->GetListOfLanguageCodes_any([languagecode=>$current_language_code]);
+			$language_codes = $this->language_object->GetListOfLanguageCodes_any(['languagecode'=>$current_language_code]);
 			$language_codes_alternate_list = $this->language_object->GetCountryCodeList();
 			$language_flags = $this->language_object->GetListOfLanguageFlags();
-			$translated_country_names_full_list = $this->country->GetTranslatedCountryNames([language=>$current_language_code]);
+			$translated_country_names_full_list = $this->country->GetTranslatedCountryNames(['language'=>$current_language_code]);
 			
 						// Display Languages
 						// -------------------------------------------------------
@@ -206,12 +193,9 @@ print('<center><h2 class="margin-5px font-family-tahoma">' . $select_language_ti
 				
 				print('<p class="font-family-tahoma margin-5px">');
 				
-				if($current_language_code == $native_language_key)
-				{
+				if($current_language_code == $native_language_key) {
 					print('<strong>');
-				}
-				else
-				{
+				} else {
 					print('<a href="' . str_replace('/', '', $_SERVER['SCRIPT_URL']) . '?language=' . $native_language_key . '">');
 				}
 				

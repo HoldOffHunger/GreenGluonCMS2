@@ -57,6 +57,95 @@
 			
 			return $title;
 		}
+		
+		public function KillDisconnectedImages() {
+			$full_directory = '../' . $this->GetImageFolderDirectory();
+			
+			if(is_dir($full_directory)) {
+				print('Image Directory found!!! : ' . $full_directory);
+				
+				print('<PRE>');
+				print(PHP_EOL . PHP_EOL);
+				
+				$this->KillDisconnectedImages_ParseBaseDirectory(['dir'=>$full_directory]);
+				
+				print(PHP_EOL . PHP_EOL);
+				print('</PRE>');
+			}
+			
+			return TRUE;
+		}
+		
+		public function KillDisconnectedImages_ParseBaseDirectory($args) {
+			$max_character = 'zz';
+			foreach (new DirectoryIterator($args['dir']) as $file) {
+				if($file->isDot()) continue;
+				if($file->getFilename() > $max_character) continue;
+				#print 'yo: ' . $file->getFilename();
+				$new_dir = $args['dir'] . $file->getFilename() . '/';
+				if(is_dir($new_dir)) {
+					print $new_dir;
+					print PHP_EOL;
+					
+					$this->KillDisconnectedImages_ParseBaseDirectory([
+						'dir'=>$new_dir,
+					]);
+					
+					if($this->is_dir_empty($new_dir)) {
+						print("DELETED FOLDER!!!!!!!!!!!!" . $new_dir);
+			#			print_r(scandir($new_dir));
+						rmdir($new_dir);
+						print PHP_EOL;
+					} else {
+					#	print("DON'T DELETE FOLDER!!!!!!!!!!!!" . $new_dir);
+					#	print PHP_EOL;
+					#	
+					#	print_r(scandir($new_dir));
+					}
+				} else {
+					$new_file = $args['dir'] . $file->getFilename();
+					print("FILE!!!");
+					print $new_file;
+					print PHP_EOL;
+					
+					$new_dir_pieces = explode('/image/', $args['dir']);
+					$new_dir = $new_dir_pieces[1];
+					$new_dir = str_replace('/', '', $new_dir);
+					#print('|' . $new_dir . '|');
+
+					$sql = 'SELECT * FROM Image where FileDirectory = "' . $new_dir. '" AND (FileName = "' . $file->getFilename() . '" OR IconFileName = "' . $file->getFilename() . '" OR StandardFileName = "' . $file->getFilename() . '")';
+					
+					$results = $this->db_access_object->RunQuery([
+						'sql'=>$sql,
+					]);
+					
+					$result_count = count($results);
+					
+					if($result_count === 0) {
+						print("REMOVE!!!!!!!!!!!!!!!!!!!" . PHP_EOL);
+						
+						unlink($new_file);
+					} else {
+						print("KEEP!!!!!!!!!!!!!!!!!!!" . PHP_EOL);
+					}
+				}
+			#	echo $file->getFilename() . "|" . $file->valid . "|" . PHP_EOL;
+			}
+
+		}
+		
+		public function is_dir_empty($dir) {
+			return (count(scandir($dir)) == 2);
+		}
+		
+		public function KillDisconnectedImages_ParseDirectory($args) {
+			foreach (new DirectoryIterator($args['dir']) as $fileInfo) {
+				if($fileInfo->isDot()) continue;
+				echo $fileInfo->getFilename() . "|" . $fileInfo->valid . "|" . PHP_EOL;
+			}
+
+		}
+		
 					// Function Information
 					// --------------------------------------------------------------
 					

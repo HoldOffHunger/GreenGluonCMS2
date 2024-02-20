@@ -23,7 +23,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -52,22 +52,6 @@
 		$description = $this->entry['description'][0];
 		
 		$image_mouseover = str_replace('"', '\'', $description['Description']);
-	}
-	
-	if(!$div_mouseover)
-	{
-		if($this->primary_host_record['Classification'])
-		{
-			$div_mouseover = str_replace('"', '\'', $this->primary_host_record['Classification']);
-		}
-	}
-	
-	if(!$image_mouseover)
-	{
-		if($this->primary_host_record['Subject'])
-		{
-			$image_mouseover = str_replace('"', '\'', $this->primary_host_record['Subject']);
-		}
 	}
 	
 			// Display Header
@@ -273,15 +257,6 @@
 						}
 					}
 					
-					if(!$display_image)
-					{
-						$display_image = [
-							'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-							'IconPixelWidth'=>200,
-							'IconPixelHeight'=>200,
-						];
-					}
-					
 					print('<div class="border-2px background-color-gray15 margin-5px float-left">');
 					print('<div class="border-2px background-color-gray15 margin-5px float-left">');
 					print('<div class="height-100px width-100px background-color-gray0">');
@@ -373,21 +348,13 @@
 						}
 					}
 					
-					$header_secondary_args = [
-						'title'=>$grandchild_title,
-					//	'image'=>$this->primary_host_record['PrimaryImageLeft'],
-					//	'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
-						'divmouseover'=>$div_mouseover,
-						'level'=>3,
-						'divclass'=>'border-2px background-color-gray15 margin-5px float-left',
-						'textclass'=>'padding-0px margin-5px horizontal-left font-family-tahoma',
-						'imagedivclass'=>'border-2px margin-5px background-color-gray10',
-						'imageclass'=>'border-1px',
-						'domainobject'=>$this->domain_object,
-						'leftimageenable'=>0,
-						'rightimageenable'=>0,
-					];
-					$header->display($header_secondary_args);
+					print('<div id="header_backgroundimageurl" class="border-2px background-color-gray15 margin-5px float-left" title="' . $div_mouseover . '">');
+
+print('<div class="span-header-3"><h3 style="margin:5px;padding:5px;display: inline-block;border:black 2px solid;background-color:#FFFFFF;" class="header-3 padding-0px margin-5px horizontal-left font-family-tahoma">' . $grandchild_title . '</h3></div>');
+
+
+
+print('</div>');
 					
 					print('<p class="horizontal-left margin-5px font-family-arial">');
 					
@@ -705,7 +672,7 @@
 	
 	ggreq('modules/html/socialmediasharelinks.php');
 	$social_media_share_links_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'textonly'=>$this->mobile_friendly,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,

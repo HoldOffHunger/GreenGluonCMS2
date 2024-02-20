@@ -21,12 +21,8 @@
 			// Display Header
 		
 		// -------------------------------------------------------------
-		
-	if($this->primary_host_record['PrimaryColor']) {
-		$primary_color = $this->primary_host_record['PrimaryColor'];
-	} else {
-		$primary_color = '6495ED';
-	}
+	
+	$primary_color = '6495ED';
 	
 	$header_primary_args = [
 		'title'=>'Master Control Program',

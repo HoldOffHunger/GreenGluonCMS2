@@ -189,7 +189,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
-						'Preface' .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -200,6 +200,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -210,6 +211,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -220,6 +222,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -230,6 +233,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -240,6 +244,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -250,6 +255,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -260,6 +266,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -270,6 +277,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -280,6 +288,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -290,6 +299,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =
@@ -300,6 +310,7 @@
 					$preface_section[] =
 						'<h3><a name="preface"></a>' .
 						$this->getImageMarkup(['image'=>$image]) .
+						$this->handler->abstractglobals->language_script->PrefaceHeader() .
 						'</h3>';
 					
 					$preface_section[] =

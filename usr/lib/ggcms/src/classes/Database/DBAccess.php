@@ -2,9 +2,13 @@
 
 	class DBAccess {
 		public $db_link;
-		private $ip_address;
+		public $ip_address;
 		
 		public $escapemysql;
+		
+		public function Upgraded() {
+			return FALSE;
+		}
 		
 			// Construction
 			// -------------------------------------------------
@@ -23,8 +27,19 @@
 			$escapemysql = new EscapeMySQL($args);
 			$this->escapemysql = $escapemysql;
 			
+			$hardcoded_table_entries = new HardcodedTableDescriptions($args);
+			$this->hardcoded_table_entries = $hardcoded_table_entries;
+			
+			if($this->handler->globals->useDBFileCache()) {
+				ggreq('classes/Database/DBFileCache.php');
+				
+				$this->db_file_cache = new DBFileCache($args);
+			}
+			
 			if(!$this->ip_address) {
-				die('Unable to proceed if user has no recognizable IP address.');
+				if($_SERVER['HTTP_HOST'] !== 'localhost' || $_SERVER['SERVER_NAME'] !== 'localhost') {
+					die('Unable to proceed if user has no recognizable IP address.');
+				}
 			}
 			
 			return TRUE;
@@ -53,16 +68,31 @@
 			// Start/Stop the DB
 			// -------------------------------------------------
 		
+		public function DBStartConditional() {
+			if(!property_exists($this, 'db_link')) {
+				$this->DBStart();
+			}
+			
+			return TRUE;
+		}
+		
 		public function DBStart() {
 		#	error_reporting(E_ERROR);
 			
-			$this->db_link = new mysqli(
-				ini_get("mysqli.default_host"),
-				ini_get("mysqli.default_user"),
-				ini_get("mysqli.default_pw"),
-				$this->database,
-				ini_get("mysqli.default_port")
-			);
+			try {
+				$this->db_link = new mysqli(
+					ini_get("mysqli.default_host"),
+					ini_get("mysqli.default_user"),
+					ini_get("mysqli.default_pw"),
+					$this->database,
+					ini_get("mysqli.default_port")
+				);
+			} catch (Exception $e) {
+				#if($_SERVER['HTTP_HOST'] === 'localhost' && $_SERVER['SERVER_NAME'] === 'localhost') {
+				#	print($this->db_link->connect_errno . ' : ' . $this->db_link->connect_error);
+				#	print_r($e);
+				#}
+			}
 			
 			if($this->db_link->connect_errno) {
 				$this->hostname = 'mysql.' . $this->hostlabel . '.com';
@@ -87,6 +117,9 @@
 				];
 			} else {
 				if($this->handler->globals->SetSQLModePerSession()) {
+				#if($_SERVER['HTTP_HOST'] === 'localhost' && $_SERVER['SERVER_NAME'] === 'localhost') {
+				#	print($this->db_link->connect_errno . ' : ' . $this->db_link->connect_error);
+			#	}
 						# never enable `ONLY_FULL_GROUP_BY`
 						# nevere nable `STRICT_TRANS_TABLES` (it causes Text types to fail always because they need to have a default type, which they cannot have)
 				#	$this->db_link->query("SET GLOBAL sql_mode = 'ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'");
@@ -96,19 +129,21 @@
 				}
 			}
 			
-			unset($this->hostname);
-			unset($this->username);
-			unset($this->password);
-			
 			if($this->db_link->connect_error) {
-				print_r($this->db_link->connect_error);
+			#	print_r($this->db_link->connect_error);
 				http_response_code(500);
+				if($_SERVER['HTTP_HOST'] === 'localhost' && $_SERVER['SERVER_NAME'] === 'localhost') {
+					print($this->db_link->connect_errno . ' : ' . $this->db_link->connect_error);
+				}
+			#	print('<p>');
+			#	print($this->db_link->connect_errno . ' : ' . $this->db_link->connect_error);
+			#	print('</p>');
 			//	print("<PRE>");
 			//	print_r($this->db_link);
 			//	$e = new \Exception;
 			//	var_dump($e->getTraceAsString());
 			//	print("</PRE>");
-				die ("Database unavailable. =(");
+			//	die ("Database unavailable. =(");
 			}
 			
 		#	$this->db_link->set_charset("utf8");
@@ -131,6 +166,7 @@
 			// -------------------------------------------------
 		
 		public function FetchAllRows($args) {
+			$this->DBStartConditional();
 			$query = $args['query'];
 			$objects = [];
 			
@@ -148,6 +184,8 @@
 			// -------------------------------------------------
 		
 		public function GetRecords($args) {
+			$this->DBStartConditional();
+			
 			$record_select = $args['select'];
 			$record_type = $args['type'];
 			$record_definition = $args['definition'];
@@ -323,6 +361,8 @@
 		}
 		
 		public function FillArraysFromDB($args) {
+			$this->DBStartConditional();
+			
 			$query = $args['query'];
 			$sqlbindstring = $args['sqlbindstring'];
 			$recordvalues = $args['recordvalues'];
@@ -449,11 +489,16 @@
 		}
 		
 		public function GetRecordDescription($args) {
-			$record_type = $args['type'];
+			$hardcoded_function = 'HardcodedTable_' . $args['type'];
 			
-			$record_schema_query = 'DESCRIBE ' . $record_type;
+			if(method_exists($this->hardcoded_table_entries, $hardcoded_function)) {
+				return $this->hardcoded_table_entries->$hardcoded_function();
+			}
 			
-			$result = $this->db_link->query($record_schema_query);
+		#	if($args['type'] === 'Entry') {
+		#		return $this->hardcoded_table_entries->HardcodedTable_Entry();
+		#	}
+			$result = $this->GetRecordDescription_QueryDB($args);
 			
 			$record_description = [];
 			
@@ -485,6 +530,18 @@
 			#http://php.net/manual/en/mysqli.info.php
 			
 			return $record_description;
+		}
+		
+		public function GetRecordDescription_QueryDB($args) {
+			$this->DBStartConditional();
+			
+			$record_type = $args['type'];
+			
+			$record_schema_query = 'DESCRIBE ' . $record_type;
+			
+			$result = $this->db_link->query($record_schema_query);
+			
+			return $result;
 		}
 		
 		public function GetRecordDescription_GetTypeBaseAndAttribute($args) {

@@ -15,36 +15,45 @@
 	ggreq('modules/html/divider.php');
 	$divider = new module_divider;
 	
-	ggreq('modules/html/table.php');
-	$table = new module_table;
-	
 	ggreq('modules/html/list/generic.php');
 	$generic_list = new module_genericlist;
 	
-	ggreq('modules/html/header.php');
-	$header = new module_header;
-	
-			// Display Header
-		
-		// -------------------------------------------------------------
-	
-	$header_primary_args = [
-		'title'=>$this->header_title_text,
-		'image'=>$this->primary_host_record['PrimaryImageLeft'],
-		'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
-		'divmouseover'=>'The Grand Master C.',
-		'imagemouseover'=>'Master C is in the house!',
-		'level'=>1,
-		'divclass'=>'horizontal-center width-100percent border-2px margin-top-5px background-color-gray13',
-		'textclass'=>'padding-0px margin-0px horizontal-center vertical-center padding-top-22px',
-		'imagedivclass'=>'border-2px margin-5px background-color-gray10',
-		'imageclass'=>'border-1px height-75px',
+	ggreq('modules/html/navigation.php');
+	$navigation_args = [
+		'globals'=>$this->handler->globals,
+		'languageobject'=>$this->language_object,
+		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
-		'leftimageenable'=>1,
-		'rightimageenable'=>1,
 	];
+	$navigation = new module_navigation($navigation_args);
 	
-	$header->display($header_primary_args);
+	ggreq('modules/html/entry-sort.php');
+	$entrysort = new module_entrysort(['that'=>$this]);
+	
+				// Header_REAL
+			
+			// -------------------------------------------------------------
+	
+	$date_epoch_time = strtotime($this->child_record_stats['LastModificationDate']);
+	$full_date = date("F d, Y; H:i:s", $date_epoch_time);
+	
+	$sub_text =
+		str_replace('<p>', '<p class="horizontal-left margin-5px font-family-tahoma">', $this->entry['textbody'][0]['Text']) . 
+		'<p class="horizontal-left margin-5px font-family-tahoma">' .
+		'This blog contains ' . number_format($this->child_record_stats['ChildRecordCount']) . ' texts, with ' . number_format($this->child_record_stats['ChildWordCount']) . ' words or ' . number_format($this->child_record_stats['ChildCharacterCount']) . ' characters.' .
+		'</p>';
+	$sub_title = 'Last Updated: ' . $full_date . '.';
+	
+	ggreq('modules/html/entry-header.php');
+	ggreq('modules/html/entry-index-header.php');
+	$entryheader = new module_entryindexheader([
+		'that'=>$this,
+		'main_text'=>$this->header_title_text,
+		'sub_text'=>$sub_text,
+		'sub_title'=>$sub_title,
+	]);
+	
+	$entryheader->Display();
 	
 			// Basic Divider Arguments
 		
@@ -69,31 +78,103 @@
 	$divider_end_args = [
 	];
 	
+			// Admin Controls
+		
+		// -------------------------------------------------------------
+	
+	if($this->authentication_object->user_session['UserAdmin.id']) {
+		ggreq('modules/html/entry-controls.php');
+		$entry_controls = new module_entrycontrols;
+		$entry_controls->Display(['that'=>$this, 'file'=>__FILE__]);
+	}
+	
+			// Start Top Bar
+		
+		// -------------------------------------------------------------
+	
+	print('<div class="horizontal-center width-95percent margin-top-5px">');
+	
+			// Login Info
+		
+		// -------------------------------------------------------------
+		
+	ggreq('modules/html/auth.php');
+	$auth = new module_auth(['that'=>$this]);
+	$auth->Display();
+	
+			// End Top Bar
+		
+		// -------------------------------------------------------------
+	
+	print('</div>');
+	
+			// Finish Breadcrumb Trails
+		
+		// -------------------------------------------------------------
+							
+	print('<div class="clear-float"></div>');
+	
+	
+			// Newest-Entries Record List
+		
+		// -------------------------------------------------------------
+	
+	ggreq('modules/html/entry-newest.php');
+	$entry_newest = new module_entrynewest(['that'=>$this]);
+	
+	$entry_newest->Display();
+	
 			// View Selected Record List
 		
 		// -------------------------------------------------------------
 	
-	print("BT: INDEX view.php script, display.php template<BR><BR>");
+	ggreq('modules/html/entry-children-grandchildren.php');
+	$entry_children_grandchildren = new module_entrychildrengrandchildren(['that'=>$this, 'entrysort'=>$entrysort]);
 	
-	for($i = 0; $i < count($this->children); $i++) {
-		$child = $this->children[$i];
+	$entry_children_grandchildren->Display();
+	
+			// Share Package
 		
-		print('<a href="' . $child['Code'] . '/view.php">');
-		print($child['Title']);
-		print('</a>');
-		print("<BR>");
-	}
+		// -------------------------------------------------------------
 	
-	print("<PRE>RECORD LIST:");
-	print_r($this->record_list);
-	print("\n\nMASTER RECORD:\n\n");
-	print_r($this->master_record);
-	print("\n\nPARENT:\n\n");
-	print_r($this->parent);
-	print("\n\nENTRY:\n\n");
-	print_r($this->entry);
-	print("\n\nCHILDREN:\n\n");
-	print_r($this->children);
-	print("</PRE>");
+	ggreq('modules/html/socialmediasharelinks.php');
+	$social_media_share_links_args = [
+		'globals'=>$this->handler->globals,
+		'textonly'=>$this->mobile_friendly,
+		'languageobject'=>$this->language_object,
+		'divider'=>$divider,
+		'domainobject'=>$this->domain_object,
+		'socialmedia'=>$this->social_media,
+		'sharewithtext'=>'Share With',
+		'socialmediasharelinkargs'=>[
+			'url'=>$this->domain_object->GetPrimaryDomain(['insecure'=>1, 'lowercase'=>1, 'www'=>1]) . '/',
+			'title'=>$this->header_title_text,
+			'desc'=>$image_mouseover,
+			'provider'=>$this->domain_object->primary_domain_lowercased,
+		],
+	];
+	$social_media_share_links = new module_socialmediasharelinks($social_media_share_links_args);
+	
+		
+				// Display Social Networking Options
+			
+			// -------------------------------------------------------------
+	
+	$social_media_share_links->display();
+
+				// Finish Textbody Header
+			
+			// -------------------------------------------------------------
+	
+	print('<div class="clear-float"></div>');
+	
+			// Display Final Ending Navigation
+		
+		// -------------------------------------------------------------
+	
+	$bottom_navigation_args = [
+		'thispage'=>'Home',
+	];
+	$navigation->DisplayBottomNavigation($bottom_navigation_args);
 	
 ?>

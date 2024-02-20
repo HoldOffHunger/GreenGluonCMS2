@@ -73,8 +73,8 @@
 				'en',		// English
 				'es',		// Spanish
 				'fr',		// French
-				'ja',		// Japanese
 				'it',		// Italian
+				'ja',		// Japanese
 				'nl',		// Dutch
 				'pl',		// Polish
 				'pt',		// Portuguese
@@ -126,16 +126,6 @@
 					#	'fr',		# 3166-1 2-Code
 					#	'fra',		# 3166-1 3-Code
 					],
-				'ja'=>
-					[
-						'ja',		# 639-1
-						'jpn',		# 639-2/T
-					#	'jpn',		# 639-2/B
-					#	'jpn',		# 639-3
-					#	'jpn',		# 639-6	
-						'jp',		# 3166-1 2-Code
-					#	'jpn',		# 3166-1 3-Code
-					],
 				'it'=>
 					[
 						'it',		# 639-1
@@ -145,6 +135,16 @@
 						'itas',		# 639-6
 					#	'it',		# 3166-1 2-Code
 					#	'ita',		# 3166-1 3-Code
+					],
+				'ja'=>
+					[
+						'ja',		# 639-1
+						'jpn',		# 639-2/T
+					#	'jpn',		# 639-2/B
+					#	'jpn',		# 639-3
+					#	'jpn',		# 639-6	
+						'jp',		# 3166-1 2-Code
+					#	'jpn',		# 3166-1 3-Code
 					],
 				'nl'=>
 					[
@@ -218,8 +218,8 @@
 				'en'=>'us_United_States.png',
 				'es'=>'es_Spain.png',
 				'fr'=>'fr_France.png',
-				'ja'=>'jp_Japan.png',
 				'it'=>'it_Italy.png',
+				'ja'=>'jp_Japan.png',
 				'nl'=>'nl_Netherlands.png',
 				'pl'=>'pl_Poland.png',
 				'pt'=>'pt_Portugal.png',
@@ -238,8 +238,8 @@
 				'en'=>'English',
 				'es'=>'Español',
 				'fr'=>'Français',
-				'ja'=>'日本語',
 				'it'=>'Italiano',
+				'ja'=>'日本語',
 				'nl'=>'Nederlands',
 				'pl'=>'Polskie',
 				'pt'=>'Português',
@@ -268,8 +268,8 @@
 				'en'=>'English',
 				'es'=>'Spanish',
 				'fr'=>'French',
-				'ja'=>'Japanese',
 				'it'=>'Italian',
+				'ja'=>'Japanese',
 				'nl'=>'Dutch',
 				'pl'=>'Polish',
 				'pt'=>'Portuguese',
@@ -294,8 +294,8 @@
 				'en'=>'Englisch',
 				'es'=>'Spanisch',
 				'fr'=>'Französisch',
-				'ja'=>'Japanisch',
 				'it'=>'Italienisch',
+				'ja'=>'Japanisch',
 				'nl'=>'Niederländer',
 				'pl'=>'Polieren',
 				'pt'=>'Portugiesisch',
@@ -320,8 +320,8 @@
 				'en'=>'Inglés',
 				'es'=>'Español',
 				'fr'=>'Francés',
-				'ja'=>'Japonés',
 				'it'=>'Italiano',
+				'ja'=>'Japonés',
 				'nl'=>'Holandés',
 				'pl'=>'Polaco',
 				'pt'=>'Portugués',
@@ -346,8 +346,8 @@
 				'en'=>'Anglais',
 				'es'=>'Espanol',
 				'fr'=>'Français',
-				'ja'=>'Japonais',
 				'it'=>'Italien',
+				'ja'=>'Japonais',
 				'nl'=>'Néerlandais',
 				'pl'=>'Polonais',
 				'pt'=>'Portugais',
@@ -370,8 +370,8 @@
 				'en'=>'英語',
 				'es'=>'スペイン語',
 				'fr'=>'フランス語',
-				'ja'=>'日本語',
 				'it'=>'イタリア語',
+				'ja'=>'日本語',
 				'nl'=>'オランダの',
 				'pl'=>'ポーランド語',
 				'pt'=>'ポルトガル語',
@@ -394,8 +394,8 @@
 				'en'=>'Inglese',
 				'es'=>'Spagnolo',
 				'fr'=>'Francese',
-				'ja'=>'Giapponese',
 				'it'=>'Italiano',
+				'ja'=>'Giapponese',
 				'nl'=>'Olandese',
 				'pl'=>'Polacco',
 				'pt'=>'Portoghese',
@@ -418,8 +418,8 @@
 				'en'=>'Engels',
 				'es'=>'Spaans',
 				'fr'=>'Frans',
-				'ja'=>'Japans',
 				'it'=>'Italiaans',
+				'ja'=>'Japans',
 				'nl'=>'Nederlands',
 				'pl'=>'Pools',
 				'pt'=>'Portugees',
@@ -442,8 +442,8 @@
 				'en'=>'Angielski',
 				'es'=>'Hiszpański',
 				'fr'=>'Francuski',
-				'ja'=>'Japoński',
 				'it'=>'Włoski',
+				'ja'=>'Japoński',
 				'nl'=>'Holenderski',
 				'pl'=>'Polskie',
 				'pt'=>'Portugalski',
@@ -466,8 +466,8 @@
 				'en'=>'Inglês',
 				'es'=>'Espanhol',
 				'fr'=>'Francês',
-				'ja'=>'Japonês',
 				'it'=>'Italiano',
+				'ja'=>'Japonês',
 				'nl'=>'Holandês',
 				'pl'=>'Polonês',
 				'pt'=>'Português',
@@ -490,8 +490,8 @@
 				'en'=>'Английский',
 				'es'=>'Испанский',
 				'fr'=>'Французский',
-				'ja'=>'Японский',
 				'it'=>'Итальянский',
+				'ja'=>'Японский',
 				'nl'=>'Голландский',
 				'pl'=>'Польский',
 				'pt'=>'Португальский',
@@ -514,8 +514,8 @@
 				'en'=>'İngilizce',
 				'es'=>'İspanyol',
 				'fr'=>'Fransızca',
-				'ja'=>'Japonca',
 				'it'=>'İtalyan',
+				'ja'=>'Japonca',
 				'nl'=>'Flemenkçe',
 				'pl'=>'Lehçe',
 				'pt'=>'Portekizce',
@@ -538,8 +538,8 @@
 				'en'=>'英语',
 				'es'=>'西班牙语',
 				'fr'=>'法语',
-				'ja'=>'日本',
 				'it'=>'意大利语',
+				'ja'=>'日本',
 				'nl'=>'菏兰语',
 				'pl'=>'抛光',
 				'pt'=>'葡萄牙语',
@@ -554,8 +554,8 @@ German.
 English.
 Spanish.
 French.
-Japanese.
 Italian.
+Japanese.
 Dutch.
 Polish.
 Portuguese.

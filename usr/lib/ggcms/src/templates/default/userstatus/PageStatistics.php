@@ -433,7 +433,6 @@ print('<nobr>Hostname</nobr>');
 		$type_args = [
 			'type'=>'select',
 			'name'=>'hostname',
-			'options'=>$this->primary_host_options,
 		];
 		
 		$form->DisplayFormField($type_args);

@@ -26,7 +26,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -54,30 +54,12 @@
 		$image_mouseover = str_replace('"', '\'', $description['Description']);
 	}
 	
-	if(!$div_mouseover)
-	{
-		if($this->primary_host_record['Classification'])
-		{
-			$div_mouseover = str_replace('"', '\'', $this->primary_host_record['Classification']);
-		}
-	}
-	
-	if(!$image_mouseover)
-	{
-		if($this->primary_host_record['Subject'])
-		{
-			$image_mouseover = str_replace('"', '\'', $this->primary_host_record['Subject']);
-		}
-	}
-	
 			// Display Header
 		
 		// -------------------------------------------------------------
 		
 	$header_primary_args = [
 		'title'=>'WordWeight.com : <br>' . $this->master_record['Subtitle'],
-		'image'=>$this->primary_host_record['PrimaryImageLeft'],
-		'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
 		'divmouseover'=>$div_mouseover,
 		'imagemouseover'=>$image_mouseover,
 		'level'=>1,
@@ -137,12 +119,11 @@
 	
 	print('<p class="horizontal-left margin-5px font-family-tahoma">');
 	
-	#$definitions_count = $this->dictionary->GetDefinitionsCount([]);
-	#$words_count = $this->dictionary->GetWordsCount([]);
-	#$dictionaries_count = $this->dictionary->GetDictionariesCount([]);
+	$definitions_count = $this->dictionary->GetDefinitionsCount([]);
+	$words_count = $this->dictionary->GetWordsCount([]);
+	$dictionaries_count = $this->dictionary->GetDictionariesCount([]);
 	
-	print('We currently maintain ' . number_format($definitions_count) . ' definitions for ' . number_format($words_count) . ' words');
-	print('.');
+	print('We currently maintain ' . number_format($definitions_count) . ' definitions for ' . number_format($words_count) . ' words across ' . $dictionaries_count . ' dictionaries.');
 #	print(' across ' . number_format($dictionaries_count) . ' dictionaries.');
 	
 	print('</strong>');
@@ -203,10 +184,9 @@
 	
 	print('<br>');
 	
-	$random_definitions = $this->dictionary->LookUpRandomWords([]);
+	$random_definitions = $this->handler->dictionary->LookUpRandomWords([]);
 	
-	foreach ($random_definitions as $random_word => $random_definition)
-	{
+	foreach ($random_definitions as $random_word => $random_definition) {
 		print('<div id="header_backgroundimageurl" class="border-2px background-color-gray13 margin-5px" style="display: inline-block;">');
 		print('<div class="margin-5px">');
 		print('<a href="' . urlencode(ucwords($random_word)) . '/view.php">');
@@ -255,7 +235,7 @@
 	
 	ggreq('modules/html/socialmediasharelinks.php');
 	$social_media_share_links_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'textonly'=>$this->mobile_friendly,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,

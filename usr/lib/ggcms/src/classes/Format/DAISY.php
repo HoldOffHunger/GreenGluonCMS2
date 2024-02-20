@@ -33,13 +33,7 @@
 			if($_GET['forceregen'] || !is_file($daisy_file_location) || filesize($daisy_file_location) === 0 || $old_daisy_input !== $daisy_input) {
 				$daisy_output = $this->ConvertHTMLToFormat();
 				
-				$file_handle_for_output = fopen($daisy_file_location, 'w+');
-				fwrite($file_handle_for_output, $daisy_output);
-				fclose($file_handle_for_output);
-				
-				$file_handle_for_source = fopen($source_file_location, 'w+');
-				fwrite($file_handle_for_source, $daisy_input);
-				fclose($file_handle_for_source);
+				return $daisy_output;
 			}
 			
 			return readfile($daisy_file_location);

@@ -8,17 +8,19 @@
 			
 			// -------------------------------------------------------------
 		
-	$image_count = count($this->entry['image']);
-	$tag_count = count($this->entry['tag']);
-	$description_count = count($this->entry['description']);
-	$quote_count = count($this->entry['quote']);
-	$textbody_count = count($this->entry['textbody']);
-	$associated_count = count($this->entry['associated']);
-	$eventdate_count = count($this->entry['eventdate']);
-	$link_count = count($this->entry['link']);
+	$image_count = $this->counts['image'];
+	$tag_count = $this->counts['tag'];
+	$description_count = $this->counts['description'];
+	$quote_count = $this->counts['quote'];
+	$textbody_count = $this->counts['textbody'];
+	$association_count = $this->counts['association'];
+	$eventdate_count = $this->counts['eventdate'];
+	$link_count = $this->counts['link'];
+	$definition_count = $this->counts['definition'];
+	$children_count = $this->counts['children'];
 	
-	$younger_sibling_count = count($this->younger_siblings);
-	$older_sibling_count = count($this->older_siblings);
+	$younger_sibling_count = $this->counts['younger_sibling'];
+	$older_sibling_count = $this->counts['older_sibling'];
 	
 	ggreq('modules/spacing.php');
 	ggreq('modules/html/entry-sort.php');
@@ -627,7 +629,7 @@
 		
 		ggreq('modules/html/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
@@ -640,7 +642,7 @@
 		
 		ggreq('modules/html/socialmediasharelinks.php');
 		$social_media_share_links_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'textonly'=>$this->mobile_friendly,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
@@ -1389,15 +1391,6 @@
 						$child_image = $child_images[0];
 						$display_image = $child_image;
 					}
-				}
-				
-				if(!$display_image)
-				{
-					$display_image = [
-						'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-						'IconPixelWidth'=>200,
-						'IconPixelHeight'=>200,
-					];
 				}
 				
 				print('<div class="border-2px background-color-gray15 margin-5px float-left">');
@@ -2829,7 +2822,7 @@
 				$oldest_young_sibling = $this->younger_siblings[0];
 				$sibling_descriptions = $oldest_young_sibling['description'];
 				
-				if(count($sibling_descriptions))
+				if($sibling_descriptions && count($sibling_descriptions))
 				{
 					$first_sibling_description = $sibling_descriptions[0];
 					$last_sibling_mouseover_text = str_replace('"', '&quot;', $first_sibling_description['Description']);
@@ -2965,7 +2958,7 @@
 			{
 				$youngest_old_sibling = $this->older_siblings[0];
 				$sibling_descriptions = $youngest_old_sibling['description'];
-				if(count($sibling_descriptions))
+				if($sibling_descriptions && count($sibling_descriptions))
 				{
 					$first_sibling_description = $sibling_descriptions[0];
 					$next_sibling_mouseover_text = str_replace('"', '&quot;', $first_sibling_description['Description']);
@@ -3031,7 +3024,7 @@
 					print($younger_sibling['ListTitle']);
 					
 					$younger_sibling_descriptions = $younger_sibling['description'];
-					$younger_sibling_description_count = count($younger_sibling_descriptions);
+					$younger_sibling_description_count = $younger_sibling_descriptions ? count($younger_sibling_descriptions) : 0;
 					
 					if($younger_sibling_description_count && $younger_sibling_descriptions[0]['Description'])
 					{
@@ -3080,7 +3073,7 @@
 					print($older_sibling['ListTitle']);
 					
 					$older_sibling_descriptions = $older_sibling['description'];
-					$older_sibling_description_count = count($older_sibling_descriptions);
+					$older_sibling_description_count = $older_sibling_descriptions ? count($older_sibling_descriptions) : 0;
 					
 					if($older_sibling_description_count && $older_sibling_descriptions[0]['Description'])
 					{

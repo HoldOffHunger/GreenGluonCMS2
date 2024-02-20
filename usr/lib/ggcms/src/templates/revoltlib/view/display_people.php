@@ -26,7 +26,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -84,8 +84,6 @@
 	
 	$header_secondary_args = [
 		'title'=>'Total People : ' . count($this->children) ,
-	//	'image'=>$this->primary_host_record['PrimaryImageLeft'],
-	//	'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
 		'imagemouseover'=>'Master C is in the house!',
 		'level'=>3,
 		'divclass'=>'width-33percent border-2px background-color-gray13 margin-5px',
@@ -119,8 +117,6 @@
 		
 		$header_secondary_args = [
 			'title'=>$child_title,
-		//	'image'=>$this->primary_host_record['PrimaryImageLeft'],
-		//	'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
 			'imagemouseover'=>'Master C is in the house!',
 			'level'=>2,
 			'divclass'=>'width-100percent border-2px background-color-gray13 margin-5px',

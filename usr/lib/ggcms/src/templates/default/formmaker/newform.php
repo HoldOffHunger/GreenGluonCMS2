@@ -35,14 +35,13 @@
 	ggreq('modules/html/languages.php');
 	$languages_args = [
 		'languageobject'=>$this->language_object,
-		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
 	];
 	$languages = new module_languages($languages_args);
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -78,6 +77,8 @@
 			// Display About Info
 		
 		// -------------------------------------------------------------
+	
+	print('<form method="POST">');
 	
 	print('<center><h2 class="margin-5px font-family-tahoma">' . $this->entry['Title'] . ' Form-Maker: Create New Form</h2>');
 	
@@ -168,7 +169,7 @@
 	print('</div>');
 	
 	print('<div class="field-div field-value-div">');
-	print('<input type="text" name="RowQuantity" class="input-field" size="20">');
+	print('<input type="text" name="RowQuantity" class="input-field" size="10">');
 	print('</div>');
 	
 			// Column Quantity Field
@@ -182,7 +183,7 @@
 	print('</div>');
 	
 	print('<div class="field-div field-value-div">');
-	print('<input type="text" name="ColumnQuantity" class="input-field" size="20">');
+	print('<input type="text" name="ColumnQuantity" class="input-field" size="10">');
 	print('</div>');
 	
 			// Display About Info
@@ -193,10 +194,12 @@
 	
 	print('<input type="submit" value="Save New Form">');
 	
-	print('<input type="hidden" value="saveform">');
+	print('<input type="hidden" name="action" value="saveform">');
 	
 	print('</div>');
 	print('</center>');
+	
+	print('</form>');
 	
 			// Display Final Ending Navigation
 		

@@ -3,6 +3,7 @@
 	trait SimpleLookupLists {
 		public function getListAndItems($args)
 		{
+			return [];
 			$list_title = $args['ListTitle'];
 			
 			$lookup_list_args = [

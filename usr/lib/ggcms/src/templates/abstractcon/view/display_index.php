@@ -27,7 +27,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -54,18 +54,6 @@
 		$description = $this->entry['description'][0];
 		
 		$image_mouseover = str_replace('"', '\'', $description['Description']);
-	}
-	
-	if(!$div_mouseover) {
-		if($this->primary_host_record['Classification']) {
-			$div_mouseover = str_replace('"', '\'', $this->primary_host_record['Classification']);
-		}
-	}
-	
-	if(!$image_mouseover) {
-		if($this->primary_host_record['Subject']) {
-			$image_mouseover = str_replace('"', '\'', $this->primary_host_record['Subject']);
-		}
 	}
 	
 	if($this->entry['image'][0] && $this->entry['image'][0]['id']) {
@@ -283,14 +271,6 @@
 						}
 					}
 					
-					if(!$display_image) {
-						$display_image = [
-							'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-							'IconPixelWidth'=>200,
-							'IconPixelHeight'=>200,
-						];
-					}
-					
 					print('<div class="border-2px background-color-gray15 margin-5px float-left">');
 					print('<div class="border-2px background-color-gray15 margin-5px float-left">');
 					print('<div class="height-100px width-100px background-color-gray0">');
@@ -318,15 +298,13 @@
 					
 					$title_max = 50;
 					
-					if($grandchild['association'] && count($grandchild['association']))
-					{
+					if($grandchild['association'] && count($grandchild['association'])) {
 						$title_max = 30;
 					}
 					
 					$grandchild_title_full = $grandchild['Title'];
 					$popup_title = 0;
-					if(strlen($grandchild_title_full) > $title_max)
-					{
+					if(strlen($grandchild_title_full) > $title_max) {
 						$grandchild_title_full = substr($grandchild_title_full, 0, $title_max) . '...';
 						$popup_title = 1;
 					}
@@ -335,8 +313,7 @@
 					
 					$grandchild_title .= '"';
 					
-					if($popup_title)
-					{
+					if($popup_title) {
 						$grandchild_title .= ' title="' . str_replace('"', '&quot;', $grandchild['Title']) . '"';
 					}
 					
@@ -345,16 +322,14 @@
 					$grandchild_title .= $grandchild_title_full;
 					$grandchild_title .= '</a>';
 					
-					if($grandchild['association'] && count($grandchild['association']))
-					{
+					if($grandchild['association'] && count($grandchild['association'])) {
 						$author = $grandchild['association'][0]['entry'];
 						$grandchild_title .= ', by ';
 						
 						$grandchild_author_full_title = $author['Title'];
 						
 						$popup_title = 0;
-						if(strlen($grandchild_author_full_title) > 20)
-						{
+						if(strlen($grandchild_author_full_title) > 20) {
 							$grandchild_author_full_title = substr($grandchild_author_full_title, 0, 20) . '...';
 							$popup_title = 1;
 						}
@@ -373,13 +348,11 @@
 					
 					$div_mouseover = '';
 					
-					if($grandchild['textbody'])
-					{
+					if($grandchild['textbody']) {
 						$text_bodies = $grandchild['textbody'];
 						
 						$text_body_count = count($text_bodies);
-						if($text_body_count)
-						{
+						if($text_body_count) {
 							$first_textbody = $text_bodies[0];
 							
 							$div_mouseover .= number_format($first_textbody['WordCount']) . ' Words / ' . number_format($first_textbody['CharacterCount']) . ' Characters';
@@ -388,8 +361,6 @@
 					
 					$header_secondary_args = [
 						'title'=>$grandchild_title,
-					//	'image'=>$this->primary_host_record['PrimaryImageLeft'],
-					//	'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
 						'divmouseover'=>$div_mouseover,
 						'level'=>3,
 						'divclass'=>'border-2px background-color-gray15 margin-5px float-left',
@@ -406,58 +377,43 @@
 					
 					$time_frame = '';
 					
-					if($grandchild['eventdate'])
-					{
+					if($grandchild['eventdate']) {
 						$grandchild_event_count = count($grandchild['eventdate']);
-						for($k = 0; $k < $grandchild_event_count; $k++)
-						{
+						for($k = 0; $k < $grandchild_event_count; $k++) {
 							$grandchild_event = $grandchild['eventdate'][$k];
 							
-							if($grandchild_event['Title'] == 'Birth Day')
-							{
+							if($grandchild_event['Title'] == 'Birth Day') {
 								$birth_event = $grandchild_event;
-							}
-							elseif($grandchild_event['Title'] == 'Death Day')
-							{
+							} elseif($grandchild_event['Title'] == 'Death Day') {
 								$death_event = $grandchild_event;
 							}
 							
-							if($birth_event && $death_event)
-							{
+							if($birth_event && $death_event) {
 								$k = $grandchild_event_count;
 							}
 						}
 						
-						if($birth_event || $death_event)
-						{
+						if($birth_event || $death_event) {
 							$time_frame .= ' (';
 							
-							if($birth_event && $birth_event['id'])
-							{
-								if($birth_event['EventDateTime'] != '0000-00-00 00:00:00')
-								{
+							if($birth_event && $birth_event['id']) {
+								if($birth_event['EventDateTime'] != '0000-00-00 00:00:00') {
 									$birth_event_date_pieces = explode('-', $birth_event['EventDateTime']);
 									$birth_year = $birth_event_date_pieces[0];
 									$time_frame .= $birth_year;
-								}
-								else
-								{
+								} else {
 									$time_frame .= '?';
 								}
 							}
 							
 							$time_frame .= ' - ';
 							
-							if($death_event && $death_event['id'])
-							{
-								if($death_event['EventDateTime'] != '0000-00-00 00:00:00')
-								{
+							if($death_event && $death_event['id']) {
+								if($death_event['EventDateTime'] != '0000-00-00 00:00:00') {
 									$death_event_date_pieces = explode('-', $death_event['EventDateTime']);
 									$death_year = $death_event_date_pieces[0];
 									$time_frame .= $death_year;
-								}
-								else
-								{
+								} else {
 									$time_frame .= '?';
 								}
 							}
@@ -469,15 +425,12 @@
 						}
 					}
 					
-					if($time_frame)
-					{
+					if($time_frame) {
 						print($time_frame);
 					}
 					
-					if($grandchild['Subtitle'])
-					{
-						if($time_frame)
-						{
+					if($grandchild['Subtitle']) {
+						if($time_frame) {
 							print(' ~ ');
 						}
 						
@@ -486,15 +439,12 @@
 						print('</strong>');
 					}
 					
-					if($grandchild['description'])
-					{
+					if($grandchild['description']) {
 						$description = $grandchild['description'][0];
 						
-						if($description && $description['Description'])
-						{
+						if($description && $description['Description']) {
 							print('<em>');
-							if($time_frame || $grandchild['Subtitle'])
-							{
+							if($time_frame || $grandchild['Subtitle']) {
 								print(' : ');
 							}
 							
@@ -502,12 +452,10 @@
 							print(' ');
 							print('</em>');
 							
-							if($description['Source'])
-							{
+							if($description['Source']) {
 								$source = $description['Source'];
 								
-								if(strlen($source) > 50)
-								{
+								if(strlen($source) > 50) {
 									$source = substr($source, 0, 50) . '...';
 								}
 								
@@ -516,18 +464,15 @@
 						}
 					}
 					
-					if($grandchild['quote'])
-					{
+					if($grandchild['quote']) {
 						$grandchild_quotes = $grandchild['quote'];
 						$grandchild_quotes_count = count($grandchild_quotes);
 						$max_limit = $grandchild_quotes_count;
-						if($max_limit > 3)
-						{
+						if($max_limit > 3) {
 							$max_limit = 3;
 						}
 						shuffle($grandchild_quotes);
-						for($k = 0; $k < $max_limit; $k++)
-						{
+						for($k = 0; $k < $max_limit; $k++) {
 							$quote = $grandchild_quotes[$k];
 							if($quote && $quote['Quote'])
 							{
@@ -698,7 +643,7 @@
 	
 	ggreq('modules/html/socialmediasharelinks.php');
 	$social_media_share_links_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'textonly'=>$this->mobile_friendly,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,

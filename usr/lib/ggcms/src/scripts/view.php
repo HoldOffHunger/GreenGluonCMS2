@@ -204,6 +204,10 @@
 							// ---------------------------------------------
 		
 		public function browseByTag() {
+			if($_GET['soybeans']) {
+				print("MEM!" . memory_get_usage() . "|");
+			}
+			
 			$this->SetORMBasics();
 			$this->SetRecordTree();
 			
@@ -240,6 +244,9 @@
 			
 			$this->FormatEntryInformation();
 			$this->FormatErrors();
+			if($_GET['soybeans']) {
+				print("MEM!" . memory_get_usage() . "|");
+			}
 			
 			return TRUE;
 		}
@@ -893,17 +900,17 @@
 		}
 		
 		public function display_wordweight() {
-			if(count($this->record_list) > 1) {
+			if($this->record_list && count($this->record_list) > 1) {
 				return FALSE;
 			}
 			
 			$this->SetORMBasics();
 			
-			if(count($this->object_list)) {
+			if($this->object_list && count($this->object_list)) {
 				$this->word = $this->object_code;
 				$this->definitions = $this->dictionary->LookupWords(['words'=>[$this->word]])[strtolower($this->word)];
 				
-				$this->definition_count = count($this->definitions);
+				$this->definition_count = $this->definitions ? count($this->definitions) : 0;
 				
 				if(!$this->definition_count) {
 					return FALSE;
@@ -955,7 +962,7 @@
 			
 			$this->SetChildAssociationRecords();
 			
-			if($this->globals->IndexPullChildRecordStats()) {
+			if($this->handler->globals->IndexPullChildRecordStats()) {
 				$this->setChildRecordStatsOfChildren();
 	#			print('soyo-beano');
 			}

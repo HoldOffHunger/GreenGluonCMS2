@@ -3,6 +3,13 @@
 	class Handler {
 		use ReverseDNSNotation;
 		public function __construct() {
+			
+			$this->LocalHostHandling();
+			
+			
+			
+			
+			
 			$this->ValidateSecurity();
 			$this->Construct_SetErrorLogging();
 			$this->Construct_SetDevelopmentVersion();
@@ -23,11 +30,54 @@
 			$this->Construct_DBAccess();
 			$this->Construct_Dictionaries();
 			$this->Construct_PresetAuthentication();
+			
 			$this->CheckPermalinkRedirect();
 			
 			if($this->script_name) {
 				$this->Construct_ScriptLocation();
 				$this->Construct_SocialMedia();
+			}
+			
+			return TRUE;
+		}
+		
+		public function Construct_UpgradeDBAccess() {
+			if($this->authentication->CheckAuthenticationForCurrentObject_IsAdmin()) {
+				ggreq('classes/Database/DBAccessUpgraded.php');
+				
+				$this->db_access = new DBAccessUpgraded([
+					'handler'=>$this,
+					'db_access'=>$this->db_access,
+				]);
+			}
+			
+			return TRUE;
+		}
+		
+		public function LocalHostHandling() {
+			$local_host_name = 'localhost';
+			
+			$server_variables = [
+				'HTTP_HOST',
+				'SERVER_NAME',
+			];
+			
+			$valid_local_host = TRUE;
+			
+			$server_variables_count = count($server_variables);
+			
+			for($i = 0; $i < $server_variables_count; $i++) {
+				$server_variable = $server_variables[$i];
+				if($_SERVER[$server_variable] !== $local_host_name) {
+					$valid_local_host = FALSE;
+					$i = $server_variables_count;
+				}
+			}
+			
+			if($valid_local_host) {
+				ggreq('classes/Networking/Handler/LocalHostHandler.php');
+				$this->local_host_handler = new LocalHostHandler($this->getArgs());
+				$this->local_host_handler->HandleLocalRequest();
 			}
 			
 			return TRUE;
@@ -97,6 +147,7 @@
 		
 		public function Construct_Domain() {
 			$domain = new Domain($this->getArgs());
+			
 			return $this->domain = $domain;
 		}
 		
@@ -148,9 +199,15 @@
 		}
 		
 		public function Construct_Dictionaries() {
-			$dictionary = new Dictionary($this->getArgs());
-			
-			return $this->dictionary = $dictionary;
+			if($this->globals->EnableDictionaries()) {
+				$folder_location_prefix = GGCMS_DIR . 'classes/';
+				require($folder_location_prefix . 'Language/Dictionary' . '.php');
+				
+				$dictionary = new Dictionary($this->getArgs());
+				
+				return $this->dictionary = $dictionary;
+			}
+			return FALSE;
 		}
 		
 		public function Construct_Time() {
@@ -261,8 +318,9 @@
 			$assignment = $args['assignment'];
 			$permalink_id = $args['permalink_id'];
 			
-			require_once(GGCMS_DIR . 'classes/Database/ORM.php');
-			$this->orm = new ORM($this->getArgs());
+			if(!$this->orm) {
+				$this->orm = new ORM($this->getArgs());
+			}
 			
 			$entry_records = $this->orm->SearchForEntries([
 				'fieldname'=>'id',
@@ -283,7 +341,6 @@
 			} else {
 				$redirect_url .= 'http://www.';
 			}
-			
 			$redirect_url .= $this->domain->primary_domain_lowercased;
 			
 			$entry_record_count = count($entry_records['parents']);
@@ -558,54 +615,115 @@
 				return $this->SecureRedirect();
 			}
 			
+					//start redirects
+			
 			if(!$this->ValidateReferrals()) {
 				return FALSE;
 			}
 			
-			$this->handleRedirect();
+			if($this->handleMailTo()) {
+				return FALSE;
+			}
 			
-			if(!$this->AutoRedirect()) {
-				if(!$this->handleSrvLocalFiles()) {
-				if(!$this->handleImage()) {
-				if(!$this->handleUndesirableParameters()) {
-					if(!$this->HandleRequest_Content() && !$this->redirect_url) {
-						if($this->isScriptImage()) {
-							$this->HandleRequest_Error_404();	# BT: FIXME, special error 404 for images?
-						} else {
-						#	ggreq('classes/API/GoogleAnalytics.php');
-							ggreq('classes/Networking/Error404Redirect.php');
-							$this->error404redirect = new Error404Redirect([
-								'handler'=>$this,
-							]);
-							if(!$this->handleBadLinkRedirect()) {
-								if(!$this->handleReservedCodeRedirect()) {
-									if(!$this->handleMatchingCodeRedirect()) {
-										if(!$this->handleScriptRedirect()) {
-											if(!$this->handleMisplacedScriptRedirect()) {
-												if(!$this->handleCopyPasteErrorRedirect()) {
-													if(!$this->handleImageRedirect()) {
-														if(!$this->handleLinuxUserRedirect()) {
-															if(!$this->handleGitRedirect()) {
-																if(!$this->handleMailTo()) {
-																	$this->HandleRequest_Error_404();
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
+			if($this->handleGitRedirect()) {
+				return FALSE;
+			}
+			
+			if($this->handleLinuxUserRedirect()) {
+				return FALSE;
+			}
+			
+			if($this->handleMultipleSlashesRedirect()) {
+				return FALSE;
+			}
+			
+			if($this->handleUndesirableParameters()) {
+				return FALSE;
+			}
+			
+			if($this->handleCopyPasteErrorRedirect()) {
+				return FALSE;
+			}
+			
+			if($this->handleBadLinkRedirect()) {
+				return FALSE;
+			}
+			
+			if($this->handleImageRedirect()) {
+				return FALSE;
+			}
+			
+					// end redirects
+			
+			$this->HandleRequest_ServeContent();
+			
+			return $this->HandleRequest_EndRequest();
+		}
+		
+		public function HandleRequest_ServeContent() {
+			if($this->handleSrvLocalFiles()) {
+				return TRUE;
+			}
+			
+			if($this->handle404Image()) {
+				return TRUE;
+			}
+			
+			if($this->HandleRequest_Content()) {
+				return TRUE;
+			}
+			
+			ggreq('classes/Networking/Error404.php');
+			if($this->isScriptImage()) {
+				$this->HandleRequest_Error_404();	# BT: FIXME, special error 404 for images?
+			} else {
+				ggreq('classes/Networking/Error404Redirect.php');
+				$this->error404redirect = new Error404Redirect([
+					'handler'=>$this,
+				]);
+				if(!$this->handleReservedCodeRedirect()) {
+					if(!$this->handleMatchingCodeRedirect()) {
+						if(!$this->handleScriptRedirect()) {
+							if(!$this->handleMisplacedScriptRedirect()) {
+								$this->HandleRequest_Error_404();
 							}
 						}
 					}
 				}
-				}
+			}
+			
+			return TRUE;
+		}
+		
+		public function HandleRequest_EndRequest() {
+			$this->AdminTools();
+			$this->MySQLDebugging();
+			$this->RecordUserStatistics();
+			
+			return TRUE;
+		}
+		
+		public function AdminTools() {
+			if($this->authentication->CheckAuthenticationForCurrentObject_IsAdmin()) {
+				
+				$action = $_GET['admin_action'];
+				
+				if($action) {
+				ggreq('classes/Admin/AdminTools.php');
+				$admintools = new AdminTools();
+				print('<PRE>');
+				$admintools->$action();
+				print('</PRE>');
 				}
 			}
 			
-			$this->RecordUserStatistics();
+			return TRUE;
+		}
+		
+		public function MySQLDebugging() {
+			if($this->db_access->Upgraded()) {
+				$this->db_access->ShowQueries();
+			}
 			
 			return TRUE;
 		}
@@ -618,21 +736,16 @@
 				
 				if(data_isfile($good_filename, $this)) {
 					data_reqfile($good_filename, $this);
-			#		print("yea");
+					
 					return TRUE;
-	#				print('soybeans');
 				}
 			}
-					# file_get_contents
-		
-#		print("BT: I AM! " . $_SERVER['REQUEST_URI'] . "|");
-	#		if(data_isfile($_SERVER['REQUEST_URI']
-	#		file_get_contents
-	#}
+			
 			return FALSE;
 		}
 		
-		public function handleImage() {
+		public function handle404Image() {
+			return FALSE;	 // hrm, is this a img src=??? problem?
 			$url_pieces = explode('/', $_SERVER['REQUEST_URI']);
 			
 			if(count($url_pieces) > 2) {
@@ -648,10 +761,10 @@
 					$this->script = new $this->script_format(['handler'=>$this]);
 				#	$this->script = $this->HandleRequest_Content_Format_InstantiateFormatObject();
 					if(!$this->script->Display()) {
-						return $this->handleImageRedirect();
+						return $this->imageRedirect();
 					}
 					
-					return true;
+					return TRUE;
 			#				print("BT:eeemage?!");
 			#				die("BT:!");
 				}
@@ -667,20 +780,24 @@
 				$first_piece = $url_pieces[1];
 				
 				if($first_piece === 'image' && strlen($last_piece) === 0) {	# are you searching for a directory like example.com/image/blahblahblablhablh/1/2/3/ ?  Then come along!
-					$this->redirect_url = '/image.php';
-					$this->handleRedirect();
-					return TRUE;
+					return $this->imageRedirect();
 				}
 			}
 			
 			return FALSE;
 		}
 		
+		public function imageRedirect() {
+			$this->redirect_url = '/image.php';
+			$this->handleRedirect();
+			return TRUE;
+		}
+		
 		public function handleMailTo() {
 			$possible_mailto = substr($_SERVER['REQUEST_URI'], 0, 8);
 			
 			if($possible_mailto === '/mailto:') {
-				$good_mailto = substr($_SERVER['REQUEST_URI'], 1, -1);
+				$good_mailto = substr($_SERVER['REQUEST_URI'], 1);
 				
 				$this->redirect_url = $good_mailto;
 				$this->handleRedirect();
@@ -783,7 +900,7 @@
 				return FALSE;
 			}
 			
-			$redirect_url = 'https://github.com/HoldOffHunger/GreenGluonCMS';
+			$redirect_url = $this->version->GetOpenSourceURL();
 			$this->redirect_url = $redirect_url;
 			$this->handleRedirect();
 			
@@ -980,7 +1097,7 @@
 			return FALSE;
 		}
 		
-		public function AutoRedirect() {
+		public function handleMultipleSlashesRedirect() {
 			if(!preg_match("/\/\//", $_SERVER['REQUEST_URI'])) {
 				return FALSE;
 			}
@@ -1289,11 +1406,15 @@
 		}
 		
 		public function RecordUserStatistics() {
-			ggreq('classes/Networking/UserTracking.php');
-			
-			$this->user_tracking = new UserTracking($this->getArgs());
-			
-			$this->user_tracking->RecordUserTracking();
+			if($this->globals->EnableStats() || $this->globals->EnableStats_LogExcessiveMemoryUse()) {
+				if($this->globals->EnableStats_Log404Pages() || !$this->error_404) {
+					ggreq('classes/Networking/UserTracking.php');
+					
+					$this->user_tracking = new UserTracking($this->getArgs());
+					
+					$this->user_tracking->RecordUserTracking();
+				}
+			}
 			
 			return TRUE;
 		}
@@ -1339,6 +1460,8 @@
 		
 		public function HandleRequest_Content_Format() {
 			$this->CheckSecurity();
+			
+			$this->Construct_UpgradeDBAccess();
 			
 			#	print("BT: ACCESS?");
 			if($this->access) {
@@ -1427,7 +1550,7 @@
 		}
 		
 		public function HandleRequest_Error_404() {
-			ggreq('classes/Networking/Error404.php');
+			$this->error_404 = TRUE;
 
 			$error_404 = new Error404($this->getArgs());
 			

@@ -29,14 +29,13 @@
 		ggreq('modules/' . $this->script_format_lower . '/languages.php');
 		$languages_args = [
 			'languageobject'=>$this->language_object,
-			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
 		];
 		$languages = new module_languages($languages_args);
 		
 		ggreq('modules/' . $this->script_format_lower . '/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
@@ -122,8 +121,7 @@
 	
 	$indent_level = 1;
 	
-	if($this->IsPaginatedSitemap())
-	{
+	if($this->IsPaginatedSitemap()) {
 		$indent_level = 0;
 	}
 	

@@ -8,14 +8,19 @@
 			
 			// -------------------------------------------------------------
 		
-	$image_count = count($this->entry['image']);
-	$tag_count = count($this->entry['tag']);
-	$description_count = count($this->entry['description']);
-	$quote_count = count($this->entry['quote']);
-	$textbody_count = count($this->entry['textbody']);
-	$association_count = count($this->entry['association']);
-	$eventdate_count = count($this->entry['eventdate']);
-	$link_count = count($this->entry['link']);
+	$image_count = $this->counts['image'];
+	$tag_count = $this->counts['tag'];
+	$description_count = $this->counts['description'];
+	$quote_count = $this->counts['quote'];
+	$textbody_count = $this->counts['textbody'];
+	$association_count = $this->counts['association'];
+	$eventdate_count = $this->counts['eventdate'];
+	$link_count = $this->counts['link'];
+	$definition_count = $this->counts['definition'];
+	$children_count = $this->counts['children'];
+	
+	$younger_sibling_count = $this->counts['younger_sibling'];
+	$older_sibling_count = $this->counts['older_sibling'];
 		
 				// Timeframe
 			
@@ -594,7 +599,7 @@
 		
 		ggreq('modules/html/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
@@ -607,7 +612,7 @@
 		
 		ggreq('modules/html/socialmediasharelinks.php');
 		$social_media_share_links_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'textonly'=>$this->mobile_friendly,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
@@ -937,15 +942,6 @@
 						$child_image = $child_images[0];
 						$display_image = $child_image;
 					}
-				}
-				
-				if(!$display_image)
-				{
-					$display_image = [
-						'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-						'IconPixelWidth'=>200,
-						'IconPixelHeight'=>200,
-					];
 				}
 				
 				print('<div class="border-2px background-color-gray15 margin-5px float-left">');

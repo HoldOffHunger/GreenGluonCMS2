@@ -16,11 +16,14 @@
 		}
 		
 		public function SetPrimaryDomain() {
-			if($_SERVER['HTTP_X_FORWARDED_SERVER']) {
+			if(array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)) {
 				$server_name = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+			} elseif($_SERVER['HTTP_HOST'] === 'localhost' && $_SERVER['SERVER_NAME'] === 'localhost' && $_GET['domain']) {
+				$server_name = $_GET['domain'];
 			} else {
 				$server_name = $_SERVER['SERVER_NAME'];
 			}
+			
 			$server_name_pieces = explode('.', $server_name);
 			$server_name_pieces_count = count($server_name_pieces);
 			for($i = 0; $i < $server_name_pieces_count; $i++) {
@@ -41,6 +44,8 @@
 			
 			$this->primary_domain = $primary_domain;
 			$this->primary_domain_lowercased = $primary_domain;
+			
+			return TRUE;
 		}
 		
 		public function GetPrimaryDomain($args) {
@@ -94,6 +99,11 @@
 						'topleveldomain'=>$top_level_domain,
 					];
 				}
+			} else {
+				return [
+					'domain'=>$url,
+					'topleveldomain'=>'',
+				];
 			}
 			
 			return '';

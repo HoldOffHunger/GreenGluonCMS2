@@ -27,14 +27,13 @@
 	ggreq('modules/html/languages.php');
 	$languages_args = [
 		'languageobject'=>$this->language_object,
-		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
 	];
 	$languages = new module_languages($languages_args);
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -128,7 +127,7 @@
 	ggreq('modules/html/socialmediasharelinks.php');
 	
 	$social_media_share_links_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -148,12 +147,10 @@
 	
 	$header_primary_args = [
 		'title'=>$this->header_title_text,
-		'image'=>$this->primary_host_record['PrimaryImageLeft'],
-		'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
 		'divmouseover'=>$instructions_content_text,
 		'imagemouseover'=>'&quot;' . $quote_text . '&quot;',
 		'level'=>1,
-		'divclass'=>'horizontal-center width-100percent border-2px margin-top-5px background-color-' . $this->globals->styling['PrimaryColor'],
+		'divclass'=>'horizontal-center width-100percent border-2px margin-top-5px background-color-' . $this->handler->globals->styling['PrimaryColor'],
 		'textclass'=>'padding-0px margin-0px horizontal-center vertical-center padding-top-22px margin-bottom-10px',
 		'imagedivclass'=>'border-2px margin-5px background-color-gray10',
 		'imageclass'=>'border-1px',

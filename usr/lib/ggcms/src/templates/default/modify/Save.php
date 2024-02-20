@@ -27,7 +27,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -797,7 +797,7 @@ print($element);
 					if($this->handler->globals->TitleAutoIncrement()) {
 						print('<input type="checkbox" value="1" name="autoincrement-title" id="autoincrement-title" ');
 						
-						if($this->globals->AutoGenerateTitleDefault()) {
+						if($this->handler->globals->AutoGenerateTitleDefault()) {
 							print('CHECKED="CHECKED"');
 						}
 						
@@ -807,7 +807,7 @@ print($element);
 					if($this->handler->globals->TitleAutoSmartTitleCase()) {
 						print('<input type="checkbox" value="1" name="title-smart-title-case" id="title-smart-title-case" ');
 						
-						if($this->globals->AutoGenerateTitleDefault()) {
+						if($this->handler->globals->AutoGenerateTitleDefault()) {
 							print('CHECKED="CHECKED"');
 						}
 						
@@ -817,7 +817,7 @@ print($element);
 					if($this->handler->globals->TitleDeRomanizeNumbers()) {
 						print('<input type="checkbox" value="1" name="title-de-romanize-numbers" id="title-de-romanize-numbers" ');
 						
-						#if($this->globals->AutoGenerateTitleDefault()) {
+						#if($this->handler->globals->AutoGenerateTitleDefault()) {
 						#	print('CHECKED="CHECKED"');
 						#}
 						
@@ -840,7 +840,7 @@ print($element);
 					if($this->handler->globals->SubTitleAutoSmartTitleCase()) {
 						print('<input type="checkbox" value="1" name="subtitle-smart-title-case" id="subtitle-smart-title-case" ');
 						
-						if($this->globals->AutoGenerateTitleDefault()) {
+						if($this->handler->globals->AutoGenerateTitleDefault()) {
 							print('CHECKED="CHECKED"');
 						}
 						

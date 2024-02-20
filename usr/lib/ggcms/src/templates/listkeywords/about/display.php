@@ -27,14 +27,13 @@
 	ggreq('modules/html/languages.php');
 	$languages_args = [
 		'languageobject'=>$this->language_object,
-		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
 	];
 	$languages = new module_languages($languages_args);
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -1138,20 +1137,11 @@
 			// Display Header
 		
 		// -------------------------------------------------------------
-		
-	if($this->primary_host_record['PrimaryColor'])
-	{
-		$primary_color = $this->primary_host_record['PrimaryColor'];
-	}
-	else
-	{
-		$primary_color = '6495ED';
-	}
+	
+	$primary_color = '6495ED';
 	
 	$header_primary_args = [
 		'title'=>$this->header_title_text,
-		'image'=>$this->primary_host_record['PrimaryImageLeft'],
-		'rightimage'=>$this->primary_host_record['PrimaryImageRight'],
 		'divmouseover'=>$div_mouseover,
 		'imagemouseover'=>'&quot;' . $quote_text . '&quot;',
 		'level'=>1,

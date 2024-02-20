@@ -27,7 +27,7 @@
 	
 	ggreq('modules/html/navigation.php');
 	$navigation_args = [
-		'globals'=>$this->globals,
+		'globals'=>$this->handler->globals,
 		'languageobject'=>$this->language_object,
 		'divider'=>$divider,
 		'domainobject'=>$this->domain_object,
@@ -462,7 +462,7 @@ print('<center><h4>Form Unavailable</h4></center>');
 					if($this->handler->globals->TitleAutoIncrement()) {
 						print('<input type="checkbox" value="1" name="autoincrement-title" id="autoincrement-title" ');
 						
-						if($this->globals->AutoGenerateTitleDefault()) {
+						if($this->handler->globals->AutoGenerateTitleDefault()) {
 							print('CHECKED="CHECKED"');
 						}
 						
@@ -472,7 +472,7 @@ print('<center><h4>Form Unavailable</h4></center>');
 					if($this->handler->globals->TitleAutoSmartTitleCase()) {
 						print('<input type="checkbox" value="1" name="title-smart-title-case" id="title-smart-title-case" ');
 						
-						if($this->globals->AutoGenerateTitleDefault()) {
+						if($this->handler->globals->AutoGenerateTitleDefault()) {
 							print('CHECKED="CHECKED"');
 						}
 						
@@ -482,7 +482,7 @@ print('<center><h4>Form Unavailable</h4></center>');
 					if($this->handler->globals->TitleAmericanize()) {
 						print('<input type="checkbox" value="1" name="title-americanize" id="title-americanize" ');
 						
-					#	if($this->globals->AmericanizeTitleDefault()) {
+					#	if($this->handler->globals->AmericanizeTitleDefault()) {
 					#		print('CHECKED="CHECKED"');
 					#	}
 						
@@ -492,7 +492,7 @@ print('<center><h4>Form Unavailable</h4></center>');
 					if($this->handler->globals->TitleDeRomanizeNumbers()) {
 						print('<input type="checkbox" value="1" name="title-de-romanize-numbers" id="title-de-romanize-numbers" ');
 						
-						#if($this->globals->AutoGenerateTitleDefault()) {
+						#if($this->handler->globals->AutoGenerateTitleDefault()) {
 						#	print('CHECKED="CHECKED"');
 						#}
 						
@@ -515,7 +515,7 @@ print('<center><h4>Form Unavailable</h4></center>');
 					if($this->handler->globals->SubTitleAutoSmartTitleCase()) {
 						print('<input type="checkbox" value="1" name="subtitle-smart-title-case" id="subtitle-smart-title-case" ');
 						
-						if($this->globals->AutoGenerateTitleDefault()) {
+						if($this->handler->globals->AutoGenerateTitleDefault()) {
 							print('CHECKED="CHECKED"');
 						}
 						
@@ -525,7 +525,7 @@ print('<center><h4>Form Unavailable</h4></center>');
 					if($this->handler->globals->SubtitleAmericanize()) {
 						print('<input type="checkbox" value="1" name="subtitle-americanize" id="subtitle-americanize" ');
 						
-					#	if($this->globals->AmericanizeSubtitleDefault()) {
+					#	if($this->handler->globals->AmericanizeSubtitleDefault()) {
 					#		print('CHECKED="CHECKED"');
 					#	}
 						
@@ -548,7 +548,7 @@ print('<center><h4>Form Unavailable</h4></center>');
 					if($this->handler->globals->ListTitleAutoSmartTitleCase()) {
 						print('<input type="checkbox" value="1" name="listtitle-smart-title-case" id="listtitle-smart-title-case" ');
 						
-					#	if($this->globals->AutoGenerateTitleDefault()) {
+					#	if($this->handler->globals->AutoGenerateTitleDefault()) {
 					#		print('CHECKED="CHECKED"');
 					#	}
 						
@@ -558,7 +558,7 @@ print('<center><h4>Form Unavailable</h4></center>');
 					if($this->handler->globals->ListTitleAmericanize()) {
 						print('<input type="checkbox" value="1" name="listtitle-americanize" id="listtitle-americanize" ');
 						
-					#	if($this->globals->AmericanizeListTitleDefault()) {
+					#	if($this->handler->globals->AmericanizeListTitleDefault()) {
 					#		print('CHECKED="CHECKED"');
 					#	}
 						

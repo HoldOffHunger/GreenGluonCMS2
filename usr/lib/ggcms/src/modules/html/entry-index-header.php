@@ -38,8 +38,11 @@
 		}
 		
 		public function Display_LeftIcons($args) {
-		
 			$primary_image = $args['primary_image'];
+			
+			if(!$primary_image) {
+				return TRUE;
+			}
 			
 			$directory = implode('/', str_split($primary_image['FileDirectory']));
 			

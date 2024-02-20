@@ -30,18 +30,19 @@
 			
 			// -------------------------------------------------------------
 		
-	$image_count = count($this->entry['image']);
-	$tag_count = count($this->entry['tag']);
-	$description_count = count($this->entry['description']);
-	$quote_count = count($this->entry['quote']);
-	$textbody_count = count($this->entry['textbody']);
-	$association_count = count($this->entry['association']);
-	$eventdate_count = count($this->entry['eventdate']);
-	$link_count = count($this->entry['link']);
-	$children_count = count($this->children);
+	$image_count = $this->counts['image'];
+	$tag_count = $this->counts['tag'];
+	$description_count = $this->counts['description'];
+	$quote_count = $this->counts['quote'];
+	$textbody_count = $this->counts['textbody'];
+	$association_count = $this->counts['association'];
+	$eventdate_count = $this->counts['eventdate'];
+	$link_count = $this->counts['link'];
+	$definition_count = $this->counts['definition'];
+	$children_count = $this->counts['children'];
 	
-	$younger_sibling_count = count($this->younger_siblings);
-	$older_sibling_count = count($this->older_siblings);
+	$younger_sibling_count = $this->counts['younger_sibling'];
+	$older_sibling_count = $this->counts['older_sibling'];
 	
 				// Timeframe
 	
@@ -732,7 +733,7 @@
 		
 		ggreq('modules/html/navigation.php');
 		$navigation_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
 			'domainobject'=>$this->domain_object,
@@ -745,7 +746,7 @@
 		
 		ggreq('modules/html/socialmediasharelinks.php');
 		$social_media_share_links_args = [
-			'globals'=>$this->globals,
+			'globals'=>$this->handler->globals,
 			'textonly'=>$this->mobile_friendly,
 			'languageobject'=>$this->language_object,
 			'divider'=>$divider,
@@ -769,7 +770,7 @@
 		
 	#	print_r($this->parent['image']);
 	
-		if(!$this->entry['image'] && !count($this->entry['image']))
+		if(!$this->entry['image'])
 		{
 			$this->entry['image'] = $this->parent['image'];
 		}
@@ -792,12 +793,6 @@
 				}
 			}
 			
-			if(!$primary_image)
-			{
-				$primary_image = $this->primary_host_record['PrimaryImageLeft'];
-				$primary_image_text = $this->primary_host_record['Classification'];
-			}
-			
 					// Mouseover Values
 				
 				// -------------------------------------------------------------
@@ -813,14 +808,6 @@
 				if($random_quote['Source'])
 				{
 					$div_mouseover .= ' -- ' . str_replace('"', '\'', $random_quote['Source']);
-				}
-			}
-			
-			if(!$div_mouseover)
-			{
-				if($this->primary_host_record['Subject'])
-				{
-					$div_mouseover = str_replace('"', '\'', $this->primary_host_record['Subject']);
 				}
 			}
 		}
@@ -1117,15 +1104,6 @@
 						$child_image = $child_images[0];
 						$display_image = $child_image;
 					}
-				}
-				
-				if(!$display_image)
-				{
-					$display_image = [
-						'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-						'IconPixelWidth'=>200,
-						'IconPixelHeight'=>200,
-					];
 				}
 				
 				print('<div class="border-2px background-color-gray15 margin-5px float-left">');
@@ -1860,15 +1838,6 @@
 					}
 				}
 				
-				if(!$display_image)
-				{
-					$display_image = [
-						'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-						'IconPixelWidth'=>200,
-						'IconPixelHeight'=>200,
-					];
-				}
-				
 				print('<div class="border-2px background-color-gray15 margin-5px float-left">');
 				print('<div class="border-2px background-color-gray15 margin-5px float-left">');
 				print('<div class="background-color-gray0" style="width:200px;height:50px;">');
@@ -1972,7 +1941,7 @@
 				print('<input type="hidden" id="listen-to-phrase-english-'  . $child['id'] . '-word" value="' . $child['Title'] . '">');
 				
 				$child_tags = $child['tag'];
-				$child_tags_count = count($child_tags);
+				$child_tags_count = $child_tags ? count($child_tags) : 0;
 				
 				if($child_tags_count)
 				{
@@ -2533,15 +2502,6 @@
 						$child_image = $child_images[0];
 						$display_image = $child_image;
 					}
-				}
-				
-				if(!$display_image)
-				{
-					$display_image = [
-						'IconFileName'=>$this->primary_host_record['PrimaryImageLeft'],
-						'IconPixelWidth'=>200,
-						'IconPixelHeight'=>200,
-					];
 				}
 				
 				$title_max = 50;
@@ -3479,7 +3439,7 @@
 					
 					print('<input type="hidden" class="quiz-question" id="quiz-question-' . $child['id'] . '" name="quiz-question-' . $child['id'] . '" value="' . $child['Title'] . '">');
 					$child_tags = $child['tag'];
-					$child_tags_count = count($child_tags);
+					$child_tags_count = $child_tags ? count($child_tags) : 0;
 					
 					if($child_tags_count)
 					{

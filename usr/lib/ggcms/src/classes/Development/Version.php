@@ -18,6 +18,10 @@
 			return '1.00';
 		}
 		
+		public function GetOpenSourceURL() {
+			return 'https://github.com/HoldOffHunger/GreenGluonCMS';
+		}
+		
 			// Constant-Based Functions
 		public function GetSoftwareNameAcronymAndVersion() {
 			return $this->GetSoftwareName() . ' (' . $this->GetSoftwareAcronym() . '): Version ' . $this->GetSoftwareVersion();

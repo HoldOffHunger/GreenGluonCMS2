@@ -52,7 +52,7 @@
 			$image_request = $_SERVER['REQUEST_URI'];
 			#print($image_request);
 			
-			$image_location = GGCMS_DATA_DIR . $this->handler->domain->primary_domain_lowercased . '/www' . $image_request;
+			$image_location = GGCMS_DATA_DIR . $this->handler->domain->primary_domain_lowercased . '/www' . urldecode($image_request);
 			
 		#	print("LOC!!!" . $image_location . "|");
 			
